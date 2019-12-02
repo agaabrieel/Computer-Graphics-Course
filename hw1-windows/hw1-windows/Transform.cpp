@@ -47,21 +47,25 @@ mat4 Transform::lookAt(vec3 eye, vec3 up) {
 
 	mat4 m;
 	
+	// Row 1
 	m[0][0] = u.x;
 	m[0][1] = u.y;
 	m[0][2] = u.z;
 	m[0][3] = -glm::dot(u, eye);
 
+	// Row 2
 	m[1][0] = v.x;
 	m[1][1] = v.y;
 	m[1][2] = v.z;
 	m[1][3] = -glm::dot(v, eye);
 
+	// Row 3
 	m[2][0] = w.x;
 	m[2][1] = w.y;
 	m[2][2] = w.z;
 	m[2][3] = -glm::dot(w, eye);
 
+	// Row 4
 	m[3][0] = 0;
 	m[3][1] = 0;
 	m[3][2] = 0;
