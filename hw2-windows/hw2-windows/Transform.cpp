@@ -9,30 +9,64 @@
 // Helper rotation function.  Please implement this.  
 mat3 Transform::rotate(const float degrees, const vec3& axis) 
 {
-    mat3 ret;
-    // YOUR CODE FOR HW2 HERE
-    // Please implement this.  Likely the same as in HW 1.  
-    return ret;
+	float rads = glm::radians(degrees);
+	float cos_rads = cos(rads);
+	mat3 a_star = mat3(0, axis.z, -axis.y, -axis.z, 0, axis.x, axis.y, -axis.x, 0);
+
+	return cos_rads * mat3() + (1 - cos_rads) * glm::outerProduct(axis, axis) + sin(rads) * a_star;
 }
 
 void Transform::left(float degrees, vec3& eye, vec3& up) 
 {
-    // YOUR CODE FOR HW2 HERE
-    // Likely the same as in HW 1.  
+	eye = rotate(degrees, up) * eye;
 }
 
 void Transform::up(float degrees, vec3& eye, vec3& up) 
 {
-    // YOUR CODE FOR HW2 HERE 
-    // Likely the same as in HW 1.  
+	vec3 rotation_axis = glm::normalize(glm::cross(eye, up));
+	mat3 rotation_matrix = rotate(degrees, rotation_axis);
+
+	eye = rotation_matrix * eye;
+	up = glm::normalize(rotation_matrix * up);
 }
 
 mat4 Transform::lookAt(const vec3 &eye, const vec3 &center, const vec3 &up) 
 {
-    mat4 ret;
-    // YOUR CODE FOR HW2 HERE
-    // Likely the same as in HW 1.  
-    return ret;
+	vec3 a = eye - center; // TODO check this use of center is appropriate.
+	vec3 b = up;
+
+	vec3 w = glm::normalize(a);
+	vec3 u = glm::cross(b, w);
+	u = glm::normalize(u);
+	vec3 v = glm::cross(w, u);
+
+	mat4 m;
+
+	// Row 1
+	m[0][0] = u.x;
+	m[0][1] = u.y;
+	m[0][2] = u.z;
+	m[0][3] = -glm::dot(u, eye);
+
+	// Row 2
+	m[1][0] = v.x;
+	m[1][1] = v.y;
+	m[1][2] = v.z;
+	m[1][3] = -glm::dot(v, eye);
+
+	// Row 3
+	m[2][0] = w.x;
+	m[2][1] = w.y;
+	m[2][2] = w.z;
+	m[2][3] = -glm::dot(w, eye);
+
+	// Row 4
+	m[3][0] = 0;
+	m[3][1] = 0;
+	m[3][2] = 0;
+	m[3][3] = 1;
+
+	return glm::transpose(m);
 }
 
 mat4 Transform::perspective(float fovy, float aspect, float zNear, float zFar)
