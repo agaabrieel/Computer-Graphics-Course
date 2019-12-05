@@ -247,6 +247,9 @@ void readfile(const char* filename)
                     validinput = readvals(s,3,values); 
                     if (validinput) {
 
+						mat4 scaleMatrix = Transform::scale(values[0], values[1], values[2]);
+						rightmultiply(scaleMatrix, transfstack);
+
                         // YOUR CODE FOR HW 2 HERE.  
                         // Think about how the transformation stack is affected
                         // You might want to use helper functions on top of file.  
