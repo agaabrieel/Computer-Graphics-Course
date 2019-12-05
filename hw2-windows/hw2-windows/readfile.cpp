@@ -100,6 +100,14 @@ void readfile(const char* filename)
                         validinput = readvals(s, 8, values); // Position/color for lts.
                         if (validinput) {
 
+							for (int i = 0; i < 4; i++) {
+								lightposn[numused * 4 + i] = values[i];
+							}
+
+							for (int i = 4; i < 8; i++) {
+								lightcolor[numused * 4 + (i - 4)] = values[i];
+							}
+
                             // YOUR CODE FOR HW 2 HERE. 
                             // Note that values[0...7] shows the read in values 
                             // Make use of lightposn[] and lightcolor[] arrays in variables.h
