@@ -108,6 +108,7 @@ void readfile(const char* filename)
 								lightcolor[numused * 4 + (i - 4)] = values[i];
 							}
 
+							// TODO delete these comments once satisfied it works.
                             // YOUR CODE FOR HW 2 HERE. 
                             // Note that values[0...7] shows the read in values 
                             // Make use of lightposn[] and lightcolor[] arrays in variables.h
@@ -166,6 +167,21 @@ void readfile(const char* filename)
                     validinput = readvals(s,10,values); // 10 values eye cen up fov
                     if (validinput) {
 
+						for (int i = 0; i < 3; i++) {
+							eyeinit[i] = values[i];
+						}
+
+						for (int i = 3; i < 6; i++) {
+							center[i - 3] = values[i];
+						}
+
+						for (int i = 6; i < 9; i++) {
+							upinit[i - 6] = values[i];
+						}
+
+						fovy = values[9];
+
+						// TODO delete these comments once satisfied they work.
                         // YOUR CODE FOR HW 2 HERE
                         // Use all of values[0...9]
                         // You may need to use the upvector fn in Transform.cpp
@@ -216,6 +232,10 @@ void readfile(const char* filename)
                     validinput = readvals(s,3,values); 
                     if (validinput) {
 
+						mat4 translationMatrix = Transform::translate(values[0], values[1], values[2]);
+						rightmultiply(translationMatrix, transfstack);
+
+						// TODO delete these comments once satisfied it works.
                         // YOUR CODE FOR HW 2 HERE.  
                         // Think about how the transformation stack is affected
                         // You might want to use helper functions on top of file. 
