@@ -66,19 +66,19 @@ void display()
 	glUniform1i(numusedcol, numused);
 
 	// TODO do i translate here or in the shader?
-	for (int i = 0; i < numused; i++) {
-		GLfloat inputVec[4];
-		for (int j = 0; j < 4; j++) {
-			inputVec[j] = lightposn[i * 4 + j];
-		}
-		GLfloat outputVec[4];
-		transformvec(inputVec, outputVec); // TODO check
-		for (int j = 0; j < 4; j++) {
-			lightransf[i * 4 + j] = outputVec[j];
-		}
-	}
-	glUniform4fv(lightpos, numused, lightransf); 
-
+	//for (int i = 0; i < numused; i++) {
+	//	GLfloat inputVec[4];
+	//	for (int j = 0; j < 4; j++) {
+	//		inputVec[j] = lightposn[i * 4 + j];
+	//	}
+	//	GLfloat outputVec[4];
+	//	transformvec(inputVec, outputVec); // TODO check
+	//	for (int j = 0; j < 4; j++) {
+	//		lightransf[i * 4 + j] = outputVec[j];
+	//	}
+	//}
+	glUniform4fv(lightpos, numused, lightposn); 
+	glUniform4fv(lightcol, numused, lightcolor);
 
 	// TODO delete these comments once satisfied the code works.
     // YOUR CODE FOR HW 2 HERE.  

@@ -34,12 +34,12 @@ uniform vec4 specular;
 uniform vec4 emission; 
 uniform float shininess; 
 
-vec4 ComputeLight (const in vec3 direction, const in vec4 lightcolor, const in vec3 normal, const in vec3 halfvec) {
+vec4 ComputeLight (const in vec3 direction, const in vec4 lightcolorIn, const in vec3 normal, const in vec3 halfvec) {
 	float nDotL = dot(normal, direction);
-	vec4 lambert = diffuse * lightcolor * max(nDotL, 0.0);
+	vec4 lambert = diffuse * lightcolorIn * max(nDotL, 0.0);
 
 	float nDotH = dot(normal, halfvec);
-	vec4 phong = specular * lightcolor * pow (max(nDotH, 0.0), shininess);
+	vec4 phong = specular * lightcolorIn * pow (max(nDotH, 0.0), shininess);
 
 	return lambert + phong;
 }
@@ -52,30 +52,29 @@ void main (void)
 		vec3 eyeDirection = normalize(eyePosition - myPosition);
 		vec3 normal = normalize(mynormal);
 
-		vec4 finalcolor = vec4(0, 0, 0, 1);
-        finalcolor += ambient; // + emission?
+		vec4 finalcolor = ambient;
 
-		vec3 lightPosition;
+		vec4 lightPosition4;
+		vec3 lightPosition3;
 		vec3 lightDirection;
 		vec3 h;
 
 		for (int i = 0; i < numused; i++) {
-			if (lightposn[i].w != 0) // Point
+			if (abs(lightposn[i].w) > 0.00001) // Point
 			{
-				lightPosition = lightposn[i].xyz / lightposn[i].w; // TODO what when w = 0?
-				lightDirection = normalize(lightPosition - myPosition); 
+				lightPosition4 = modelview * lightposn[i];
+				lightPosition3 = lightPosition4.xyz / lightPosition4.w; // TODO what when w = 0?
+				lightDirection = normalize(lightPosition3 - myPosition); 
 			}
 			else // Directional
 			{
-				lightDirection = normalize(lightposn[i].xyz);
+				lightPosition4 = modelview * lightposn[i];
+				lightDirection = normalize(lightPosition4.xyz);
 			}
 			h = normalize(lightDirection + eyeDirection);
 			finalcolor += ComputeLight(lightDirection, lightcolor[i], normal, h);
 		}
 
-        // YOUR CODE FOR HW 2 HERE
-        // A key part is implementation of the fragment shader
-		
         fragColor = finalcolor; 
     } else {
         fragColor = vec4(color, 1.0f); 
