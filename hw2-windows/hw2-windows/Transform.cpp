@@ -71,26 +71,103 @@ mat4 Transform::lookAt(const vec3 &eye, const vec3 &center, const vec3 &up)
 
 mat4 Transform::perspective(float fovy, float aspect, float zNear, float zFar)
 {
-    mat4 ret;
-    // YOUR CODE FOR HW2 HERE
-    // New, to implement the perspective transform as well.  
-    return ret;
+	float theta = fovy / 2;
+	float d = 1 / tan(glm::radians(theta));
+	float A = (-zFar + zNear) / (zFar - zNear);
+	float B = (-2 * zFar * zNear) / (zFar - zNear);
+
+	mat4 ret;
+
+	// Row 1
+	ret[0][0] = d / aspect;
+	ret[0][1] = 0; // TODO check if these initialisations to 0 are unnecessary.
+	ret[0][2] = 0;
+	ret[0][3] = 0;
+
+	// Row 2
+	ret[1][0] = 0;
+	ret[1][1] = d;
+	ret[1][2] = 0;
+	ret[1][3] = 0;
+
+	// Row 3
+	ret[2][0] = 0;
+	ret[2][1] = 0;
+	ret[2][2] = A;
+	ret[2][3] = B;
+
+	// Row 4
+	ret[3][0] = 0;
+	ret[3][1] = 0;
+	ret[3][2] = -1;
+	ret[3][3] = 0;
+	
+	// Convert to column-major.
+	return glm::transpose(ret);
 }
 
 mat4 Transform::scale(const float &sx, const float &sy, const float &sz) 
 {
     mat4 ret;
-    // YOUR CODE FOR HW2 HERE
-    // Implement scaling 
-    return ret;
+    
+	// Row 1
+	ret[0][0] = sx;
+	ret[0][1] = 0;
+	ret[0][2] = 0;
+	ret[0][3] = 0;
+
+	// Row 2
+	ret[1][0] = 0;
+	ret[1][1] = sy;
+	ret[1][2] = 0;
+	ret[1][3] = 0;
+	
+	// Row 3
+	ret[2][0] = 0;
+	ret[2][1] = 0;
+	ret[2][2] = sz;
+	ret[2][3] = 0;
+
+	// Row 4
+	ret[3][0] = 0;
+	ret[3][1] = 0;
+	ret[3][2] = 0;
+	ret[3][3] = 1;
+
+	// Convert to column-major
+	return glm::transpose(ret);
 }
 
 mat4 Transform::translate(const float &tx, const float &ty, const float &tz) 
 {
     mat4 ret;
-    // YOUR CODE FOR HW2 HERE
-    // Implement translation 
-    return ret;
+    
+	// Row 1
+	ret[0][0] = 1;
+	ret[0][1] = 0;
+	ret[0][2] = 0;
+	ret[0][3] = tx;
+
+	// Row 2
+	ret[1][0] = 0;
+	ret[1][1] = 1;
+	ret[1][2] = 0;
+	ret[1][3] = ty;
+
+	// Row 3
+	ret[2][0] = 0;
+	ret[2][1] = 0;
+	ret[2][2] = 1;
+	ret[2][3] = tz;
+
+	// Row 4
+	ret[3][0] = 0;
+	ret[3][1] = 0;
+	ret[3][2] = 0;
+	ret[3][3] = 1;
+
+	// Convert to column-major
+	return glm::transpose(ret);
 }
 
 // To normalize the up direction and construct a coordinate frame.  
