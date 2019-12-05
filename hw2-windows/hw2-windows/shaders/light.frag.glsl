@@ -34,17 +34,48 @@ uniform vec4 specular;
 uniform vec4 emission; 
 uniform float shininess; 
 
+vec4 ComputeLight (const in vec3 direction, const in vec4 lightcolor, const in vec3 normal, const in vec3 halfvec) {
+	float nDotL = dot(normal, direction);
+	vec4 lambert = diffuse * lightcolor * max(nDotL, 0.0);
+
+	float nDotH = dot(normal, halfvec);
+	vec4 phong = specular * lightcolor * pow (max(nDotH, 0.0), shininess);
+
+	return lambert + phong;
+}
+
 void main (void) 
 {       
-    if (enablelighting) {       
-        vec4 finalcolor; 
+    if (enablelighting) {
+		const vec3 eyePosition = vec3(0, 0, 0);
+		vec3 myPosition = myvertex.xyz / myvertex.w;
+		vec3 eyeDirection = normalize(eyePosition - myPosition);
+		vec3 normal = normalize(mynormal);
+
+		vec4 finalcolor = vec4(0, 0, 0, 1);
+        finalcolor += ambient; // + emission?
+
+		vec3 lightPosition;
+		vec3 lightDirection;
+		vec3 h;
+
+		for (int i = 0; i < numused; i++) {
+			if (lightposn[i].w != 0) // Point
+			{
+				lightPosition = lightposn[i].xyz / lightposn[i].w; // TODO what when w = 0?
+				lightDirection = normalize(lightPosition - myPosition); 
+			}
+			else // Directional
+			{
+				lightDirection = normalize(lightposn[i].xyz);
+			}
+			h = normalize(lightDirection + eyeDirection);
+			finalcolor += ComputeLight(lightDirection, lightcolor[i], normal, h);
+		}
 
         // YOUR CODE FOR HW 2 HERE
         // A key part is implementation of the fragment shader
-
-        // Color all pixels black for now, remove this in your implementation!
-        finalcolor = vec4(0.0f, 0.0f, 0.0f, 1.0f); 
-
+		
         fragColor = finalcolor; 
     } else {
         fragColor = vec4(color, 1.0f); 

@@ -46,6 +46,7 @@ void display()
   glClearColor(0, 0, 1, 0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   // Set up the camera view
 
   // Either use the built-in lookAt function or the lookAt implemented by the user.
@@ -62,7 +63,24 @@ void display()
   // So we need to do so manually.  
   if (numused) {
     glUniform1i(enablelighting,true);
+	glUniform1i(numusedcol, numused);
 
+	// TODO do i translate here or in the shader?
+	for (int i = 0; i < numused; i++) {
+		GLfloat inputVec[4];
+		for (int j = 0; j < 4; j++) {
+			inputVec[j] = lightposn[i * 4 + j];
+		}
+		GLfloat outputVec[4];
+		transformvec(inputVec, outputVec); // TODO check
+		for (int j = 0; j < 4; j++) {
+			lightransf[i * 4 + j] = outputVec[j];
+		}
+	}
+	glUniform4fv(lightpos, numused, lightransf); 
+
+
+	// TODO delete these comments once satisfied the code works.
     // YOUR CODE FOR HW 2 HERE.  
     // You need to pass the light positions and colors to the shader. 
     // glUniform4fv() and similar functions will be useful. See FAQ for help with these functions.
@@ -73,32 +91,47 @@ void display()
     glUniform1i(enablelighting,false); 
   }
 
+  stack <mat4> transfstack;
+  transfstack.push(mat4(1.0));  // identity
+
   // Transformations for objects, involving translation and scaling 
   mat4 sc(1.0) , tr(1.0), transf(1.0); 
   sc = Transform::scale(sx,sy,1.0); 
   tr = Transform::translate(tx,ty,0.0); 
+  rightmultiply(tr, transfstack);
+  rightmultiply(sc, transfstack);
+  rightmultiply(modelview, transfstack);
 
   // YOUR CODE FOR HW 2 HERE.  
   // You need to use scale, translate and modelview to 
   // set up the net transformation matrix for the objects.  
   // Account for GLM issues, matrix order (!!), etc.  
-
-
+  
   // The object draw functions will need to further modify the top of the stack,
 
   // so assign whatever transformation matrix you intend to work with to modelview
-
+  // stack for modelview?
   // rather than use a uniform variable for that.
-  modelview = transf;
+  //transf = tr * sc;
+  //modelview = transf * modelview;
+  modelview = transfstack.top();
   
   for (int i = 0 ; i < numobjects ; i++) {
     object* obj = &(objects[i]); // Grabs an object struct.
-
     // YOUR CODE FOR HW 2 HERE. 
     // Set up the object transformations 
     // And pass in the appropriate material properties
     // Again glUniform() related functions will be useful
+	glUniform4fv(ambientcol, 1, obj->ambient);
+	glUniform4fv(diffusecol, 1, obj->diffuse);
+	glUniform4fv(specularcol, 1, obj->specular);
+	glUniform4fv(emissioncol, 1, obj->specular);
+	glUniform1f(shininesscol, obj->shininess);
 
+	transfstack.push(transfstack.top());
+	rightmultiply(obj->transform, transfstack);
+	modelview = transfstack.top();
+	
     // Actually draw the object
     // We provide the actual drawing functions for you.  
     // Remember that obj->type is notation for accessing struct fields
@@ -112,7 +145,7 @@ void display()
     else if (obj->type == teapot) {
       solidTeapot(obj->size); 
     }
-	
+	transfstack.pop();
   }
   
   glutSwapBuffers();
