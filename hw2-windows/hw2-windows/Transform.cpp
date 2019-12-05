@@ -9,11 +9,12 @@
 // Helper rotation function.  Please implement this.  
 mat3 Transform::rotate(const float degrees, const vec3& axis) 
 {
+	vec3 axis_norm = glm::normalize(axis);
 	float rads = glm::radians(degrees);
 	float cos_rads = cos(rads);
-	mat3 a_star = mat3(0, axis.z, -axis.y, -axis.z, 0, axis.x, axis.y, -axis.x, 0);
+	mat3 a_star = mat3(0, axis_norm.z, -axis_norm.y, -axis_norm.z, 0, axis_norm.x, axis_norm.y, -axis_norm.x, 0);
 
-	return cos_rads * mat3() + (1 - cos_rads) * glm::outerProduct(axis, axis) + sin(rads) * a_star;
+	return cos_rads * mat3() + (1 - cos_rads) * glm::outerProduct(axis_norm, axis_norm) + sin(rads) * a_star;
 }
 
 void Transform::left(float degrees, vec3& eye, vec3& up) 

@@ -261,6 +261,12 @@ void readfile(const char* filename)
                     validinput = readvals(s,4,values); 
                     if (validinput) {
 
+						mat4 rotateMatrix = glm::mat4(
+							Transform::rotate(values[3], vec3(values[0], values[1], values[2])));
+
+						rightmultiply(rotateMatrix, transfstack);
+
+						// TODO delete these comments once satisfied the code works.
                         // YOUR CODE FOR HW 2 HERE. 
                         // values[0..2] are the axis, values[3] is the angle.  
                         // You may want to normalize the axis (or in Transform::rotate)
