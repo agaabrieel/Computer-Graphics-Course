@@ -33,7 +33,7 @@ void Transform::up(float degrees, vec3& eye, vec3& up)
 
 mat4 Transform::lookAt(const vec3 &eye, const vec3 &center, const vec3 &up) 
 {
-	vec3 a = eye - center; // TODO check this use of center is appropriate.
+	vec3 a = eye - center;
 	vec3 b = up;
 
 	vec3 w = glm::normalize(a);
@@ -41,7 +41,7 @@ mat4 Transform::lookAt(const vec3 &eye, const vec3 &center, const vec3 &up)
 	u = glm::normalize(u);
 	vec3 v = glm::cross(w, u);
 
-	mat4 m;
+	mat4 m = mat4(); // Start with identity matrix
 
 	// Row 1
 	m[0][0] = u.x;
@@ -61,11 +61,7 @@ mat4 Transform::lookAt(const vec3 &eye, const vec3 &center, const vec3 &up)
 	m[2][2] = w.z;
 	m[2][3] = -glm::dot(w, eye);
 
-	// Row 4
-	m[3][0] = 0;
-	m[3][1] = 0;
-	m[3][2] = 0;
-	m[3][3] = 1;
+	// Row 4 is unchanged from the identity matrix
 
 	return glm::transpose(m);
 }
@@ -77,98 +73,45 @@ mat4 Transform::perspective(float fovy, float aspect, float zNear, float zFar)
 	float A = (-zFar + zNear) / (zFar - zNear);
 	float B = (-2 * zFar * zNear) / (zFar - zNear);
 
-	mat4 ret;
+	mat4 m = mat4(); // Start with identity matrix
 
-	// Row 1
-	ret[0][0] = d / aspect;
-	ret[0][1] = 0; // TODO check if these initialisations to 0 are unnecessary.
-	ret[0][2] = 0;
-	ret[0][3] = 0;
+	m[0][0] = d / aspect;
 
-	// Row 2
-	ret[1][0] = 0;
-	ret[1][1] = d;
-	ret[1][2] = 0;
-	ret[1][3] = 0;
+	m[1][1] = d;
 
-	// Row 3
-	ret[2][0] = 0;
-	ret[2][1] = 0;
-	ret[2][2] = A;
-	ret[2][3] = B;
+	m[2][2] = A;
+	m[2][3] = B;
 
-	// Row 4
-	ret[3][0] = 0;
-	ret[3][1] = 0;
-	ret[3][2] = -1;
-	ret[3][3] = 0;
+	m[3][2] = -1;
+	m[3][3] = 0;
 	
 	// Convert to column-major.
-	return glm::transpose(ret);
+	return glm::transpose(m);
 }
 
 mat4 Transform::scale(const float &sx, const float &sy, const float &sz) 
 {
-    mat4 ret;
+    mat4 m = mat4(); // Start with identity matrix
     
-	// Row 1
-	ret[0][0] = sx;
-	ret[0][1] = 0;
-	ret[0][2] = 0;
-	ret[0][3] = 0;
+	m[0][0] = sx;
+	m[1][1] = sy;
+	m[2][2] = sz;
+	// sw = 1
 
-	// Row 2
-	ret[1][0] = 0;
-	ret[1][1] = sy;
-	ret[1][2] = 0;
-	ret[1][3] = 0;
-	
-	// Row 3
-	ret[2][0] = 0;
-	ret[2][1] = 0;
-	ret[2][2] = sz;
-	ret[2][3] = 0;
-
-	// Row 4
-	ret[3][0] = 0;
-	ret[3][1] = 0;
-	ret[3][2] = 0;
-	ret[3][3] = 1; // sw = 1
-
-	// Convert to column-major
-	return glm::transpose(ret);
+	// Conversion to column-major is unnecessary as matrix is diagonal
+	return m;
 }
 
 mat4 Transform::translate(const float &tx, const float &ty, const float &tz) 
 {
-    mat4 ret;
+    mat4 m = mat4(); // Start with identity
     
-	// Row 1
-	ret[0][0] = 1;
-	ret[0][1] = 0;
-	ret[0][2] = 0;
-	ret[0][3] = tx;
-
-	// Row 2
-	ret[1][0] = 0;
-	ret[1][1] = 1;
-	ret[1][2] = 0;
-	ret[1][3] = ty;
-
-	// Row 3
-	ret[2][0] = 0;
-	ret[2][1] = 0;
-	ret[2][2] = 1;
-	ret[2][3] = tz;
-
-	// Row 4
-	ret[3][0] = 0;
-	ret[3][1] = 0;
-	ret[3][2] = 0;
-	ret[3][3] = 1;
+	m[0][3] = tx;
+	m[1][3] = ty;
+	m[2][3] = tz;
 
 	// Convert to column-major
-	return glm::transpose(ret);
+	return glm::transpose(m);
 }
 
 // To normalize the up direction and construct a coordinate frame.  
