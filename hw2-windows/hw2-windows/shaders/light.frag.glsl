@@ -48,9 +48,13 @@ void main (void)
 {       
     if (enablelighting) {
 		const vec3 eyePosition = vec3(0, 0, 0);
-		vec3 myPosition = myvertex.xyz / myvertex.w;
-		vec3 eyeDirection = normalize(eyePosition - myPosition);
-		vec3 normal = normalize(mynormal);
+
+		vec4 myPosition4 = modelview * myvertex;
+		vec3 myPosition3 = myPosition4.xyz / myPosition4.w;
+
+		vec3 eyeDirection = normalize(eyePosition - myPosition3);
+
+		vec3 normal = normalize(mat3(transpose(inverse(modelview))) * mynormal);
 
 		vec4 finalcolor = ambient;
 
@@ -62,13 +66,13 @@ void main (void)
 		for (int i = 0; i < numused; i++) {
 			if (abs(lightposn[i].w) > 0.00001) // Point
 			{
-				lightPosition4 = modelview * lightposn[i];
+				lightPosition4 = lightposn[i];
 				lightPosition3 = lightPosition4.xyz / lightPosition4.w; // TODO what when w = 0?
-				lightDirection = normalize(lightPosition3 - myPosition); 
+				lightDirection = normalize(lightPosition3 - myPosition3); 
 			}
 			else // Directional
 			{
-				lightPosition4 = modelview * lightposn[i];
+				lightPosition4 = lightposn[i];
 				lightDirection = normalize(lightPosition4.xyz);
 			}
 			h = normalize(lightDirection + eyeDirection);
