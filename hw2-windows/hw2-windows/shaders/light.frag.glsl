@@ -49,34 +49,34 @@ void main (void)
     if (enablelighting) {
 		const vec3 eyePosition = vec3(0, 0, 0);
 
-		vec4 myPosition4 = modelview * myvertex;
+		vec4 myPosition4 = modelview * myvertex;  // Position was not transformed in vertex shader, so we do it here.
 		vec3 myPosition3 = myPosition4.xyz / myPosition4.w;
 
 		vec3 eyeDirection = normalize(eyePosition - myPosition3);
 
-		vec3 normal = normalize(mat3(transpose(inverse(modelview))) * mynormal);
+		vec3 normal = normalize(mat3(transpose(inverse(modelview))) * mynormal);  // Normal was not transformed in vertex shader, so we do it here
 
 		vec4 finalcolor = ambient;
 
 		vec4 lightPosition4;
 		vec3 lightPosition3;
 		vec3 lightDirection;
-		vec3 h;
+		vec3 halfAngleVector;
 
 		for (int i = 0; i < numused; i++) {
-			if (abs(lightposn[i].w) > 0.00001) // Point
+			if (abs(lightposn[i].w) > 0.00001) // Point light, w != 0, with small tolerance for float error.
 			{
 				lightPosition4 = lightposn[i];
-				lightPosition3 = lightPosition4.xyz / lightPosition4.w; // TODO what when w = 0?
+				lightPosition3 = lightPosition4.xyz / lightPosition4.w; 
 				lightDirection = normalize(lightPosition3 - myPosition3); 
 			}
-			else // Directional
+			else // Directional light
 			{
 				lightPosition4 = lightposn[i];
 				lightDirection = normalize(lightPosition4.xyz);
 			}
-			h = normalize(lightDirection + eyeDirection);
-			finalcolor += ComputeLight(lightDirection, lightcolor[i], normal, h);
+			halfAngleVector = normalize(lightDirection + eyeDirection);
+			finalcolor += ComputeLight(lightDirection, lightcolor[i], normal, halfAngleVector);
 		}
 
         fragColor = finalcolor; 
