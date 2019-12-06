@@ -1,5 +1,6 @@
 #pragma once
 #include "Shape.h"
+#include "Vertex.h"
 
 
 /*
@@ -18,6 +19,8 @@ a vertex is (x, y, z)
 class Triangle :
 	public Shape
 {
+
+
 	private:
 		Vertex a;
 		Vertex b;

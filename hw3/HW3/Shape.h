@@ -1,4 +1,5 @@
 #pragma once
+#include "Color.h"
 
 // Contains the class Shape, which will be subclassed by Sphere and Triangle
 

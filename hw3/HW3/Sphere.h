@@ -1,5 +1,6 @@
 #pragma once
 #include "Shape.h"
+#include "Point.h"
 
 /*
 A sphere has:
