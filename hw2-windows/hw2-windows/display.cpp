@@ -46,9 +46,7 @@ void display()
   glClearColor(0, 0, 1, 0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   // Set up the camera view
-
   // Either use the built-in lookAt function or the lookAt implemented by the user.
   if (useGlu) {
     modelview = glm::lookAt(eye,center,up); 
@@ -65,69 +63,48 @@ void display()
     glUniform1i(enablelighting,true);
 	glUniform1i(numusedcol, numused);
 
-	// TODO do i translate here or in the shader?
+	// Opted to translate the light positions here, but could equally do it in the fragment shader.
 	for (int i = 0; i < numused; i++) {
-		GLfloat inputVec[4];
+		GLfloat inputVec[4]; // Temporary array to store each vector
 		for (int j = 0; j < 4; j++) {
 			inputVec[j] = lightposn[i * 4 + j];
 		}
-		GLfloat outputVec[4];
-		transformvec(inputVec, outputVec); // TODO check
+		GLfloat outputVec[4]; // Temporary array to store each transformed vector
+		transformvec(inputVec, outputVec);
 		for (int j = 0; j < 4; j++) {
 			lightransf[i * 4 + j] = outputVec[j];
 		}
 	}
-	glUniform4fv(lightpos, numused, lightransf); 
+	glUniform4fv(lightpos, numused, lightransf); // Transformed light positions are sent to the fragment shader.
 	glUniform4fv(lightcol, numused, lightcolor);
-
-	// TODO delete these comments once satisfied the code works.
-    // YOUR CODE FOR HW 2 HERE.  
-    // You need to pass the light positions and colors to the shader. 
-    // glUniform4fv() and similar functions will be useful. See FAQ for help with these functions.
-    // The lightransf[] array in variables.h and transformvec() might also be useful here.
-    // Remember that light positions must be transformed by modelview.  
 
   } else {
     glUniform1i(enablelighting,false); 
   }
 
   stack <mat4> transfstack;
-  transfstack.push(modelview);  // identity
+  transfstack.push(modelview);  // Start with modelview
 
   // Transformations for objects, involving translation and scaling 
-  mat4 sc(1.0) , tr(1.0), transf(1.0); 
-  sc = Transform::scale(sx,sy,1.0); 
-  tr = Transform::translate(tx,ty,0.0); 
-  //rightmultiply(modelview, transfstack);
-  rightmultiply(tr, transfstack);
-  rightmultiply(sc, transfstack);
+  mat4 scaleMatrix = Transform::scale(sx,sy,1.0);
+  mat4 translationMatrix = Transform::translate(tx,ty,0.0);
 
-  // YOUR CODE FOR HW 2 HERE.  
-  // You need to use scale, translate and modelview to 
-  // set up the net transformation matrix for the objects.  
-  // Account for GLM issues, matrix order (!!), etc.  
-  
-  // The object draw functions will need to further modify the top of the stack,
+  rightmultiply(translationMatrix, transfstack);
+  rightmultiply(scaleMatrix, transfstack);
 
-  // so assign whatever transformation matrix you intend to work with to modelview
-  // stack for modelview?
-  // rather than use a uniform variable for that.
-  //transf = tr * sc;
-  //modelview = transf * modelview;
-  modelview = transfstack.top();
+  // modelview still points to the matrix at the top of the stack.
   
   for (int i = 0 ; i < numobjects ; i++) {
     object* obj = &(objects[i]); // Grabs an object struct.
-    // YOUR CODE FOR HW 2 HERE. 
-    // Set up the object transformations 
-    // And pass in the appropriate material properties
-    // Again glUniform() related functions will be useful
+    
+	// Pass the material properties to the fragment shader for this object.
 	glUniform4fv(ambientcol, 1, obj->ambient);
 	glUniform4fv(diffusecol, 1, obj->diffuse);
 	glUniform4fv(specularcol, 1, obj->specular);
 	glUniform4fv(emissioncol, 1, obj->specular);
 	glUniform1f(shininesscol, obj->shininess);
 
+	// Set up the object transformations
 	transfstack.push(transfstack.top());
 	rightmultiply(obj->transform, transfstack);
 	modelview = transfstack.top();
