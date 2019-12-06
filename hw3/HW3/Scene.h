@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include "Shape.h"
+#include "Light.h"
 
 
 // Contains class to contain scene description
@@ -20,15 +22,16 @@ addLight(Light)
 class Scene
 {
 	public:
+		Scene(int width, int height);
 		Scene(int width, int height, Color ambient_global);
 		void addShape(Shape shape);
 		void addLight(Light light);
 
 	private:
-		int width;
-		int height;
+		const int width;
+		const int height;
 		std::vector<Shape> shapes;
 		std::vector<Light> lights;
-		Color ambient_global;
+		const Color ambient_global;
 };
 

@@ -18,13 +18,15 @@ transform -> a matrix describing the transforms applied to it
 
 */
 
-
-
+#ifndef GLM_FORCE_RADIANS
+#define GLM_FORCE_RADIANS
+#endif
+#include <glm/glm.hpp>
 
 class Shape
 {
 	public:
-		Shape(Color diffuse, Color specular, float shininess, Color emission, Color ambient, mat4 transform);
+		Shape(Color diffuse, Color specular, float shininess, Color emission, Color ambient, glm::mat4 transform);
 
 	private:
 		Color diffuse;
@@ -33,6 +35,6 @@ class Shape
 		Color emission;
 		Color ambient; // Maybe null
 
-		mat4 transform;
+		glm::mat4 transform;
 };
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "Color.h"
+#include "Attenuation.h"
 
 /*
 A light has
@@ -11,11 +12,11 @@ attenuation (const, linear, quadratic)
 
 class Light
 {
+	public:
+		Light(Color color, Attenuation attenuation);
 
 	private:
-		Color color;
-		float attenuation_constant; // TODO define struct for attenuation
-		float attenuation_linear;
-		float attenuation_quadratic;
+		const Color color;
+		const Attenuation attenuation;
 };
 
