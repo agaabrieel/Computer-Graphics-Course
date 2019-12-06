@@ -133,7 +133,7 @@ mat4 Transform::scale(const float &sx, const float &sy, const float &sz)
 	ret[3][0] = 0;
 	ret[3][1] = 0;
 	ret[3][2] = 0;
-	ret[3][3] = 1;
+	ret[3][3] = 1; // sw = 1
 
 	// Convert to column-major
 	return glm::transpose(ret);

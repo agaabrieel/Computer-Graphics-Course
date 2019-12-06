@@ -92,15 +92,15 @@ void display()
   }
 
   stack <mat4> transfstack;
-  transfstack.push(mat4(1.0));  // identity
+  transfstack.push(modelview);  // identity
 
   // Transformations for objects, involving translation and scaling 
   mat4 sc(1.0) , tr(1.0), transf(1.0); 
   sc = Transform::scale(sx,sy,1.0); 
   tr = Transform::translate(tx,ty,0.0); 
+  //rightmultiply(modelview, transfstack);
   rightmultiply(tr, transfstack);
   rightmultiply(sc, transfstack);
-  rightmultiply(modelview, transfstack);
 
   // YOUR CODE FOR HW 2 HERE.  
   // You need to use scale, translate and modelview to 
