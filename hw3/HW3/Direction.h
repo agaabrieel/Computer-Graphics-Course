@@ -19,6 +19,7 @@ class Direction
 {
 	public:
 		Direction(float x, float y, float z);
+		~Direction();
 
 		float x() const;
 		float y() const;

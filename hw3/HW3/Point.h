@@ -16,6 +16,7 @@ class Point
 {
 	public:
 		Point(float x, float y, float z);
+		~Point();
 
 		float x() const;
 		float y() const;

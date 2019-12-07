@@ -38,6 +38,7 @@ class TransformStack
 {
 	public:
 		TransformStack(); // Do we start with identity?
+		~TransformStack();
 
 		glm::mat4& top();
 

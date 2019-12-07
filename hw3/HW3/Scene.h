@@ -35,6 +35,7 @@ class Scene
 	public:
 		Scene(int width, int height);
 		Scene(int width, int height, const Color& ambient_global);
+		~Scene();
 
 		void addShape(const Shape& shape);
 		void addLight(const Light& light);

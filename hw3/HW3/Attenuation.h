@@ -6,6 +6,7 @@ class Attenuation
 {
 	public:
 		Attenuation(float constant, float linear, float quadratic);
+		~Attenuation();
 
 		// Getters
 		float constant() const;

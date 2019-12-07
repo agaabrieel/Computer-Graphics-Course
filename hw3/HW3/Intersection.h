@@ -15,6 +15,7 @@ class Intersection
 {
 	public:
 		Intersection(const Shape& shape, const Point& point);
+		~Intersection();
 
 		const Shape& shape() const;
 		const Point& point() const;

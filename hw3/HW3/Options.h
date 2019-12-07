@@ -11,6 +11,7 @@ class Options
 {
 	public:
 		Options(int maxdepth, const char* out_file_name);
+		~Options();
 
 		int maxdepth() const;
 		char* out_file_name() const;

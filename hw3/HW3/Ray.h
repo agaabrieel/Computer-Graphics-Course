@@ -15,6 +15,7 @@ class Ray
 {
 	public:
 		Ray(const Point& origin, const Direction& direction);
+		~Ray();
 
 		Point& origin() const;
 		Direction& direction() const;

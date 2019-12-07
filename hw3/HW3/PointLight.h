@@ -15,6 +15,7 @@ class PointLight :
 {
 	public:
 		PointLight(const Color& color, const Attenuation& attenuation, const Point& point);
+		~PointLight();
 
 		Point& point() const;
 

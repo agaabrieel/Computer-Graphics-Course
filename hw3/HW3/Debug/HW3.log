@@ -1,17 +1,5 @@
 ﻿  Attenuation.cpp
-  Camera.cpp
-  Color.cpp
-  Direction.cpp
-  DirectionalLight.cpp
-  Intersection.cpp
-  Light.cpp
-  Point.cpp
-  PointLight.cpp
-  Ray.cpp
-  Scene.cpp
-  Shape.cpp
-  Sphere.cpp
+  Options.cpp
   TransformStack.cpp
-  Triangle.cpp
   Generating Code...
   HW3.vcxproj -> C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\Debug\HW3.exe

@@ -18,6 +18,7 @@ class Vertex
 {
 	public:
 		Vertex(float x, float y, float z);
+		~Vertex();
 
 		float x() const;
 		float y() const;

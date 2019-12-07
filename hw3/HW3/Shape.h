@@ -32,6 +32,7 @@ class Shape
 {
 	public:
 		Shape(const Color& diffuse, const Color& specular, float shininess, const Color& emission, const Color& ambient, const glm::mat4& transform);
+		~Shape();
 
 		// Getters
 		Color& diffuse() const; // We may not need to provide these public getters: maybe there is a way to do the shading by asking the shape to do it?

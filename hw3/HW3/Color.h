@@ -14,6 +14,7 @@ class Color
 {
 	public:
 		Color(float red, float green, float blue);
+		~Color();
 
 		float red() const;
 		float green() const;
