@@ -161,7 +161,7 @@
     <ClCompile Include="Intersection.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MatrixStack.cpp" />
+    <ClCompile Include="TransformStack.cpp" />
     <ClCompile Include="Options.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="PointLight.cpp" />
@@ -170,7 +170,6 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shape.cpp" />
     <ClCompile Include="Sphere.cpp" />
-    <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Vertex.cpp" />
   </ItemGroup>
@@ -182,7 +181,7 @@
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="Intersection.h" />
     <ClInclude Include="Light.h" />
-    <ClInclude Include="MatrixStack.h" />
+    <ClInclude Include="TransformStack.h" />
     <ClInclude Include="Options.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="PointLight.h" />
@@ -191,7 +190,6 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="Sphere.h" />
-    <ClInclude Include="Transform.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>

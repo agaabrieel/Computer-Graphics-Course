@@ -81,9 +81,6 @@
     <ClCompile Include="Options.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Source Files\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="Attenuation.cpp">
       <Filter>Source Files\Model\Lights</Filter>
     </ClCompile>
@@ -96,7 +93,7 @@
     <ClCompile Include="Intersection.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="MatrixStack.cpp">
+    <ClCompile Include="TransformStack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -140,9 +137,6 @@
     <ClInclude Include="Options.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="Attenuation.h">
       <Filter>Header Files\Model\Lights</Filter>
     </ClInclude>
@@ -155,7 +149,7 @@
     <ClInclude Include="Intersection.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
-    <ClInclude Include="MatrixStack.h">
+    <ClInclude Include="TransformStack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
