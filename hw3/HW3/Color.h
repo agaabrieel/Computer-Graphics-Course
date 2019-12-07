@@ -14,9 +14,14 @@ class Color
 {
 	public:
 		Color(float red, float green, float blue);
+
+		float red() const;
+		float green() const;
+		float blue() const;
+
 	private:
-		float red;
-		float green;
-		float blue;
+		const float _red;
+		const float _green;
+		const float _blue;
 };
 

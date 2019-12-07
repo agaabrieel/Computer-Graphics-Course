@@ -19,9 +19,13 @@ class Vertex
 	public:
 		Vertex(float x, float y, float z);
 
+		float x() const;
+		float y() const;
+		float z() const;
+
 	private:
-		float x;
-		float y;
-		float z;
+		const float _x;
+		const float _y;
+		const float _z;
 };
 

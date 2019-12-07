@@ -37,12 +37,21 @@ class Scene
 		void addShape(Shape shape);
 		void addLight(Light light);
 
+		// We probably don't need getters in this class since raytracing is handled by the scene. For now I won't add any.
+		 
+		Intersection intersect(Ray ray) const;  // finds the object in the scene that is closest to the camera and intersects the ray
+		//returnType raytrace() const;
+			// Returns an image of the scene raytraced.
+			// for each pixel, traces a ray and determines the object that intersects
+			// finds the color using the intersection. 
+			// Return type: a bitmap ? an array of bytes?
+
 	private:
 		const Camera camera;
 		const int width;
 		const int height;
-		std::vector<Shape> shapes;
-		std::vector<Light> lights;
+		const std::vector<Shape> shapes;
+		const std::vector<Light> lights;
 		const Color ambient_global;
 };
 

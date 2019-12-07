@@ -16,7 +16,9 @@ class DirectionalLight :
 	public:
 		DirectionalLight(Color color, Attenuation attenuation, Direction direction);
 
+		Direction& direction() const;
+
 	private:
-		Direction direction;
+		const Direction _direction;
 };
 

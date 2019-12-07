@@ -20,10 +20,15 @@ class Camera
 	public:
 		Camera(Point lookfrom, Point lookat, Direction up, float fovy_radians);
 
+		Point& lookfrom() const;
+		Point& lookat() const;
+		Direction& up() const;
+		float fovy_radians() const;
+
 	private:
-		Point lookfrom;
-		Point lookat;
-		Direction up;
-		float fovy_radians;
+		const Point _lookfrom;
+		const Point _lookat;
+		const Direction _up;
+		const float _fovy_radians;
 };
 

@@ -10,13 +10,16 @@ attenuation (const, linear, quadratic)
 
 */
 
-class Light
+class Light  // This class should be abstract, but I can deal with that later.
 {
 	public:
 		Light(Color color, Attenuation attenuation);
 
+		Color& color() const;
+		Attenuation& attenuation() const;
+
 	private:
-		const Color color;
-		const Attenuation attenuation;
+		const Color _color;
+		const Attenuation _attenuation;
 };
 

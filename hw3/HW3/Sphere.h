@@ -14,8 +14,14 @@ radius
 class Sphere :
 	public Shape
 {
+	public:
+		Sphere(Color diffuse, Color specular, float shininess, Color emission, Color ambient, glm::mat4 transform, Point center, float radius);
+		
+		Point& center() const;
+		float radius() const;
+
 	private:
-		Point center;
-		float radius;
+		const Point _center;
+		const float _radius;
 };
 

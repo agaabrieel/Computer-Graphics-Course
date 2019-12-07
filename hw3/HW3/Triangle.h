@@ -19,12 +19,17 @@ a vertex is (x, y, z)
 class Triangle :
 	public Shape
 {
+	public:
+		Triangle(Color diffuse, Color specular, float shininess, Color emission, Color ambient, glm::mat4 transform, Vertex a, Vertex b, Vertex c);
 
+		Vertex& a() const;
+		Vertex& b() const;
+		Vertex& c() const;
 
 	private:
-		Vertex a;
-		Vertex b;
-		Vertex c;
+		const Vertex _a;
+		const Vertex _b;
+		const Vertex _c;
 
 };
 

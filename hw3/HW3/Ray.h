@@ -16,8 +16,11 @@ class Ray
 	public:
 		Ray(Point origin, Direction direction);
 
+		Point& origin() const;
+		Direction& direction() const;
+
 	private:
-		const Point origin;
-		const Direction direction;
+		const Point _origin;
+		const Direction _direction;
 };
 
