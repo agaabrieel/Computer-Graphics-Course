@@ -16,8 +16,8 @@ class Intersection
 	public:
 		Intersection(Shape shape, Point point);
 
-		Shape& shape() const;
-		Point& point() const;
+		const Shape& shape() const;
+		const Point& point() const;
 
 	private:
 		const Shape _shape;

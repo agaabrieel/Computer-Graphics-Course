@@ -1,6 +1,9 @@
 #pragma once
 #include <stack>
-#include <glm\detail\type_mat.hpp>  // Maybe use the more general kind?
+#ifndef GLM_FORCE_RADIANS
+#define GLM_FORCE_RADIANS
+#endif
+#include <glm/glm.hpp>
 
 /*
 A Matrix Stack has:
@@ -20,7 +23,7 @@ right multiply the top of the stack
 class MatrixStack
 {
 	public:
-		MatrixStack(); // Do we start with identity
+		MatrixStack(); // Do we start with identity?
 
 		glm::mat4& top();
 

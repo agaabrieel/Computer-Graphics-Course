@@ -3,6 +3,7 @@
 #include "Shape.h"
 #include "Light.h"
 #include "Camera.h"
+#include "Intersection.h"
 
 
 // Contains class to contain scene description

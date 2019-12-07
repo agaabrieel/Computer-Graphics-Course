@@ -161,6 +161,7 @@
     <ClCompile Include="Intersection.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MatrixStack.cpp" />
     <ClCompile Include="Options.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="PointLight.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="Intersection.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="MatrixStack.h" />
     <ClInclude Include="Options.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="PointLight.h" />

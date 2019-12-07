@@ -26,7 +26,6 @@ A Shape can:
 #define GLM_FORCE_RADIANS
 #endif
 #include <glm/glm.hpp>
-#include "Intersection.h"
 #include "Ray.h"
 
 class Shape
@@ -43,10 +42,10 @@ class Shape
 		glm::mat4& transform() const; // Is this the best name for this? It's the name from the previous project, but it's not very clear.
 															// Maybe something like: worldToObject?
 
-		Intersection intersect(Ray ray) const;
+		Point* intersect(Ray ray) const;
 			// determines the intersection point of the given object with the ray, if any
 			// Presumably, uses world coordinates to determine the intersection?
-			// Returns an intersection containing this shape and the location of the hit.
+			// Returns the location of the hit, or a null pointer if there is no valid intersection
 
 	private:
 		const Color _diffuse;
