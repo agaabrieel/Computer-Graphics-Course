@@ -4,6 +4,7 @@
 #include "Light.h"
 #include "Camera.h"
 #include "Intersection.h"
+#include "Options.h"
 
 
 // Contains class to contain scene description
@@ -33,12 +34,12 @@ raytrace() // Returns an image of the scene raytraced.
 class Scene
 {
 	public:
-		Scene(int width, int height);
-		Scene(int width, int height, Color ambient_global);
+		Scene(int width, int height, Camera camera, Options options);
+		Scene(int width, int height, Camera camera, Options options, Color ambient_global);
 		~Scene();
 
-		void addShape(const Shape& shape);
-		void addLight(const Light& light);
+		void addShape(Shape shape);
+		void addLight(Light light);
 
 		// We probably don't need getters in this class since raytracing is handled by the scene. For now I won't add any.
 		 
@@ -50,11 +51,12 @@ class Scene
 			// Return type: a bitmap ? an array of bytes?
 
 	private:
-		const Camera camera;
-		const int width;
-		const int height;
-		const std::vector<Shape> shapes;
-		const std::vector<Light> lights;
-		const Color ambient_global;
+		const Camera _camera;
+		const int _width;
+		const int _height;
+		std::vector<Shape> _shapes;
+		std::vector<Light> _lights;
+		const Options _options;
+		const Color _ambient_global;
 };
 

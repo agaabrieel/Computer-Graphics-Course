@@ -1,21 +1,16 @@
-﻿  Attenuation.cpp
-  Camera.cpp
-  Color.cpp
+﻿  Camera.cpp
   Direction.cpp
   DirectionalLight.cpp
   Intersection.cpp
   Light.cpp
+  TransformStack.cpp
   Options.cpp
   Point.cpp
   PointLight.cpp
   Ray.cpp
+  ReadFile.cpp
   Scene.cpp
-  Shape.cpp
-  Sphere.cpp
-  TransformStack.cpp
   Triangle.cpp
   Vertex.cpp
   Generating Code...
-Light.obj : error LNK2019: unresolved external symbol "public: __thiscall Color::~Color(void)" (??1Color@@QAE@XZ) referenced in function "protected: __thiscall Light::Light(class Color,class Attenuation)" (??0Light@@IAE@VColor@@VAttenuation@@@Z)
-Light.obj : error LNK2019: unresolved external symbol "public: __thiscall Attenuation::~Attenuation(void)" (??1Attenuation@@QAE@XZ) referenced in function "protected: __thiscall Light::Light(class Color,class Attenuation)" (??0Light@@IAE@VColor@@VAttenuation@@@Z)
-C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\Debug\HW3.exe : fatal error LNK1120: 2 unresolved externals
+  HW3.vcxproj -> C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\Debug\HW3.exe

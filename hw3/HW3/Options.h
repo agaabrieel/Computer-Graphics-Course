@@ -14,7 +14,7 @@ class Options
 		~Options();
 
 		int maxdepth() const;
-		char* out_file_name() const;
+		const char* out_file_name() const;
 
 	private:
 		const int _maxdepth;

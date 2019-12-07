@@ -50,6 +50,6 @@ class TransformStack
 		void rotate(const float degrees, const Direction& axis);
 
 	private:
-		const std::stack<glm::mat4> _transformationStack;
+		std::stack<glm::mat4> _transformationStack;
 };
 
