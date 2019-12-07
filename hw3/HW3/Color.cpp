@@ -11,3 +11,8 @@ float Color::red() const { return _red; }
 float Color::green() const { return _green; }
 
 float Color::blue() const { return _blue; }
+
+BYTE Color::color_as_byte() const
+{
+	return 0; // TODO
+}

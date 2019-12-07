@@ -1,5 +1,7 @@
 #pragma once
 
+#include <FreeImage.h>
+
 // Struct for an RGB color
 // We can bring all these small files together into a header file such as utilities but for now I'll keep them separate
 
@@ -19,6 +21,8 @@ class Color
 		float red() const;
 		float green() const;
 		float blue() const;
+
+		BYTE color_as_byte() const;
 
 	private:
 		const float _red;

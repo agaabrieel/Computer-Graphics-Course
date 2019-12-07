@@ -28,10 +28,9 @@ A Shape can:
 #include <glm/glm.hpp>
 #include "Ray.h"
 
-class Shape
+class Shape  // abstract
 {
 	public:
-		Shape(Color diffuse, Color specular, float shininess, Color emission, Color ambient, glm::mat4 transform);
 		~Shape();
 
 		// Getters
@@ -43,10 +42,13 @@ class Shape
 		glm::mat4 transform() const; // Is this the best name for this? It's the name from the previous project, but it's not very clear.
 															// Maybe something like: worldToObject?
 
-		Point* intersect(Ray ray) const;
+		virtual Point* intersect(Ray ray) const = 0;
 			// determines the intersection point of the given object with the ray, if any
 			// Presumably, uses world coordinates to determine the intersection?
 			// Returns the location of the hit, or a null pointer if there is no valid intersection
+
+	protected:
+		Shape(Color diffuse, Color specular, float shininess, Color emission, Color ambient, glm::mat4 transform);
 
 	private:
 		const Color _diffuse;

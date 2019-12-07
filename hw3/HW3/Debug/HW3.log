@@ -1,16 +1,5 @@
-﻿  Camera.cpp
-  Direction.cpp
-  DirectionalLight.cpp
-  Intersection.cpp
-  Light.cpp
-  TransformStack.cpp
+﻿  Color.cpp
   Options.cpp
-  Point.cpp
-  PointLight.cpp
-  Ray.cpp
-  ReadFile.cpp
   Scene.cpp
-  Triangle.cpp
-  Vertex.cpp
   Generating Code...
   HW3.vcxproj -> C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\Debug\HW3.exe

@@ -14,14 +14,14 @@ The Point where the ray hit
 class Intersection
 {
 	public:
-		Intersection(Shape shape, Point point);
+		Intersection(Shape* shape, Point point);
 		~Intersection();
 
-		const Shape shape() const;
+		const Shape* shape() const;
 		const Point point() const;
 
 	private:
-		const Shape _shape;
+		const Shape* _shape;
 		const Point _point;
 };
 

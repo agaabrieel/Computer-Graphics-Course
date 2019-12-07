@@ -10,16 +10,15 @@ attenuation (const, linear, quadratic)
 
 */
 
-class Light  // This class should be abstract, but I can deal with that later.
+class Light  // abstract
 {
 	public:
-		~Light();
+		Color color() const;
+		Attenuation attenuation() const;
+		virtual ~Light() = 0;
 
 	protected:
 		Light(Color color, Attenuation attenuation);
-
-		Color color() const;
-		Attenuation attenuation() const;
 
 	private:
 		const Color _color;

@@ -18,8 +18,3 @@ Color Shape::emission() const {	return _emission; }
 Color Shape::ambient() const { return _ambient; }
 
 glm::mat4 Shape::transform() const { return _transform; }
-
-Point* Shape::intersect(Ray ray) const
-{
-	return nullptr; // TODO
-}

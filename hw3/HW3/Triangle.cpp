@@ -7,8 +7,13 @@ Triangle::~Triangle()
 {
 }
 
-Vertex Triangle::a() const { return _a; }
+Point* Triangle::intersect(Ray ray) const
+{
+	return nullptr; //TODO
+}
 
-Vertex Triangle::b() const { return _b; }
+//Vertex Triangle::a() const { return _a; }
 
-Vertex Triangle::c() const { return _c; }
+//Vertex Triangle::b() const { return _b; }
+
+//Vertex Triangle::c() const { return _c; }

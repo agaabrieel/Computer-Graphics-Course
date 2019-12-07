@@ -1,10 +1,11 @@
 #pragma once
 #include <vector>
 #include "Shape.h"
-#include "Light.h"
 #include "Camera.h"
 #include "Intersection.h"
 #include "Options.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
 
 
 // Contains class to contain scene description
@@ -34,14 +35,19 @@ raytrace() // Returns an image of the scene raytraced.
 class Scene
 {
 	public:
-		Scene(int width, int height, Camera camera, Options options);
-		Scene(int width, int height, Camera camera, Options options, Color ambient_global);
+		Scene(int width, int height, Camera camera);
+		Scene(int width, int height, Camera camera, Color ambient_global);
 		~Scene();
 
-		void addShape(Shape shape);
-		void addLight(Light light);
+		void addShape(Shape* shape);  // We can store all Shapes together in the same list because we only need to call the method intersect(Ray)
+										// on them, which all Shape subclasses must implement separately
+		void addDirectionalLight(DirectionalLight directional_light);  // We must store separate lists of Light subclasses because we need to access
+		void addPointLight(PointLight point_light);						// different information from them - i.e. we need to know that a PointLight is
+																		// a PointLight, and not a DirectionalLight.
 
 		// We probably don't need getters in this class since raytracing is handled by the scene. For now I won't add any.
+
+		Ray rayThroughPixel(int i, int j) const; // Returns the ray that goes from the camera through the "viewing screen" at pixel with coords i, j
 		 
 		Intersection intersect(const Ray& ray) const;  // finds the object in the scene that is closest to the camera and intersects the ray
 		//returnType raytrace() const;
@@ -50,13 +56,19 @@ class Scene
 			// finds the color using the intersection. 
 			// Return type: a bitmap ? an array of bytes?
 
+		Color findColor(Intersection intersection) const; // Finds the appropriate color given the object and location in intersection
+
+		BYTE* raytrace(int max_recursion_depth) const; // Returns a byte array containing the pixels of the raytraced image
+			// Possibility: have the option maxdepth passed here
+						// don't pass the output file name to the scene, we can just pass back the byte array from here, and then main can write the file out.
+
 	private:
 		const Camera _camera;
 		const int _width;
 		const int _height;
-		std::vector<Shape> _shapes;
-		std::vector<Light> _lights;
-		const Options _options;
+		std::vector<Shape*> _shapes;
+		std::vector<DirectionalLight> _directional_lights;
+		std::vector<PointLight> _point_lights;
 		const Color _ambient_global;
 };
 

@@ -7,6 +7,8 @@ maxdepth
 output file name
 */
 
+// TODO consider deletion of this class in favour of a struct in the ReadFile namespace that houses the information.
+
 class Options
 {
 	public:

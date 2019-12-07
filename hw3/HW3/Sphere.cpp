@@ -10,3 +10,8 @@ Sphere::~Sphere()
 Point Sphere::center() const { return _center; }
 
 float Sphere::radius() const {	return _radius; }
+
+Point* Sphere::intersect(Ray ray) const 
+{
+	return nullptr; // TODO
+}

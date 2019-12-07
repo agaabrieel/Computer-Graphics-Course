@@ -2,33 +2,57 @@
 #include "Sphere.h" // TODO remove after implementing intersect
 
 
-Scene::Scene(int width, int height, Camera camera, Options options) :
-	Scene(width, height, camera, options, Color(0.2f, 0.2f, 0.2f)) {}
+Scene::Scene(int width, int height, Camera camera) :
+	Scene(width, height, camera, Color(0.2f, 0.2f, 0.2f)) {}
 
-Scene::Scene(int width, int height, Camera camera, Options options, Color ambient_global) :
-	_width(width), _height(height), _camera(camera), _options(options), _ambient_global(ambient_global)
+Scene::Scene(int width, int height, Camera camera, Color ambient_global) :
+	_width(width), _height(height), _camera(camera), _ambient_global(ambient_global)
 {
-	_shapes = std::vector<Shape>();
-	_lights = std::vector<Light>();
+	_shapes = std::vector<Shape*>();
+	_point_lights = std::vector<PointLight>();
+	_directional_lights = std::vector<DirectionalLight>();
 }
 
 Scene::~Scene()
 {
+	// Need to delete the Shapes and Lights?
 }
 
-void Scene::addShape(Shape shape)
+void Scene::addShape(Shape* shape)
 {
 	_shapes.push_back(shape);
 }
 
-void Scene::addLight(Light light)
+void Scene::addDirectionalLight(DirectionalLight directional_light)
 {
-	_lights.push_back(light);
+	_directional_lights.push_back(directional_light);
+}
+
+void Scene::addPointLight(PointLight point_light)
+{
+	_point_lights.push_back(point_light);
+}
+
+
+
+Ray Scene::rayThroughPixel(int i, int j) const
+{
+	return Ray(Point(0, 0, 0), Direction(0, 0, 0)); // TODO
 }
 
 Intersection Scene::intersect(const Ray& ray) const
 {
 	// Placeholder intersection
-	Intersection i = Intersection(Sphere(Color(0, 0, 0), Color(0, 0, 0), 0.0, Color(0, 0, 0), Color(0, 0, 0), glm::mat4(), Point(0, 0, 0), 0.0), Point(0, 0, 0));
+	Intersection i = Intersection(new Sphere(Color(0, 0, 0), Color(0, 0, 0), 0.0, Color(0, 0, 0), Color(0, 0, 0), glm::mat4(), Point(0, 0, 0), 0.0), Point(0, 0, 0));
 	return i; //TODO
+}
+
+Color Scene::findColor(Intersection intersection) const
+{
+	return Color(0, 0, 0); // TODO
+}
+
+BYTE* Scene::raytrace(int max_recursion_depth) const
+{
+	return nullptr; // TODO
 }
