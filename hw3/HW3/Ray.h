@@ -14,11 +14,11 @@ A Direction
 class Ray
 {
 	public:
-		Ray(const Point& origin, const Direction& direction);
+		Ray(Point origin, Direction direction);
 		~Ray();
 
-		Point& origin() const;
-		Direction& direction() const;
+		Point origin() const;
+		Direction direction() const;
 
 	private:
 		const Point _origin;

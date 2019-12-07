@@ -14,10 +14,10 @@ class DirectionalLight :
 	public Light
 {
 	public:
-		DirectionalLight(const Color& color, const Attenuation& attenuation, const Direction& direction);
+		DirectionalLight(Color color, Attenuation attenuation, Direction direction);
 		~DirectionalLight();
 
-		Direction& direction() const;
+		Direction direction() const;
 
 	private:
 		const Direction _direction;

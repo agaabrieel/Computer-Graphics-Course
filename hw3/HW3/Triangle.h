@@ -20,13 +20,13 @@ class Triangle :
 	public Shape
 {
 	public:
-		Triangle(const Color& diffuse, const Color& specular, float shininess, const Color& emission, const Color& ambient, 
-			const glm::mat4& transform, const Vertex& a, const Vertex& b, const Vertex& c);
+		Triangle(Color diffuse, Color specular, float shininess, Color emission, Color ambient, 
+			glm::mat4 transform, Vertex a, Vertex b, Vertex c);
 		~Triangle();
 
-		Vertex& a() const;
-		Vertex& b() const;
-		Vertex& c() const;
+		Vertex a() const;
+		Vertex b() const;
+		Vertex c() const;
 
 	private:
 		const Vertex _a;

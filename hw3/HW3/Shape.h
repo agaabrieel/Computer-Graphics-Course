@@ -31,16 +31,16 @@ A Shape can:
 class Shape
 {
 	public:
-		Shape(const Color& diffuse, const Color& specular, float shininess, const Color& emission, const Color& ambient, const glm::mat4& transform);
+		Shape(Color diffuse, Color specular, float shininess, Color emission, Color ambient, glm::mat4 transform);
 		~Shape();
 
 		// Getters
-		Color& diffuse() const; // We may not need to provide these public getters: maybe there is a way to do the shading by asking the shape to do it?
-		Color& specular() const;		// Otherwise we are passing a lot of information around.
+		Color diffuse() const; // We may not need to provide these public getters: maybe there is a way to do the shading by asking the shape to do it?
+		Color specular() const;		// Otherwise we are passing a lot of information around.
 		float shininess() const;
-		Color& emission() const;
-		Color& ambient() const;
-		glm::mat4& transform() const; // Is this the best name for this? It's the name from the previous project, but it's not very clear.
+		Color emission() const;
+		Color ambient() const;
+		glm::mat4 transform() const; // Is this the best name for this? It's the name from the previous project, but it's not very clear.
 															// Maybe something like: worldToObject?
 
 		Point* intersect(Ray ray) const;
