@@ -163,7 +163,7 @@
     <ClCompile Include="Options.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="PointLight.cpp" />
-    <ClCompile Include="Raytracer.cpp" />
+    <ClCompile Include="Ray.cpp" />
     <ClCompile Include="ReadFile.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shape.cpp" />
@@ -182,7 +182,7 @@
     <ClInclude Include="Options.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="PointLight.h" />
-    <ClInclude Include="Raytracer.h" />
+    <ClInclude Include="Ray.h" />
     <ClInclude Include="ReadFile.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shape.h" />

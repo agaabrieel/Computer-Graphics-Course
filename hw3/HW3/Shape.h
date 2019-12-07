@@ -16,6 +16,10 @@ ambient (r, g, b) (possibly null, overrides the scene ambient lighting)
 
 transform -> a matrix describing the transforms applied to it
 
+A Shape can:
+// Intersect(Ray)
+	// determines the intersection point of the given object with the ray, if any
+
 */
 
 #ifndef GLM_FORCE_RADIANS
