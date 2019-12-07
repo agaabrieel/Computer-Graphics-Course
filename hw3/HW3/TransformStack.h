@@ -44,8 +44,8 @@ class TransformStack
 		void pushTransform();
 		void popTransform();
 
-		void scale(const float& sx, const float& sy, const float& sz);
-		void translate(const float& tx, const float& ty, const float& tz);
+		void scale(float sx, float sy, float sz);
+		void translate(float tx, float ty, float tz);
 		void rotate(const float degrees, const Direction& axis);
 
 	private:

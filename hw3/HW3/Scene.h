@@ -34,13 +34,14 @@ class Scene
 {
 	public:
 		Scene(int width, int height);
-		Scene(int width, int height, Color ambient_global);
-		void addShape(Shape shape);
-		void addLight(Light light);
+		Scene(int width, int height, const Color& ambient_global);
+
+		void addShape(const Shape& shape);
+		void addLight(const Light& light);
 
 		// We probably don't need getters in this class since raytracing is handled by the scene. For now I won't add any.
 		 
-		Intersection intersect(Ray ray) const;  // finds the object in the scene that is closest to the camera and intersects the ray
+		Intersection intersect(const Ray& ray) const;  // finds the object in the scene that is closest to the camera and intersects the ray
 		//returnType raytrace() const;
 			// Returns an image of the scene raytraced.
 			// for each pixel, traces a ray and determines the object that intersects

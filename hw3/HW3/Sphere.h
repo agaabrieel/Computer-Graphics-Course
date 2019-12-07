@@ -15,7 +15,8 @@ class Sphere :
 	public Shape
 {
 	public:
-		Sphere(Color diffuse, Color specular, float shininess, Color emission, Color ambient, glm::mat4 transform, Point center, float radius);
+		Sphere(const Color& diffuse, const Color& specular, float shininess, const Color& emission, const Color& ambient, 
+			const glm::mat4& transform, const Point& center, float radius);
 		
 		Point& center() const;
 		float radius() const;

@@ -10,7 +10,7 @@ output file name
 class Options
 {
 	public:
-		Options(int maxdepth, char out_file_name);
+		Options(int maxdepth, const char* out_file_name);
 
 		int maxdepth() const;
 		char* out_file_name() const;

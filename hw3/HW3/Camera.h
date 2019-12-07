@@ -18,7 +18,7 @@ fovy (angle in radians (?))
 class Camera
 {
 	public:
-		Camera(Point lookfrom, Point lookat, Direction up, float fovy_radians);
+		Camera(const Point& lookfrom, const Point& lookat, const Direction& up, float fovy_radians);
 
 		Point& lookfrom() const;
 		Point& lookat() const;

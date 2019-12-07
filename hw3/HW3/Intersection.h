@@ -14,7 +14,7 @@ The Point where the ray hit
 class Intersection
 {
 	public:
-		Intersection(Shape shape, Point point);
+		Intersection(const Shape& shape, const Point& point);
 
 		const Shape& shape() const;
 		const Point& point() const;
