@@ -102,7 +102,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 
 				else if (cmd == "camera") {
 					validinput = readvals(s, 10, values);
-					if (validinput && camera.get() == NULL) { // Only update camera if it has not already been setup. Could throw an error if it is redefined? TODO
+					if (validinput && camera.get() == NULL) { // TODO Only update camera if it has not already been setup. Could throw an error if it is redefined? 
 						Point lookfrom = Point(values[0], values[1], values[2]);
 						Point lookat = Point(values[3], values[4], values[5]);
 						Direction up = Direction(values[6], values[7], values[8]);
@@ -110,7 +110,6 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 						float fovy_radians = glm::radians(fovy_degrees);
 
 						camera.reset(new Camera(lookfrom, lookat, up, fovy_radians));
-						// TODO have to work out who will free this.
 					}
 				}
 

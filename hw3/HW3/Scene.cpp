@@ -17,7 +17,6 @@ Scene::Scene(int width, int height, Camera camera, Color ambient_global) :
 
 Scene::~Scene()
 {
-	// Need to delete the Shapes and Lights?
 }
 
 void Scene::addTriangle(Triangle triangle)
@@ -48,6 +47,10 @@ int Scene::height() const {	return _height; }
 
 Ray Scene::rayThroughPixel(int i, int j) const
 {
+
+
+
+
 	return Ray(Point(0, 0, 0), Direction(0, 0, 0)); // TODO
 }
 

@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdexcept>
 
-Direction::Direction(float x, float y, float z) : _x(x), _y(y), _z(z) {
+Direction::Direction(float x, float y, float z) : Vector(x, y, z) {
 
 	if (abs(x) < 0.0001 && abs(y) < 0.0001 && abs(z) < 0.0001) {
 		throw std::out_of_range("Direction vector must not be the zero vector.");
@@ -15,12 +15,6 @@ Direction::Direction(float x, float y, float z) : _x(x), _y(y), _z(z) {
 Direction::~Direction()
 {
 }
-
-float Direction::x() const { return _x; }
-
-float Direction::y() const { return _y; }
-
-float Direction::z() const { return _z; }
 
 void Direction::normalise()
 {

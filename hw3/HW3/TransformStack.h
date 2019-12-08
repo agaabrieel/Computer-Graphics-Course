@@ -51,5 +51,6 @@ class TransformStack
 
 	private:
 		std::stack<glm::mat4> _transformationStack;
+		void rightmultiply(const glm::mat4& M);
 };
 
