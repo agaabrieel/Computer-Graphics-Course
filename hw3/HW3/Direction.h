@@ -26,9 +26,9 @@ class Direction
 		float z() const;
 
 	private:
-		const float _x;
-		const float _y;
-		const float _z;
+		float _x;
+		float _y;
+		float _z;
 
 		void normalise();
 };
