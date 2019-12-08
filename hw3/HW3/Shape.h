@@ -42,6 +42,7 @@ class Shape  // abstract
 		glm::mat4 transform() const; // Is this the best name for this? It's the name from the previous project, but it's not very clear.
 															// Maybe something like: worldToObject?
 
+		// TODO consider returning smart pointer from intersect
 		virtual Point* intersect(Ray ray) const = 0;
 			// determines the intersection point of the given object with the ray, if any
 			// Presumably, uses world coordinates to determine the intersection?

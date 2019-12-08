@@ -23,11 +23,7 @@ class Triangle :
 		Triangle(Color diffuse, Color specular, float shininess, Color emission, Color ambient, 
 			glm::mat4 transform, Vertex a, Vertex b, Vertex c);
 		~Triangle();
-
-		//Vertex a() const;
-		//Vertex b() const;
-		//Vertex c() const;
-
+		
 		Point* intersect(Ray ray) const;
 
 	private:

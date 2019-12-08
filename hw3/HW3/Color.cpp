@@ -15,6 +15,11 @@ float Color::green() const { return _green; }
 
 float Color::blue() const { return _blue; }
 
+glm::vec3 Color::toGlmVec3()
+{
+	return glm::vec3(_red, _green, _blue);
+}
+
 RGBTRIPLE Color::to_freeimage_rgbtriple() const
 {
 	RGBTRIPLE triple;

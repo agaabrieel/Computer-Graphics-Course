@@ -6,6 +6,6 @@ Intersection::~Intersection()
 {
 }
 
-const Shape* Intersection::shape() const { return _shape; }
+Shape* Intersection::shape() { return _shape; }
 
-const Point Intersection::point() const { return _point; }
+Point Intersection::point() const { return _point; }

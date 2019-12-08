@@ -24,6 +24,7 @@ class Vertex
 		float y() const;
 		float z() const;
 
+
 	private:
 		const float _x;
 		const float _y;

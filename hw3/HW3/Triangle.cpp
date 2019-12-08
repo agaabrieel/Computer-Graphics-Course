@@ -11,9 +11,3 @@ Point* Triangle::intersect(Ray ray) const
 {
 	return nullptr; //TODO
 }
-
-//Vertex Triangle::a() const { return _a; }
-
-//Vertex Triangle::b() const { return _b; }
-
-//Vertex Triangle::c() const { return _c; }

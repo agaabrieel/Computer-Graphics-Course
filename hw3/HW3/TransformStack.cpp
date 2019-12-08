@@ -54,7 +54,7 @@ void TransformStack::translate(float tx, float ty, float tz)
 
 void TransformStack::rotate(float angle_radians, const Direction& axis)
 {
-	glm::vec3 axis_glm(axis.x, axis.y, axis.z); // TODO: Temporary kludge to save defining a bunch of vector functions. Could define them in Direction later.
+	glm::vec3 axis_glm(axis.x(), axis.y(), axis.z()); // TODO: Temporary kludge to save defining a bunch of vector functions. Could define them in Direction later.
 
 	float cos_rads = cos(angle_radians);
 	// Direction is already normalised.

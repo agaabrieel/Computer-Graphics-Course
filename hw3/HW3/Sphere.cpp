@@ -13,5 +13,5 @@ float Sphere::radius() const {	return _radius; }
 
 Point* Sphere::intersect(Ray ray) const 
 {
-	return nullptr; // TODO
+	return nullptr; // TODO implement Sphere-Ray intersection
 }

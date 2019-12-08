@@ -5,7 +5,6 @@
 #include "Triangle.h"
 #include "Camera.h"
 #include "Intersection.h"
-#include "Options.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
 
@@ -49,7 +48,6 @@ class Scene
 		void addPointLight(PointLight point_light);						// different information from them - i.e. we need to know that a PointLight is
 																		// a PointLight, and not a DirectionalLight.
 
-		// We probably don't need getters in this class since raytracing is handled by the scene. For now I won't add any.
 		int width() const;
 		int height() const;
 
@@ -67,6 +65,11 @@ class Scene
 		const Camera _camera;
 		const int _width;
 		const int _height;
+		float _aspect_ratio;
+		float _width_over_two;
+		float _height_over_two;
+		float _tan_fovx_over_two;
+		float _tan_fovy_over_two;
 		std::vector<Triangle> _triangles;
 		std::vector<Sphere> _spheres;
 		std::vector<DirectionalLight> _directional_lights;

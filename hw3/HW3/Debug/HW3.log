@@ -1,2 +1,6 @@
-﻿  Direction.cpp
+﻿  Intersection.cpp
+  main.cpp
+  ReadFile.cpp
+  Scene.cpp
+  Generating Code...
   HW3.vcxproj -> C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\Debug\Raytracer.exe

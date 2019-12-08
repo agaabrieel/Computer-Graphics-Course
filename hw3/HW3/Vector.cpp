@@ -11,3 +11,8 @@ float Vector::x() const { return _x; }
 float Vector::y() const { return _y; }
 
 float Vector::z() const { return _z; }
+
+glm::vec3 Vector::toGlmVec3() const
+{
+	return glm::vec3(_x, _y, _z);
+}

@@ -17,11 +17,11 @@ class Intersection
 		Intersection(Shape* shape, Point point);
 		~Intersection();
 
-		const Shape* shape() const;
-		const Point point() const;
+		Shape* shape();
+		Point point() const;
 
 	private:
-		const Shape* _shape;
+		Shape* _shape;
 		const Point _point;
 };
 
