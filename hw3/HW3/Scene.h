@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 #include "Shape.h"
+#include "Sphere.h"
+#include "Triangle.h"
 #include "Camera.h"
 #include "Intersection.h"
 #include "Options.h"
@@ -48,6 +50,8 @@ class Scene
 																		// a PointLight, and not a DirectionalLight.
 
 		// We probably don't need getters in this class since raytracing is handled by the scene. For now I won't add any.
+		int width() const;
+		int height() const;
 
 		Ray rayThroughPixel(int i, int j) const; // Returns the ray that goes from the camera through the "viewing screen" at pixel with coords i, j
 		 

@@ -4,7 +4,6 @@
 #include "TransformStack.h"
 #include <vector>
 #include "Vertex.h"
-#include "Scene.h"
 #include "Triangle.h"
 #include "Sphere.h"
 
@@ -53,7 +52,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 	unique_ptr<Color> specular;
 	float shininess = 0;
 	unique_ptr<Color> emission;
-	unique_ptr<Color> ambient(new Color(0.2, 0.2, 0.2));  // Default for ambient
+	unique_ptr<Color> ambient(new Color(0.2f, 0.2f, 0.2f));  // Default for ambient
 	unique_ptr<Attenuation> attenuation(new Attenuation(1, 0, 0)); // Default attenuation
 
 	// Start a new matrix transform stack with the identity matrix
@@ -73,7 +72,6 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 
 				stringstream s(str);
 				s >> cmd;
-				int i;
 				float values[10]; // Stores the parameters for the command. Need up to 10 for camera.
 									// Using float instead of GLfloat to see if we can remove dependency on OpenGL.
 				bool validinput;
@@ -165,9 +163,9 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					validinput = readvals(s, 3, values);
 					if (validinput && diffuse.get()) {
 						Triangle triangle = Triangle(*diffuse, *specular, shininess, *emission, *ambient, transform_stack.top(),
-							vertexes.at(values[0]),
-							vertexes.at(values[1]),
-							vertexes.at(values[2])); // TODO handle outofbounds
+							vertexes.at((int)values[0]),
+							vertexes.at((int)values[1]),
+							vertexes.at((int)values[2])); // TODO handle outofbounds
 
 						triangles.push_back(triangle);
 					}
@@ -318,9 +316,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 			scene.addPointLight(point_light);
 		}
 
-		
 		FileData returnData = { scene, output_file_name, maxdepth };
-
 		return returnData;
 	}
 

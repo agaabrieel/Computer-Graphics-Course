@@ -42,6 +42,10 @@ void Scene::addPointLight(PointLight point_light)
 
 
 
+int Scene::width() const { return _width; }
+
+int Scene::height() const {	return _height; }
+
 Ray Scene::rayThroughPixel(int i, int j) const
 {
 	return Ray(Point(0, 0, 0), Direction(0, 0, 0)); // TODO

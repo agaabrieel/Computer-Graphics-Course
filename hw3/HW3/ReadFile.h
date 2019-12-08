@@ -1,11 +1,14 @@
 #pragma once
 #include <sstream>
+#include <string>
+
+#include "Scene.h"
 
 namespace ReadFile {
 
 	struct FileData {
 		Scene scene;
-		string output_filename;
+		std::string output_filename;
 		int max_recursion_depth;
 	};
 
