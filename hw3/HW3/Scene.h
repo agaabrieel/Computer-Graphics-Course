@@ -50,12 +50,7 @@ class Scene
 		Ray rayThroughPixel(int i, int j) const; // Returns the ray that goes from the camera through the "viewing screen" at pixel with coords i, j
 		 
 		Intersection intersect(const Ray& ray) const;  // finds the object in the scene that is closest to the camera and intersects the ray
-		//returnType raytrace() const;
-			// Returns an image of the scene raytraced.
-			// for each pixel, traces a ray and determines the object that intersects
-			// finds the color using the intersection. 
-			// Return type: a bitmap ? an array of bytes?
-
+	
 		Color findColor(Intersection intersection) const; // Finds the appropriate color given the object and location in intersection
 
 		BYTE* raytrace(int max_recursion_depth) const; // Returns a byte array containing the pixels of the raytraced image

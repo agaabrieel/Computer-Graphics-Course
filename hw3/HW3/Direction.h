@@ -1,6 +1,6 @@
 #pragma once
 
-// Direction struct, essentially a 3-d vector, but there is already a cpp class vector, so using the name Direction to avoid name clashes
+// Direction struct, essentially a 3-d unit vector, but there is already a cpp class vector, so using the name Direction to avoid name clashes
 // We can bring all these small files together into a header file such as utilities but for now I'll keep them separate
 
 /*
@@ -29,5 +29,7 @@ class Direction
 		const float _x;
 		const float _y;
 		const float _z;
+
+		void normalise();
 };
 

@@ -1,5 +1,7 @@
 #include "Color.h"
 
+Color::Color() : Color(0.0, 0.0, 0.0) {}
+
 Color::Color(float red, float green, float blue) : _red(red), _green(green), _blue(blue) {}
 
 Color::~Color()
