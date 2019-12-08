@@ -78,9 +78,6 @@
     <ClCompile Include="Vertex.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Options.cpp">
-      <Filter>Source Files\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="Attenuation.cpp">
       <Filter>Source Files\Model\Lights</Filter>
     </ClCompile>
@@ -133,9 +130,6 @@
     </ClInclude>
     <ClInclude Include="Vertex.h">
       <Filter>Header Files\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Options.h">
-      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Attenuation.h">
       <Filter>Header Files\Model\Lights</Filter>
