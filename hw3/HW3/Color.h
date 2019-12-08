@@ -23,11 +23,13 @@ class Color
 		float green() const;
 		float blue() const;
 
-		BYTE color_as_byte() const;
+		RGBTRIPLE to_freeimage_rgbtriple() const;
 
 	private:
 		const float _red;
 		const float _green;
 		const float _blue;
+
+		BYTE color_channel_float_to_byte(float color_channel) const;
 };
 
