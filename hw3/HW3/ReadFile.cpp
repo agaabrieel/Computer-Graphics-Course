@@ -7,6 +7,10 @@
 #include "Triangle.h"
 #include "Sphere.h"
 
+#ifndef DEFAULT_FILE_NAME
+#define DEFAULT_FILE_NAME "raytrace.png"
+#endif
+
 using namespace std;
 
 // Function to read the input data values
@@ -33,7 +37,8 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 		Camera struct
 		*/
 
-	int width = 0, height = 0, maxdepth = 0;
+	int width = 0, height = 0; // Initialised to 0 so we can check if they aren't defined in the test file.
+	int maxdepth = 5; // Default recursive depth of 5.
 	unique_ptr<Camera> camera;  // Solution to avoid this is to have a default camera
 				// at (0, 0, 0) looking down the -Z axis with up as (0, 1, 0);
 
@@ -51,7 +56,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 	unique_ptr<Color> diffuse;
 	unique_ptr<Color> specular;
 	float shininess = 0;
-	unique_ptr<Color> emission;
+	unique_ptr<Color> emission(new Color(0.0f, 0.0f, 0.0f)); // Objects do not emit light by default
 	unique_ptr<Color> ambient(new Color(0.2f, 0.2f, 0.2f));  // Default for ambient
 	unique_ptr<Attenuation> attenuation(new Attenuation(1, 0, 0)); // Default attenuation
 
@@ -297,6 +302,9 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 			throw 2;
 		}
 
+		if (output_file_name.size() == 0) {
+			output_file_name = DEFAULT_FILE_NAME;
+		}
 
 		Scene scene = Scene(width, height, *camera); // Alternative would be to pre-init the scene and add shapes as we go but that is difficult
 																// because we wouldn't have the camera. We could make it so the scene isn't initialised

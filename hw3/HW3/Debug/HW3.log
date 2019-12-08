@@ -1,6 +1,2 @@
 ﻿  ReadFile.cpp
-  Scene.cpp
-  main.cpp
-C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\main.cpp(17,12): error C2065: 'widht': undeclared identifier
-  Generating Code...
-C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\main.cpp(17,20): error C2065: 'h': undeclared identifier
+  HW3.vcxproj -> C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\Debug\Raytracer.exe
