@@ -24,7 +24,7 @@ bool ReadFile::readvals(std::stringstream& s, const int numvals, float* values)
 	return true;
 }
 
-void ReadFile::readfile(const char* filename)
+ReadFile::FileData ReadFile::readfile(const char* filename)
 {
 	/*
 	need to have:
@@ -34,8 +34,9 @@ void ReadFile::readfile(const char* filename)
 		Camera struct
 		*/
 
-	int width, height, maxdepth;
-	Camera* camera;
+	int width = 0, height = 0, maxdepth = 0;
+	unique_ptr<Camera> camera;  // Solution to avoid this is to have a default camera
+				// at (0, 0, 0) looking down the -Z axis with up as (0, 1, 0);
 
 	vector<Vertex> vertexes; // Potentially slow since we need to access by random indexes.
 								// but we want to allow an arbitrary number of vertexes.
@@ -43,114 +44,289 @@ void ReadFile::readfile(const char* filename)
 								// in this program, so I don't think it's a big deal.
 	vector<Triangle> triangles;
 	vector<Sphere> spheres;
-	vector<DirectionalLight> directionalLights;
-	vector<PointLight> pointLights;
+	vector<DirectionalLight> directional_lights;
+	vector<PointLight> point_lights;
 
 	// Material properties. Start with additive identity, since Colors are additive.
-	Color diffuse;
-	Color specular;
+		// These have to be pointers since they will be reassigned
+	unique_ptr<Color> diffuse;
+	unique_ptr<Color> specular;
 	float shininess = 0;
-	Color emission;
-	Color ambient = Color(0.2, 0.2, 0.2);  // Default for ambient
+	unique_ptr<Color> emission;
+	unique_ptr<Color> ambient(new Color(0.2, 0.2, 0.2));  // Default for ambient
+	unique_ptr<Attenuation> attenuation(new Attenuation(1, 0, 0)); // Default attenuation
 
 	// Start a new matrix transform stack with the identity matrix
-	TransformStack transformStack = TransformStack();
-	
+	TransformStack transform_stack = TransformStack();
+
 	string str, cmd, output_file_name;
 	ifstream in;
 	in.open(filename);
 	if (in.is_open()) {
 
-		
+
 
 		getline(in, str);
 		while (in) {
 			if ((str.find_first_not_of(" \t\r\n") != string::npos) && (str[0] != '#')) {
 				// Ruled out comment and blank lines 
-			}
 
-			stringstream s(str);
-			s >> cmd;
-			int i;
-			float values[10]; // Stores the parameters for the command. Need up to 10 for camera.
-								// Using float instead of GLfloat to see if we can remove dependency on OpenGL.
-			bool validinput;
+				stringstream s(str);
+				s >> cmd;
+				int i;
+				float values[10]; // Stores the parameters for the command. Need up to 10 for camera.
+									// Using float instead of GLfloat to see if we can remove dependency on OpenGL.
+				bool validinput;
 
-			if (cmd == "size") {
-				validinput = readvals(s, 2, values);
-				if (validinput) {
-					width = (int)values[0];
-					height = (int)values[1];
+				if (cmd == "size") {
+					validinput = readvals(s, 2, values);
+					if (validinput) {
+						width = (int)values[0];
+						height = (int)values[1];
+					}
+				}
+
+				else if (cmd == "maxdepth") {
+					validinput = readvals(s, 1, values);
+					if (validinput) {
+						maxdepth = (int)values[0];
+					}
+				}
+
+				else if (cmd == "output") {
+					s >> output_file_name;
+				}
+
+				else if (cmd == "camera") {
+					validinput = readvals(s, 10, values);
+					if (validinput && camera.get() == NULL) { // Only update camera if it has not already been setup. Could throw an error if it is redefined? TODO
+						Point lookfrom = Point(values[0], values[1], values[2]);
+						Point lookat = Point(values[3], values[4], values[5]);
+						Direction up = Direction(values[6], values[7], values[8]);
+						float fovy_degrees = values[9];
+						float fovy_radians = glm::radians(fovy_degrees);
+
+						camera.reset(new Camera(lookfrom, lookat, up, fovy_radians));
+						// TODO have to work out who will free this.
+					}
+				}
+
+				else if (cmd == "sphere") {
+					validinput = readvals(s, 4, values);
+					if (validinput) {
+						Point center = Point(values[0], values[1], values[2]);
+						float radius = values[3];
+						Sphere sphere = Sphere(*diffuse, *specular, shininess, *emission, *ambient,
+							transform_stack.top(), center, radius);
+						spheres.push_back(sphere);
+					}
+				}
+
+				else if (cmd == "maxverts") {
+					validinput = readvals(s, 1, values);
+					if (validinput) {
+						// Support for maxverts is optional
+						// I ignore it and allow support for an arbitrary number of vertices.
+						cout << "Ignoring command maxverts with argument " << values[0] << "\n";
+					}
+				}
+
+				else if (cmd == "maxvertnorms") {
+					validinput = readvals(s, 1, values);
+					if (validinput) {
+						// Support for maxvertnorms is optional
+						cout << "Ignoring command maxvertnorms with argument " << values[0] << "\n";
+					}
+				}
+
+				else if (cmd == "vertex") {
+					validinput = readvals(s, 3, values);
+					if (validinput) {
+						Vertex vertex = Vertex(values[0], values[1], values[2]);
+						vertexes.push_back(vertex);
+					}
+				}
+
+				else if (cmd == "vertexnormal") {
+					validinput = readvals(s, 6, values);
+					if (validinput) {
+						// Support for vertexnormal is optional
+						cout << "Ignoring command vertexnormal with arguments "
+							<< values[0] << " "
+							<< values[1] << " "
+							<< values[2] << " "
+							<< values[3] << " "
+							<< values[4] << " "
+							<< values[5] << "\n";
+					}
+				}
+
+				else if (cmd == "tri") {
+					validinput = readvals(s, 3, values);
+					if (validinput && diffuse.get()) {
+						Triangle triangle = Triangle(*diffuse, *specular, shininess, *emission, *ambient, transform_stack.top(),
+							vertexes.at(values[0]),
+							vertexes.at(values[1]),
+							vertexes.at(values[2])); // TODO handle outofbounds
+
+						triangles.push_back(triangle);
+					}
+				}
+
+				else if (cmd == "trinormal") {
+					validinput = readvals(s, 3, values);
+					if (validinput) {
+						// Support for trinormal is optional
+						cout << "Ignoring command trinormal with arguments "
+							<< values[0] << " "
+							<< values[1] << " "
+							<< values[2] << "\n";
+					}
+				}
+
+				else if (cmd == "translate") {
+					validinput = readvals(s, 3, values);
+					if (validinput) {
+						transform_stack.translate(values[0], values[1], values[2]);
+					}
+				}
+
+				else if (cmd == "rotate") {
+					validinput = readvals(s, 4, values);
+					if (validinput) {
+						float angle_radians = glm::radians(values[3]);
+						Direction axis = Direction(values[0], values[1], values[2]);
+						transform_stack.rotate(angle_radians, axis);
+					}
+				}
+
+				else if (cmd == "scale") {
+					validinput = readvals(s, 3, values);
+					if (validinput) {
+						transform_stack.scale(values[0], values[1], values[2]);
+					}
+				}
+
+				else if (cmd == "pushTransform") {
+					transform_stack.pushTransform();
+				}
+
+				else if (cmd == "popTransform") {
+					transform_stack.popTransform();
+				}
+
+				else if (cmd == "directional") {
+					validinput = readvals(s, 6, values);
+					if (validinput) {
+						Direction direction = Direction(values[0], values[1], values[2]);
+						Color color = Color(values[3], values[4], values[5]);
+						DirectionalLight directional_light = DirectionalLight(color, *attenuation, direction);
+						directional_lights.push_back(directional_light);
+					}
+				}
+
+				else if (cmd == "point") {
+					validinput = readvals(s, 6, values);
+					if (validinput) {
+						Point point = Point(values[0], values[1], values[2]);
+						Color color = Color(values[3], values[4], values[5]);
+						PointLight point_light = PointLight(color, *attenuation, point);
+						point_lights.push_back(point_light);
+					}
+				}
+
+				else if (cmd == "attenuation") {
+					validinput = readvals(s, 3, values);
+					if (validinput) {
+						attenuation.reset(new Attenuation(values[0], values[1], values[2]));
+					}
+				}
+
+				else if (cmd == "ambient") {
+					validinput = readvals(s, 3, values);
+					if (validinput) {
+						ambient.reset(new Color(values[0], values[1], values[2]));
+					}
+				}
+
+				else if (cmd == "diffuse") {
+					validinput = readvals(s, 3, values);
+					if (validinput) {
+						diffuse.reset(new Color(values[0], values[1], values[2]));
+					}
+				}
+
+				else if (cmd == "specular") {
+					validinput = readvals(s, 3, values);
+					if (validinput) {
+						specular.reset(new Color(values[0], values[1], values[2]));
+					}
+				}
+
+				else if (cmd == "shininess") {
+					validinput = readvals(s, 1, values);
+					if (validinput) {
+						shininess = values[0];
+					}
+				}
+
+				else if (cmd == "emission") {
+					validinput = readvals(s, 3, values);
+					if (validinput) {
+						emission.reset(new Color(values[0], values[1], values[2]));
+					}
+				}
+
+				else {
+					cerr << "Unknown Command: " << cmd << " Skipping \n";
 				}
 			}
+			getline(in, str);
+		}
 
-			if (cmd == "maxdepth") {
-				validinput = readvals(s, 1, values);
-				if (validinput) {
-					maxdepth = (int)values[0];
-				}
-			}
+		if (width == 0) {
+			cerr << "Width was not specified.\n";
+			throw 2;
+		}
 
-			if (cmd == "output") {
-				s >> output_file_name;
-			}
+		if (height == 0) {
+			cerr << "Height was not specified.\n";
+			throw 2;
+		}
 
-			if (cmd == "camera") {
-				validinput = readvals(s, 10, values);
-				if (validinput) {
-					Point lookfrom = Point(values[0], values[1], values[2]);
-					Point lookat = Point(values[3], values[4], values[5]);
-					Direction up = Direction(values[6], values[7], values[8]);
-					float fovy_degrees = values[9];
-					float fovy_radians = glm::radians(fovy_degrees);
-
-					Camera camera = Camera(lookfrom, lookat, up, fovy_radians);
-					// TODO how to get this into higher scope?
-						// Could use pointer but then we have to make sure to free it.
-				}
-			}
-
-			if (cmd == "sphere") {
-				validinput = readvals(s, 4, values);
-				if (validinput) {
-					Point center = Point(values[0], values[1], values[2]);
-					float radius = values[3];
-					Sphere sphere = Sphere(diffuse, specular, shininess, emission, ambient,
-						transformStack.top(), center, radius);
-					spheres.push_back(sphere);
-				}
-			}
-
-			if (cmd == "maxverts") {
-				validinput = readvals(s, 1, values);
-				if (validinput) {
-					// Support for maxverts is optional
-					// I ignore it and allow support for an arbitrary number of vertices.
-					cout << "Ignoring command maxverts with argument " << values[0];
-				}
-			}
-
-			if (cmd == "maxvertnorms") {
-				validinput = readvals(s, 1, values);
-				if (validinput) {
-					// Support for maxvertnorms is optional
-					// I ignore it and allow support for an arbitrary number of vertices.
-					cout << "Ignoring command maxvertnorms with argument " << values[0];
-				}
-			}
-
-			if (cmd == "vertex") {
-				validinput = readvals(s, 3, values);
-				if (validinput) {
-					Vertex vertex = Vertex(values[0], values[1], values[2]);
-					vertexes.push_back(vertex);
-				}
-			}
-
-
+		if (camera.get() == NULL) {
+			cerr << "Camera was not specified.\n";
+			throw 2;
 		}
 
 
+		Scene scene = Scene(width, height, *camera); // Alternative would be to pre-init the scene and add shapes as we go but that is difficult
+																// because we wouldn't have the camera. We could make it so the scene isn't initialised
+																// with the camera, instead using setCamera, but then we have the situation where the scene
+																// may not have a camera, which is also not useful.
+
+		for (Triangle triangle : triangles) {
+			scene.addTriangle(triangle);
+		}
+		for (Sphere sphere : spheres) {
+			scene.addSphere(sphere);
+		}
+		for (DirectionalLight directional_light : directional_lights) {
+			scene.addDirectionalLight(directional_light);
+		}
+		for (PointLight point_light : point_lights) {
+			scene.addPointLight(point_light);
+		}
+
+		
+		FileData returnData = { scene, output_file_name, maxdepth };
+
+		return returnData;
+	}
+
+	else {
+		cerr << "Unable to Open Input Data File " << filename << "\n";
+		throw 2;
 	}
 }
 

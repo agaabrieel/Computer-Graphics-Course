@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "Sphere.h" // TODO remove after implementing intersect
+#include "Triangle.h"
 
 
 Scene::Scene(int width, int height, Camera camera) :
@@ -8,7 +9,8 @@ Scene::Scene(int width, int height, Camera camera) :
 Scene::Scene(int width, int height, Camera camera, Color ambient_global) :
 	_width(width), _height(height), _camera(camera), _ambient_global(ambient_global)
 {
-	_shapes = std::vector<Shape*>();
+	_triangles = std::vector<Triangle>();
+	_spheres = std::vector<Sphere>();
 	_point_lights = std::vector<PointLight>();
 	_directional_lights = std::vector<DirectionalLight>();
 }
@@ -18,9 +20,14 @@ Scene::~Scene()
 	// Need to delete the Shapes and Lights?
 }
 
-void Scene::addShape(Shape* shape)
+void Scene::addTriangle(Triangle triangle)
 {
-	_shapes.push_back(shape);
+	_triangles.push_back(triangle);
+}
+
+void Scene::addSphere(Sphere sphere)
+{
+	_spheres.push_back(sphere);
 }
 
 void Scene::addDirectionalLight(DirectionalLight directional_light)

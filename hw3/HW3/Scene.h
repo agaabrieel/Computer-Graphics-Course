@@ -39,8 +39,10 @@ class Scene
 		Scene(int width, int height, Camera camera, Color ambient_global);
 		~Scene();
 
-		void addShape(Shape* shape);  // We can store all Shapes together in the same list because we only need to call the method intersect(Ray)
-										// on them, which all Shape subclasses must implement separately
+		//void addShape(Shape* shape);  // We can store all Shapes together in the same list because we only need to call the method intersect(Ray)
+		//								// on them, which all Shape subclasses must implement separately
+		void addTriangle(Triangle triangle); // Possibly add an option to add a vector of shapes.
+		void addSphere(Sphere sphere);
 		void addDirectionalLight(DirectionalLight directional_light);  // We must store separate lists of Light subclasses because we need to access
 		void addPointLight(PointLight point_light);						// different information from them - i.e. we need to know that a PointLight is
 																		// a PointLight, and not a DirectionalLight.
@@ -61,7 +63,8 @@ class Scene
 		const Camera _camera;
 		const int _width;
 		const int _height;
-		std::vector<Shape*> _shapes;
+		std::vector<Triangle> _triangles;
+		std::vector<Sphere> _spheres;
 		std::vector<DirectionalLight> _directional_lights;
 		std::vector<PointLight> _point_lights;
 		const Color _ambient_global;

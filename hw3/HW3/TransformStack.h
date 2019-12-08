@@ -47,7 +47,7 @@ class TransformStack
 
 		void scale(float sx, float sy, float sz);
 		void translate(float tx, float ty, float tz);
-		void rotate(const float degrees, const Direction& axis);
+		void rotate(float angle_radians, const Direction& axis);
 
 	private:
 		std::stack<glm::mat4> _transformationStack;

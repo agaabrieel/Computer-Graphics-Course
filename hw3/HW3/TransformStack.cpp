@@ -35,7 +35,7 @@ void TransformStack::translate(float tx, float ty, float tz)
 	//TODO
 }
 
-void TransformStack::rotate(const float degrees, const Direction& axis)
+void TransformStack::rotate(float angle_radians, const Direction& axis)
 {
 	// TODO
 }
