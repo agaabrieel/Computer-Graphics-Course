@@ -22,7 +22,7 @@ class Sphere :
 		Point center() const;
 		float radius() const;
 
-		float intersect(Ray ray) const;
+		std::optional<float> intersect(Ray ray) const;
 
 	private:
 		const Point _center;

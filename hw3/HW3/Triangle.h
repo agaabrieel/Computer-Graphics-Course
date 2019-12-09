@@ -24,7 +24,7 @@ class Triangle :
 			glm::mat4 transform, Vertex a, Vertex b, Vertex c);
 		~Triangle();
 		
-		float intersect(Ray ray) const;
+		std::optional<float> intersect(Ray ray) const;
 
 	private:
 		const Vertex _a;

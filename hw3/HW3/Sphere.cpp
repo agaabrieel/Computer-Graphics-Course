@@ -11,7 +11,7 @@ Point Sphere::center() const { return _center; }
 
 float Sphere::radius() const {	return _radius; }
 
-float Sphere::intersect(Ray ray) const 
+std::optional<float> Sphere::intersect(Ray ray) const 
 {
 	// TODO: kludge using glm, later on we can define own operations on custom data types
 	glm::vec3 p0 = ray.origin().toGlmVec3();
@@ -30,7 +30,7 @@ float Sphere::intersect(Ray ray) const
 
 	// Only complex roots
 	if (discriminant < 0) {
-		return -1.0f;
+		return std::nullopt;
 	}
 
 	float discriminant_sqrt = sqrt(discriminant);
@@ -43,7 +43,7 @@ float Sphere::intersect(Ray ray) const
 
 	if (t_root_one == t_root_two) {
 		// Treat the case where the ray is exactly tangent to the sphere as no intersection.
-		return -1.0f;
+		return std::nullopt;
 	}
 
 	// Two positive roots, choose smallest
@@ -58,8 +58,8 @@ float Sphere::intersect(Ray ray) const
 	}
 	else {
 		// Shouldn't reach this case since we checked the discriminant
-		return -1.0f;
+		return std::nullopt;
 	}
 
-	return smallest_positive_root;
+	return { smallest_positive_root };
 }

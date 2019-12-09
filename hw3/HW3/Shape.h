@@ -27,6 +27,7 @@ A Shape can:
 #endif
 #include <glm/glm.hpp>
 #include "Ray.h"
+#include <optional>
 
 class Shape  // abstract
 {
@@ -42,7 +43,7 @@ class Shape  // abstract
 		glm::mat4 transform() const; // Is this the best name for this? It's the name from the previous project, but it's not very clear.
 															// Maybe something like: worldToObject?
 
-		virtual float intersect(Ray ray) const = 0;
+		virtual std::optional<float> intersect(Ray ray) const = 0;
 			// Returns the parameter t:
 				// For now, return the smallest positive t if there is an intersection
 				// Otherwise, return a negative number for no intersection

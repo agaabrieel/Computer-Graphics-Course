@@ -7,7 +7,7 @@ Triangle::~Triangle()
 {
 }
 
-float Triangle::intersect(Ray ray) const
+std::optional<float> Triangle::intersect(Ray ray) const
 {
 	glm::vec3 A = _a.toGlmVec3();
 	glm::vec3 B = _b.toGlmVec3();
@@ -23,10 +23,10 @@ float Triangle::intersect(Ray ray) const
 
 	// No intersection when parallel to the plane
 	if (denominator == 0.0f) { // TODO: might we allow a small tolerance here for floating point error?
-		return -1.0f;
+		return std::nullopt;
 	}
 
 	float t = (glm::dot(A, normal) - glm::dot(p0, normal)) / denominator;
 
-	return t;
+	return { t };
 }

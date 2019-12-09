@@ -86,17 +86,17 @@ std::optional<Intersection> Scene::intersect(const Ray& ray) const
 	// Ideally these two loops would be merged but I found it problematic storing shapes:
 		// Shape class is abstract and C++ requires pointers to store derived objects.
 	for (Triangle triangle : _triangles) {
-		float t = triangle.intersect(ray);
-		if (t > 0 && t < mindist) {
-			mindist = t;
+		std::optional<float> t = triangle.intersect(ray);
+		if (t.has_value() && t.value() < mindist) {
+			mindist = t.value();
 			hit_object.reset(&triangle);
 		}
 	}
 
 	for (Sphere sphere : _spheres) {
-		float t = sphere.intersect(ray);
-		if (t > 0 && t < mindist) {
-			mindist = t;
+		std::optional<float> t = sphere.intersect(ray);
+		if (t.has_value() && t.value() < mindist) {
+			mindist = t.value();
 			hit_object.reset(&sphere);
 		}
 	}
