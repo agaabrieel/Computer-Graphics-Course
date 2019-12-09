@@ -19,7 +19,7 @@ class PointLight :
 
 		Point point() const;
 
-		bool isVisibleFrom(Point point) const;
+		bool isVisibleFrom(Point point, Scene* scene) const;
 
 	private: 
 		const Point _point;

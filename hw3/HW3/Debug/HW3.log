@@ -1,2 +1,5 @@
-﻿  PointLight.cpp
+﻿  DirectionalLight.cpp
+  PointLight.cpp
+  Generating Code...
+  LINK : C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\Debug\Raytracer.exe not found or not built by the last incremental link; performing full link
   HW3.vcxproj -> C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\Debug\Raytracer.exe

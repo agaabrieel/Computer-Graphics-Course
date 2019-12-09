@@ -1,4 +1,8 @@
 #include "PointLight.h"
+#include "Ray.h"
+#include <optional>
+#include "Intersection.h"
+#include "Scene.h"
 
 PointLight::PointLight(Color color, Attenuation attenuation, Point point) : Light(color, attenuation), _point(point) {}
 
@@ -8,8 +12,15 @@ PointLight::~PointLight()
 
 Point PointLight::point() const { return _point; }
 
-bool PointLight::isVisibleFrom(Point point) const
+bool PointLight::isVisibleFrom(Point point, Scene* scene) const
 {
-	// TODO
-	return false;
+	glm::vec3 origin = point.toGlmVec3();
+	glm::vec3 direction = _point.toGlmVec3() - origin;
+	direction = glm::normalize(direction);
+
+	origin += direction * 0.001f; // Bring origin of ray slightly towards light source to prevent self-intersection.
+
+	Ray ray = Ray(origin, direction);
+	std::optional<Intersection> t = scene->intersect(ray);
+	return !t.has_value();
 }
