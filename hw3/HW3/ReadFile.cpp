@@ -57,7 +57,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 	unique_ptr<Color> specular(new Color(0.0f, 0.0f, 0.0f));
 	float shininess = 0;
 	unique_ptr<Color> emission(new Color(0.0f, 0.0f, 0.0f)); // Objects do not emit light by default
-	unique_ptr<Color> ambient(new Color(0.2f, 0.2f, 0.2f));  // Default for ambient
+	unique_ptr<Color> ambient(new Color(0.2f, 0.2f, 0.2f));  // Default value for ambient property of objects
 	unique_ptr<Attenuation> attenuation(new Attenuation(1, 0, 0)); // Default attenuation
 
 	// Start a new matrix transform stack with the identity matrix

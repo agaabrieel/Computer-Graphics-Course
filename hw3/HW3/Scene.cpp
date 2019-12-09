@@ -5,7 +5,8 @@
 
 
 Scene::Scene(int width, int height, Camera camera) :
-	Scene(width, height, camera, Color(0.2f, 0.2f, 0.2f)) {}
+	// Default value for the background in the reference images appears to be pitch black, not (0.2, 0.2, 0.2)
+	Scene(width, height, camera, Color(0.0f, 0.0f, 0.0f)) {}
 
 Scene::Scene(int width, int height, Camera camera, Color ambient_global) :
 	_width(width), _height(height), _camera(camera), _ambient_global(ambient_global)
@@ -205,16 +206,6 @@ BYTE* Scene::raytrace(int max_recursion_depth) const
 			}
 		}
 	}
-
-	// TODO: debug code: sets top right and bottom left pixel to white
-	RGBTRIPLE white = Color(1.0f, 1.0f, 1.0f).to_freeimage_rgbtriple();
-	pixels[3 * pix - 3] = white.rgbtBlue;
-	pixels[3 * pix - 2] = white.rgbtGreen;
-	pixels[3 * pix - 1] = white.rgbtRed;
-	pixels[0] = white.rgbtBlue;
-	pixels[1] = white.rgbtGreen;
-	pixels[2] = white.rgbtRed;
-
-
+	   
 	return pixels;
 }
