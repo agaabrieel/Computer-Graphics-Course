@@ -55,6 +55,8 @@ int Scene::height() const {	return _height; }
 
 Ray Scene::rayThroughPixel(int i, int j) const
 {
+	// TODO ray should go through center of pixel!
+
 	glm::vec3 center = _camera.lookat().toGlmVec3(); // center is what we are looking at
 	glm::vec3 eye = _camera.lookfrom().toGlmVec3(); // eye is the camera location
 	glm::vec3 a = eye - center;
@@ -177,7 +179,7 @@ BYTE* Scene::raytrace(int max_recursion_depth) const
 			}
 			else { // No intersection so use global ambient value.
 				//Color pixel_color = _ambient_global;
-				Color pixel_color = Color(1.0f, 0.0f, 0.0f); // TODO: debug value: background is pure red.
+				Color pixel_color = Color(0.5f, 0.0f, 0.0f); // TODO: debug value: background is pure dark red.
 				RGBTRIPLE pixel_color_triple = pixel_color.to_freeimage_rgbtriple();
 				int pixel_start_index = (i * _width * 3) + (j * 3);
 
@@ -190,6 +192,16 @@ BYTE* Scene::raytrace(int max_recursion_depth) const
 			}
 		}
 	}
+
+	// TODO: debug code: sets top right and bottom left pixel to white
+	RGBTRIPLE white = Color(1.0f, 1.0f, 1.0f).to_freeimage_rgbtriple();
+	pixels[3 * pix - 3] = white.rgbtBlue;
+	pixels[3 * pix - 2] = white.rgbtGreen;
+	pixels[3 * pix - 1] = white.rgbtRed;
+	pixels[0] = white.rgbtBlue;
+	pixels[1] = white.rgbtGreen;
+	pixels[2] = white.rgbtRed;
+
 
 	return pixels;
 }
