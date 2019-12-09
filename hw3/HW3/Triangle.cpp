@@ -9,6 +9,7 @@ Triangle::~Triangle()
 
 std::optional<float> Triangle::intersect(Ray ray) const
 {
+	// TODO: account for transformed objects
 
 	// Begin ray-plane intersection
 	glm::vec3 a = _a.toGlmVec3();

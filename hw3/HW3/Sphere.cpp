@@ -13,6 +13,8 @@ float Sphere::radius() const {	return _radius; }
 
 std::optional<float> Sphere::intersect(Ray ray) const 
 {
+	// TODO: account for transformed objects
+
 	// TODO: kludge using glm, later on we can define own operations on custom data types
 	glm::vec3 p0 = ray.origin().toGlmVec3();
 	glm::vec3 p1 = ray.direction().toGlmVec3();
@@ -23,10 +25,10 @@ std::optional<float> Sphere::intersect(Ray ray) const
 
 	// Set up quadratic equation with coefficients a, b, c
 	float a = glm::dot(p1, p1);
-	float b = 2.0f * glm::dot(p1, p1 - center);
+	float b = glm::dot(2.0f *  p1, p0_minus_c);
 	float c = glm::dot(p0_minus_c, p0_minus_c) - (_radius * _radius);
 
-	float discriminant = b * b - (4.0 * a * c);
+	float discriminant = b * b - (4.0f * a * c);
 
 	// Only complex roots
 	if (discriminant < 0) {

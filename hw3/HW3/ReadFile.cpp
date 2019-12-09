@@ -53,8 +53,8 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 
 	// Material properties. Start with additive identity, since Colors are additive.
 		// These have to be pointers since they will be reassigned
-	unique_ptr<Color> diffuse;
-	unique_ptr<Color> specular;
+	unique_ptr<Color> diffuse(new Color(0.0f, 0.0f, 0.0f)); // The scene files allow creating objects without specifying material properties, so I start with black here.
+	unique_ptr<Color> specular(new Color(0.0f, 0.0f, 0.0f));
 	float shininess = 0;
 	unique_ptr<Color> emission(new Color(0.0f, 0.0f, 0.0f)); // Objects do not emit light by default
 	unique_ptr<Color> ambient(new Color(0.2f, 0.2f, 0.2f));  // Default for ambient

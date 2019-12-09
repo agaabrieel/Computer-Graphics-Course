@@ -15,6 +15,7 @@ class Intersection
 {
 	public:
 		Intersection(Shape* shape, Point point);
+		Intersection(const Intersection& i2);
 		~Intersection();
 
 		Shape* shape();

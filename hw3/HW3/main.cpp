@@ -31,15 +31,17 @@ int main(int argc, char* argv[])
 		exit(-1);
 	}
 
-	FreeImage_Initialise();
 
 	ReadFile::FileData sceneData = ReadFile::readfile(argv[1]);
 	Scene scene = sceneData.scene;
 	
 	BYTE* pixels = scene.raytrace(sceneData.max_recursion_depth);
+
+
+	FreeImage_Initialise();
 	saveImage(scene.width(), scene.height(), pixels, sceneData.output_filename);
 	// do i need to free the pixels here?
-
 	FreeImage_DeInitialise();
+
 	return 0;
 }

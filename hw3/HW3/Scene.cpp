@@ -80,10 +80,12 @@ Ray Scene::rayThroughPixel(int i, int j) const
 	return Ray(_camera.lookfrom(), Direction(direction.x, direction.y, direction.z)); 
 }
 
-std::optional<Intersection> Scene::intersect(const Ray& ray) const
+
+
+void Scene::intersect(const Ray& ray, std::optional<IntersectionAsStruct>& intersection) const
 {
 	float mindist = INFINITY;
-	Shape* hit_object = NULL;
+	std::optional<Shape*> hit_object;
 
 	// Ideally these two loops would be merged but I found it problematic storing shapes:
 		// Shape class is abstract and C++ requires pointers to store derived objects.
@@ -91,7 +93,11 @@ std::optional<Intersection> Scene::intersect(const Ray& ray) const
 		std::optional<float> t = triangle.intersect(ray);
 		if (t.has_value() && t.value() < mindist) {
 			mindist = t.value();
-			hit_object = &triangle;
+			// TODO: a bad hack. This works but now we're creating new objects in each loop.
+				// Is there a way to get a meaningful pointer to the object in the Scene and return that pointer
+				// such that the pointer does not end up pointing to garbage?
+			hit_object.reset(); 
+			hit_object = new Triangle(triangle);
 		}
 	}
 
@@ -99,31 +105,37 @@ std::optional<Intersection> Scene::intersect(const Ray& ray) const
 		std::optional<float> t = sphere.intersect(ray);
 		if (t.has_value() && t.value() < mindist) {
 			mindist = t.value();
-			hit_object = &sphere;
+			hit_object.reset();
+			hit_object = new Sphere(sphere);
 		}
 	}
 
-	if (hit_object == NULL) {
-		return std::nullopt;
+	if (!hit_object.has_value()) {
+		return;
 	}
 
 	glm::vec3 intersection_location = ray.origin().toGlmVec3() + mindist * ray.direction().toGlmVec3();
 	Point p = Point(intersection_location.x, intersection_location.y, intersection_location.z);
 
-	Intersection i = Intersection(hit_object, p);
-	return { i };
+
+	// TODO: intersection takes this Shape as a pointer, but the pointer ends up with garbage.
+		// The problem is we want to return any shape from this function.
+			// But Shape is abstract and C++ makes us use a pointer with an abstract class.
+	IntersectionAsStruct i = { hit_object.value(), p };
+	intersection.emplace(i);
+	return;
 }
 
-Color Scene::findColor(Intersection intersection, int recursive_depth_permitted) const
+Color Scene::findColor(IntersectionAsStruct intersection, int recursive_depth_permitted) const
 {
 	// Base case: no more reflections permitted
-	if (recursive_depth_permitted < 1) {
-		return Color(0.0f, 0.0f, 0.0f);
-	}
+	//if (recursive_depth_permitted < 1) {
+	//	return Color(0.0f, 0.0f, 0.0f);
+	//}
 
 	// TODO: for now, using glm::vec3 to handle the vector operations. Later on, could add operations to the custom Vector class.
 
-	Shape* intersected_shape = intersection.shape();
+	Shape* intersected_shape = intersection.intersected_shape;
 
 	// Ambient term, per object
 	glm::vec3 final_color = intersected_shape->ambient().toGlmVec3();
@@ -165,10 +177,11 @@ BYTE* Scene::raytrace(int max_recursion_depth) const
 	for (int i = 0; i < _height; i++) {
 		for (int j = 0; j < _width; j++) {
 			Ray ray = rayThroughPixel(i, j);
-			std::optional<Intersection> intersection = intersect(ray);
+			std::optional<IntersectionAsStruct> intersection = std::nullopt;
+			intersect(ray, intersection);
 			if (intersection.has_value()) {
-				//Color pixel_color = findColor(intersection.value(), max_recursion_depth);
-				Color pixel_color = Color(0.0f, 0.0f, 1.0f); // TODO: debug value: objects in view are coloured pure blue
+				Color pixel_color = findColor(intersection.value(), max_recursion_depth);
+				//Color pixel_color = Color(0.0f, 0.0f, 1.0f); // TODO: debug value: objects in view are coloured pure blue
 				RGBTRIPLE pixel_color_triple = pixel_color.to_freeimage_rgbtriple();
 				int pixel_start_index = (i * _width * 3) + (j * 3);
 
@@ -178,8 +191,8 @@ BYTE* Scene::raytrace(int max_recursion_depth) const
 				pixels[pixel_start_index + 2] = pixel_color_triple.rgbtRed;
 			}
 			else { // No intersection so use global ambient value.
-				//Color pixel_color = _ambient_global;
-				Color pixel_color = Color(0.5f, 0.0f, 0.0f); // TODO: debug value: background is pure dark red.
+				Color pixel_color = _ambient_global;
+				//Color pixel_color = Color(0.5f, 0.0f, 0.0f); // TODO: debug value: background is pure dark red.
 				RGBTRIPLE pixel_color_triple = pixel_color.to_freeimage_rgbtriple();
 				int pixel_start_index = (i * _width * 3) + (j * 3);
 

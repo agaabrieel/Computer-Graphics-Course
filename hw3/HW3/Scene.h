@@ -34,6 +34,12 @@ raytrace() // Returns an image of the scene raytraced.
 	// finds the color using the intersection. 
 */
 
+// TODO: put in name space
+struct IntersectionAsStruct {
+	Shape* intersected_shape;
+	Point intersection_location;
+};
+
 class Scene
 {
 	public:
@@ -54,9 +60,9 @@ class Scene
 
 		Ray rayThroughPixel(int i, int j) const; // Returns the ray that goes from the camera through the "viewing screen" at pixel with coords i, j
 		 
-		std::optional<Intersection> intersect(const Ray& ray) const;  // finds the object in the scene that is closest to the camera and intersects the ray
+		void intersect(const Ray& ray, std::optional<IntersectionAsStruct>& intersection) const;  // finds the object in the scene that is closest to the camera and intersects the ray
 	
-		Color findColor(Intersection intersection, int recursive_depth_permitted) const; // Finds the appropriate color given the object and location in intersection
+		Color findColor(IntersectionAsStruct intersection, int recursive_depth_permitted) const; // Finds the appropriate color given the object and location in intersection
 
 		BYTE* raytrace(int max_recursion_depth) const; // Returns a byte array containing the pixels of the raytraced image
 			// Possibility: have the option maxdepth passed here
