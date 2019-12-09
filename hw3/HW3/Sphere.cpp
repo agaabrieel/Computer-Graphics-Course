@@ -62,5 +62,7 @@ Point* Sphere::intersect(Ray ray) const
 	}
 
 	glm::vec3 intersection_location = p0 + smallest_positive_root * p1;
+
+	// TODO: introducing memory leak here.
 	return new Point(intersection_location.x, intersection_location.y, intersection_location.z);
 }

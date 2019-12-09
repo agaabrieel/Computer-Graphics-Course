@@ -1,7 +1,12 @@
-﻿  main.cpp
+﻿  Intersection.cpp
   ReadFile.cpp
   Scene.cpp
+  Shape.cpp
   Sphere.cpp
+  Triangle.cpp
+  Vertex.cpp
+  main.cpp
   Generating Code...
 C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\Sphere.cpp(29,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  LINK : C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\Debug\Raytracer.exe not found or not built by the last incremental link; performing full link
   HW3.vcxproj -> C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\Debug\Raytracer.exe

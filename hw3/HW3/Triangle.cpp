@@ -9,5 +9,27 @@ Triangle::~Triangle()
 
 Point* Triangle::intersect(Ray ray) const
 {
-	return nullptr; //TODO
+	glm::vec3 A = _a.toGlmVec3();
+	glm::vec3 B = _b.toGlmVec3();
+	glm::vec3 C = _c.toGlmVec3();
+
+	glm::vec3 normal = glm::cross(C - A, B - A);
+	normal = glm::normalize(normal);
+	
+	glm::vec3 p0 = ray.origin().toGlmVec3();
+	glm::vec3 p1 = ray.direction().toGlmVec3();
+
+	float denominator = glm::dot(p1, normal);
+
+	// No intersection when parallel to the plane
+	if (denominator == 0.0f) { // TODO: might we allow a small tolerance here for floating point error?
+		return nullptr;
+	}
+
+	float t = (glm::dot(A, normal) - glm::dot(p0, normal)) / denominator;
+
+	glm::vec3 intersection_location = p0 + t * p1;
+
+	// TODO: introducing memory leak here.
+	return new Point(intersection_location.x, intersection_location.y, intersection_location.z);
 }
