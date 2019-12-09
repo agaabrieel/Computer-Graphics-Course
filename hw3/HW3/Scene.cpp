@@ -78,11 +78,13 @@ Ray Scene::rayThroughPixel(int i, int j) const
 	return Ray(_camera.lookfrom(), Direction(direction.x, direction.y, direction.z)); 
 }
 
-Intersection Scene::intersect(const Ray& ray) const
+std::optional<Intersection> Scene::intersect(const Ray& ray) const
 {
 	float mindist = INFINITY;
 	std::unique_ptr<Shape> hit_object;
 
+	// Ideally these two loops would be merged but I found it problematic storing shapes:
+		// Shape class is abstract and C++ requires pointers to store derived objects.
 	for (Triangle triangle : _triangles) {
 		float t = triangle.intersect(ray);
 		if (t > 0 && t < mindist) {
@@ -99,12 +101,16 @@ Intersection Scene::intersect(const Ray& ray) const
 		}
 	}
 
+	if (hit_object.get() == NULL) {
+		return std::nullopt;
+	}
+
 	glm::vec3 intersection_location = ray.origin().toGlmVec3() + mindist * ray.direction().toGlmVec3();
 	Point p = Point(intersection_location.x, intersection_location.y, intersection_location.z);
 
 	// TODO: check, will the pointer to the shape remain accessible after returning if we are using a smart pointer?
 	Intersection i = Intersection(hit_object.get(), p);
-	return i; 
+	return { i };
 }
 
 Color Scene::findColor(Intersection intersection) const

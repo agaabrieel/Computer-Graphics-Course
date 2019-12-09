@@ -7,6 +7,7 @@
 #include "Intersection.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
+#include <optional>
 
 
 // Contains class to contain scene description
@@ -53,7 +54,7 @@ class Scene
 
 		Ray rayThroughPixel(int i, int j) const; // Returns the ray that goes from the camera through the "viewing screen" at pixel with coords i, j
 		 
-		Intersection intersect(const Ray& ray) const;  // finds the object in the scene that is closest to the camera and intersects the ray
+		std::optional<Intersection> intersect(const Ray& ray) const;  // finds the object in the scene that is closest to the camera and intersects the ray
 	
 		Color findColor(Intersection intersection) const; // Finds the appropriate color given the object and location in intersection
 
