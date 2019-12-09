@@ -113,8 +113,13 @@ std::optional<Intersection> Scene::intersect(const Ray& ray) const
 	return { i };
 }
 
-Color Scene::findColor(Intersection intersection) const
+Color Scene::findColor(Intersection intersection, int recursive_depth_permitted) const
 {
+	// Base case: no more reflections permitted
+	if (recursive_depth_permitted < 1) {
+		return Color(0.0f, 0.0f, 0.0f);
+	}
+
 	// TODO: for now, using glm::vec3 to handle the vector operations. Later on, could add operations to the custom Vector class.
 
 	Shape* intersected_shape = intersection.shape();
@@ -126,14 +131,26 @@ Color Scene::findColor(Intersection intersection) const
 	final_color += intersected_shape->emission().toGlmVec3();
 
 	for (PointLight point_light : _point_lights) {
+		// If the light is visible from the intersection location
+			// Compute the diffuse component to the final color
+			// Compute the specular component to the final color		
+
+		// Attenuation:
+			// Light contribution / (const + lin * dist + quad * dist^2)
 		// TODO: implement point_light contribution to color
 	}
 
 	for (DirectionalLight directional_light : _directional_lights) {
+		// If the light is visible from the intersection location
+			// Add the diffuse component to the final color
+			// Add the specular component to the final color	
+
+		// No attenuation?
 		// TODO: implement directional_light contribution to color
 	}
 
 	// TODO: implement recursive element
+	// specular * findColor(reflected ray, recursive_depth_permitted - 1)
 
 	return Color(final_color.x, final_color.y, final_color.z);
 }

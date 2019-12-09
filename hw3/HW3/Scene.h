@@ -56,7 +56,7 @@ class Scene
 		 
 		std::optional<Intersection> intersect(const Ray& ray) const;  // finds the object in the scene that is closest to the camera and intersects the ray
 	
-		Color findColor(Intersection intersection) const; // Finds the appropriate color given the object and location in intersection
+		Color findColor(Intersection intersection, int recursive_depth_permitted) const; // Finds the appropriate color given the object and location in intersection
 
 		BYTE* raytrace(int max_recursion_depth) const; // Returns a byte array containing the pixels of the raytraced image
 			// Possibility: have the option maxdepth passed here
