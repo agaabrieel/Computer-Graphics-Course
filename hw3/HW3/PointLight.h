@@ -19,6 +19,8 @@ class PointLight :
 
 		Point point() const;
 
+		bool isVisibleFrom(Point point) const;
+
 	private: 
 		const Point _point;
 };

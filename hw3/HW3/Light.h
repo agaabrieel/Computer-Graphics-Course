@@ -1,6 +1,7 @@
 #pragma once
 #include "Color.h"
 #include "Attenuation.h"
+#include "Point.h"
 
 /*
 A light has
@@ -13,12 +14,14 @@ attenuation (const, linear, quadratic)
 class Light  // abstract
 {
 	public:
+		Light(Color color, Attenuation attenuation);
+		~Light();
 		Color color() const;
 		Attenuation attenuation() const;
-		virtual ~Light() = 0;
+		
+		virtual bool isVisibleFrom(Point point) const = 0; // returns true if there is an unobstructed path from the given point to the light.
 
-	protected:
-		Light(Color color, Attenuation attenuation);
+		
 
 	private:
 		const Color _color;

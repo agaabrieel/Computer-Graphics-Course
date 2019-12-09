@@ -19,6 +19,8 @@ class DirectionalLight :
 
 		Direction direction() const;
 
+		bool isVisibleFrom(Point point) const;
+
 	private:
 		const Direction _direction;
 };

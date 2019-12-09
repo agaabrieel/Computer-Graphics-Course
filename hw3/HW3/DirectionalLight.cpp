@@ -8,3 +8,8 @@ DirectionalLight::~DirectionalLight()
 }
 
 Direction DirectionalLight::direction() const {	return _direction; }
+
+bool DirectionalLight::isVisibleFrom(Point point) const 
+{
+	return false;
+}
