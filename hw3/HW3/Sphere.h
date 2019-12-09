@@ -26,6 +26,6 @@ class Sphere :
 
 	private:
 		const Point _center;
-		const float _radius;
+		const float _radius; // TODO: consider storing radius squared since that is what seems to be needed.
 };
 

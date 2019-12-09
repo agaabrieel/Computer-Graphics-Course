@@ -1,6 +1,7 @@
-﻿  Intersection.cpp
-  main.cpp
+﻿  main.cpp
   ReadFile.cpp
   Scene.cpp
+  Sphere.cpp
   Generating Code...
+C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\Sphere.cpp(29,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   HW3.vcxproj -> C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\Debug\Raytracer.exe

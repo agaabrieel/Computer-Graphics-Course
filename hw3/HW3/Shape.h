@@ -43,6 +43,7 @@ class Shape  // abstract
 															// Maybe something like: worldToObject?
 
 		// TODO consider returning smart pointer from intersect
+		// TODO intersect may need to return more information: e.g. normal
 		virtual Point* intersect(Ray ray) const = 0;
 			// determines the intersection point of the given object with the ray, if any
 			// Presumably, uses world coordinates to determine the intersection?
