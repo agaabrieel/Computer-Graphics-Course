@@ -28,5 +28,10 @@ std::optional<float> Triangle::intersect(Ray ray) const
 
 	float t = (glm::dot(A, normal) - glm::dot(p0, normal)) / denominator;
 
-	return { t };
+	if (t > 0) {
+		return { t };
+	}
+	else {
+		return std::nullopt;
+	}
 }
