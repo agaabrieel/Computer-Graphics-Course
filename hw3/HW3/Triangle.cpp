@@ -7,7 +7,7 @@ Triangle::~Triangle()
 {
 }
 
-Point* Triangle::intersect(Ray ray) const
+float Triangle::intersect(Ray ray) const
 {
 	glm::vec3 A = _a.toGlmVec3();
 	glm::vec3 B = _b.toGlmVec3();
@@ -23,13 +23,10 @@ Point* Triangle::intersect(Ray ray) const
 
 	// No intersection when parallel to the plane
 	if (denominator == 0.0f) { // TODO: might we allow a small tolerance here for floating point error?
-		return nullptr;
+		return -1.0f;
 	}
 
 	float t = (glm::dot(A, normal) - glm::dot(p0, normal)) / denominator;
 
-	glm::vec3 intersection_location = p0 + t * p1;
-
-	// TODO: introducing memory leak here.
-	return new Point(intersection_location.x, intersection_location.y, intersection_location.z);
+	return t;
 }

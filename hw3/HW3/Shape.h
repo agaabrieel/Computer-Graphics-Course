@@ -42,12 +42,11 @@ class Shape  // abstract
 		glm::mat4 transform() const; // Is this the best name for this? It's the name from the previous project, but it's not very clear.
 															// Maybe something like: worldToObject?
 
-		// TODO consider returning smart pointer from intersect
-		// TODO intersect may need to return more information: e.g. normal
-		virtual Point* intersect(Ray ray) const = 0;
-			// determines the intersection point of the given object with the ray, if any
-			// Presumably, uses world coordinates to determine the intersection?
-			// Returns the location of the hit, or a null pointer if there is no valid intersection
+		virtual float intersect(Ray ray) const = 0;
+			// Returns the parameter t:
+				// For now, return the smallest positive t if there is an intersection
+				// Otherwise, return a negative number for no intersection
+				// Later on, we can use boost::maybe or exceptions to handle this better.
 
 	protected:
 		Shape(Color diffuse, Color specular, float shininess, Color emission, Color ambient, glm::mat4 transform);

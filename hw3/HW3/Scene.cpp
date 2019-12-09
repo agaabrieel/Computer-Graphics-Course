@@ -80,9 +80,31 @@ Ray Scene::rayThroughPixel(int i, int j) const
 
 Intersection Scene::intersect(const Ray& ray) const
 {
-	// Placeholder intersection
-	Intersection i = Intersection(new Sphere(Color(0, 0, 0), Color(0, 0, 0), 0.0, Color(0, 0, 0), Color(0, 0, 0), glm::mat4(), Point(0, 0, 0), 0.0), Point(0, 0, 0));
-	return i; //TODO implement Scene::intersect
+	float mindist = INFINITY;
+	std::unique_ptr<Shape> hit_object;
+
+	for (Triangle triangle : _triangles) {
+		float t = triangle.intersect(ray);
+		if (t > 0 && t < mindist) {
+			mindist = t;
+			hit_object.reset(&triangle);
+		}
+	}
+
+	for (Sphere sphere : _spheres) {
+		float t = sphere.intersect(ray);
+		if (t > 0 && t < mindist) {
+			mindist = t;
+			hit_object.reset(&sphere);
+		}
+	}
+
+	glm::vec3 intersection_location = ray.origin().toGlmVec3() + mindist * ray.direction().toGlmVec3();
+	Point p = Point(intersection_location.x, intersection_location.y, intersection_location.z);
+
+	// TODO: check, will the pointer to the shape remain accessible after returning if we are using a smart pointer?
+	Intersection i = Intersection(hit_object.get(), p);
+	return i; 
 }
 
 Color Scene::findColor(Intersection intersection) const
