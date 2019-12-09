@@ -15,7 +15,10 @@ using namespace std;
 
 // Adapted from HW2 skeleton code.
 void saveImage(int width, int height, BYTE* pixels, string fname) {
-	FIBITMAP* img = FreeImage_ConvertFromRawBits(pixels, width, height, width * 3, 24, 0xFF0000, 0x00FF00, 0x0000FF, false);
+	// TODO: the final argument (true) says to read the BITMAP from top to bottom.
+		// We are building the bitmap this way. Check if this is slower than bottom to top.
+		// If so, we can build the bitmap the other way.
+	FIBITMAP* img = FreeImage_ConvertFromRawBits(pixels, width, height, width * 3, 24, 0xFF0000, 0x00FF00, 0x0000FF, true);
 	std::cout << "Saving screenshot: " << fname << "\n";
 	FreeImage_Save(FIF_PNG, img, fname.c_str(), 0);
 	// Do i need to free the img data here?
