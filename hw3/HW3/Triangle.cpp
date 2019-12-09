@@ -10,6 +10,11 @@ Triangle::~Triangle()
 std::optional<float> Triangle::intersect(Ray ray) const
 {
 	// TODO: account for transformed objects
+	// Apply inverse transform to ray;
+	glm::vec4 ray_origin = glm::vec4(ray.origin().x(), ray.origin().x(), ray.origin().z(), 1); // Stored as homogenous coord. // TODO simplify
+	glm::vec4 ray_direction = glm::vec4(ray.direction().x(), ray.direction().y(), ray.direction().z(), 0);
+	ray_origin = _transform_inverse * ray_origin;
+	ray_direction = _transform_inverse  * ray_direction;
 
 	// Begin ray-plane intersection
 	glm::vec3 a = _a.toGlmVec3();
@@ -19,8 +24,10 @@ std::optional<float> Triangle::intersect(Ray ray) const
 	glm::vec3 normal = glm::cross(c - a, b - a);
 	normal = glm::normalize(normal);
 	
-	glm::vec3 p0 = ray.origin().toGlmVec3();
-	glm::vec3 p1 = ray.direction().toGlmVec3();
+	//glm::vec3 p0 = ray.origin().toGlmVec3();
+	glm::vec3 p0 = glm::vec3(ray_origin.x / ray_origin.w, ray_origin.y / ray_origin.w, ray_origin.z / ray_origin.w);
+	//glm::vec3 p1 = ray.direction().toGlmVec3();
+	glm::vec3 p1 = glm::vec3(ray_direction.x, ray_direction.y, ray_direction.z);
 	
 	float denominator = glm::dot(p1, normal);
 

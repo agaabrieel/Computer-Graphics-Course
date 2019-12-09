@@ -2,7 +2,7 @@
 #include "Sphere.h" // TODO remove after implementing intersect
 #include "Triangle.h"
 #include <memory>
-
+#include "ProgressBar.hpp"  // https://github.com/prakhar1989/progress-cpp
 
 Scene::Scene(int width, int height, Camera camera) :
 	// Default value for the background in the reference images appears to be pitch black, not (0.2, 0.2, 0.2)
@@ -116,12 +116,8 @@ void Scene::intersect(const Ray& ray, std::optional<IntersectionAsStruct>& inter
 	}
 
 	glm::vec3 intersection_location = ray.origin().toGlmVec3() + mindist * ray.direction().toGlmVec3();
-	Point p = Point(intersection_location.x, intersection_location.y, intersection_location.z);
+	Point p = Point(intersection_location);
 
-
-	// TODO: intersection takes this Shape as a pointer, but the pointer ends up with garbage.
-		// The problem is we want to return any shape from this function.
-			// But Shape is abstract and C++ makes us use a pointer with an abstract class.
 	IntersectionAsStruct i = { hit_object.value(), p };
 	intersection.emplace(i);
 	return;
@@ -174,6 +170,7 @@ BYTE* Scene::raytrace(int max_recursion_depth) const
 {
 	int pix = _width * _height;
 	BYTE* pixels = new BYTE[3 * pix];
+	ProgressBar progressBar(_height, 70);
 
 	for (int i = 0; i < _height; i++) {
 		for (int j = 0; j < _width; j++) {
@@ -205,7 +202,10 @@ BYTE* Scene::raytrace(int max_recursion_depth) const
 				// TODO reduce duplication : smart pointer to pixel_color
 			}
 		}
+		++progressBar;
+		progressBar.display();
 	}
-	   
+	  
+	progressBar.done();
 	return pixels;
 }

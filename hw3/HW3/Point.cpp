@@ -2,6 +2,8 @@
 
 Point::Point(float x, float y, float z) : _x(x), _y(y), _z(z) {}
 
+Point::Point(glm::vec3 p) : _x(p.x), _y(p.y), _z(p.z) {}
+
 Point::~Point()
 {
 }

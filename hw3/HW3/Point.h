@@ -21,6 +21,7 @@ class Point
 {
 	public:
 		Point(float x, float y, float z);
+		Point(glm::vec3 p);
 		~Point();
 
 		float x() const;

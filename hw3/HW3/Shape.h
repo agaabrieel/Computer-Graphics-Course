@@ -52,7 +52,6 @@ class Shape  // abstract
 	protected:
 		Shape(Color diffuse, Color specular, float shininess, Color emission, Color ambient, glm::mat4 transform);
 
-	private:
 		const Color _diffuse;
 		const Color _specular;
 		const float _shininess;
@@ -60,5 +59,7 @@ class Shape  // abstract
 		const Color _ambient; // Maybe null. How to model this? Since the lighting model is additive, one option is maybe (0, 0, 0)
 
 		const glm::mat4 _transform;
+		glm::mat4 _transform_inverse;
+		
 };
 
