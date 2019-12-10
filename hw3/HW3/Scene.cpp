@@ -196,7 +196,11 @@ Color Scene::findColor(IntersectionAsStruct intersection, int recursive_depth_pe
 		glm::vec3 reflected_ray_origin = intersection.intersection_location.toGlmVec3();
 		glm::vec3 reflected_ray_direction = original_ray_direction + 2.0f * (glm::dot(-original_ray_direction, intersection.normal)) * intersection.normal;
 		reflected_ray_direction = glm::normalize(reflected_ray_direction);
-		reflected_ray_origin += 0.0001f * reflected_ray_direction; // TODO check if necessary, pushes reflected ray slightly away from object
+
+		// Push reflected ray slightly out to avoid self-intersection due to floating point inaccuracy.
+		reflected_ray_origin += 0.0001f * reflected_ray_direction;
+
+
 		Ray reflected_ray = Ray(Point(reflected_ray_origin), Direction(reflected_ray_direction));
 		std::optional<IntersectionAsStruct> reflected_intersection = std::nullopt;
 		intersect(reflected_ray, reflected_intersection);

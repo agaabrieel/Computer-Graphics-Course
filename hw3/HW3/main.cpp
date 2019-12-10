@@ -43,6 +43,5 @@ int main(int argc, char* argv[])
 	saveImage(scene.width(), scene.height(), pixels, sceneData.output_filename);
 	// TODO do i need to free the pixels here?
 	FreeImage_DeInitialise();
-
 	return 0;
 }
