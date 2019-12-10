@@ -20,7 +20,10 @@ class Direction :
 {
 	public:
 		Direction(float x, float y, float z);
+		Direction(glm::vec4 d);
 		~Direction();
+
+		glm::vec4 toGlmVec4() const; // homogeneous coordinates
 
 	private:
 		void normalise();

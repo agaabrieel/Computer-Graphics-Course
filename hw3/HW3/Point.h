@@ -22,6 +22,7 @@ class Point
 	public:
 		Point(float x, float y, float z);
 		Point(glm::vec3 p);
+		Point(glm::vec4 p);
 		~Point();
 
 		float x() const;
@@ -29,6 +30,7 @@ class Point
 		float z() const;
 
 		glm::vec3 toGlmVec3() const;
+		glm::vec4 toGlmVec4() const; // homogeneous coordinates
 
 	private:
 		const float _x;

@@ -19,18 +19,22 @@ std::optional<float> Sphere::intersect(Ray ray) const
 {
 	// TODO: account for transformed objects
 
+	// Transform ray to object coordinates.
+	// Do sphere-ray' intersection to get p'
+	Ray ray_prime = ray.toObjectCoordinates(_transform_inverse);
+
 	// TODO: kludge using glm, later on we can define own operations on custom data types
-	glm::vec3 p0 = ray.origin().toGlmVec3();
-	glm::vec3 p1 = ray.direction().toGlmVec3();
+	glm::vec3 p0_prime = ray_prime.origin().toGlmVec3();
+	glm::vec3 p1_prime = ray_prime.direction().toGlmVec3();
 
 	glm::vec3 center = _center.toGlmVec3();
 
-	glm::vec3 p0_minus_c = p0 - center;
+	glm::vec3 p0_prime_minus_c = p0_prime - center;
 
 	// Set up quadratic equation with coefficients a, b, c
-	float a = glm::dot(p1, p1);
-	float b = glm::dot(2.0f *  p1, p0_minus_c);
-	float c = glm::dot(p0_minus_c, p0_minus_c) - (_radius * _radius);
+	float a = glm::dot(p1_prime, p1_prime);
+	float b = glm::dot(2.0f *  p1_prime, p0_prime_minus_c);
+	float c = glm::dot(p0_prime_minus_c, p0_prime_minus_c) - (_radius * _radius);
 
 	float discriminant = b * b - (4.0f * a * c);
 
@@ -67,5 +71,11 @@ std::optional<float> Sphere::intersect(Ray ray) const
 		return std::nullopt;
 	}
 
-	return { smallest_positive_root };
+	glm::vec4 p_prime = glm::vec4(p0_prime + smallest_positive_root * p1_prime, 1);
+	glm::vec4 p = _transform * p_prime;
+	// Transform p' back to p
+	// p' = p0' + t' * p1'
+	// p = Mp'
+
+	return { glm::distance(p, ray.origin().toGlmVec4()) };
 }

@@ -17,9 +17,11 @@ class Ray
 		Ray(Point origin, Direction direction);
 		Ray(glm::vec3 origin, glm::vec3 direction);
 		~Ray();
-
+		
 		Point origin() const;
 		Direction direction() const;
+
+		Ray toObjectCoordinates(const glm::mat4& m_inverse);
 
 	private:
 		const Point _origin;
