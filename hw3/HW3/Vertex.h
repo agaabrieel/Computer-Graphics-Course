@@ -23,13 +23,14 @@ class Vertex
 {
 	public:
 		Vertex(float x, float y, float z);
-		~Vertex();
+		Vertex(glm::vec4 homogeneous_coordinates);
 
 		float x() const;
 		float y() const;
 		float z() const;
 
 		glm::vec3 toGlmVec3() const;
+		glm::vec4 toGlmVec4() const; // Homogeneous coordinates
 
 	private:
 		const float _x;

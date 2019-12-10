@@ -27,5 +27,6 @@ class Sphere :
 	private:
 		const Point _center;
 		const float _radius; // TODO: consider storing radius squared since that is what seems to be needed.
+		const glm::mat4 _transform_inverse; // Only needed by sphere, not triangle
 };
 

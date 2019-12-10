@@ -1,7 +1,8 @@
 #include "Sphere.h"
 
 Sphere::Sphere(Color diffuse, Color specular, float shininess, Color emission, Color ambient, glm::mat4 transform, Point center, float radius) :
-	Shape(diffuse, specular, shininess, emission, ambient, transform), _center(center), _radius(radius) {}
+	Shape(diffuse, specular, shininess, emission, ambient, transform), _center(center), _radius(radius),
+	_transform_inverse(glm::inverse(_transform)) {}
 
 Sphere::~Sphere()
 {

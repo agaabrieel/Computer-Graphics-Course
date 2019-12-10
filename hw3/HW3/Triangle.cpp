@@ -1,7 +1,12 @@
 #include "Triangle.h"
 
 Triangle::Triangle(Color diffuse, Color specular, float shininess, Color emission, Color ambient, glm::mat4 transform, Vertex a, Vertex b, Vertex c) :
-	Shape(diffuse, specular, shininess, emission, ambient, transform), _a(a), _b(b), _c(c) {}
+	Shape(diffuse, specular, shininess, emission, ambient, transform),
+	_a(Vertex(_transform * a.toGlmVec4())), // Transform vertexes to eye coordinates
+	_b(Vertex(_transform * b.toGlmVec4())),
+	_c(Vertex(_transform * c.toGlmVec4()))
+{
+}
 
 Triangle::~Triangle()
 {
@@ -10,11 +15,6 @@ Triangle::~Triangle()
 std::optional<float> Triangle::intersect(Ray ray) const
 {
 	// TODO: account for transformed objects
-	// Apply inverse transform to ray;
-	glm::vec4 ray_origin = glm::vec4(ray.origin().x(), ray.origin().x(), ray.origin().z(), 1); // Stored as homogenous coord. // TODO simplify
-	glm::vec4 ray_direction = glm::vec4(ray.direction().x(), ray.direction().y(), ray.direction().z(), 0);
-	ray_origin = _transform_inverse * ray_origin;
-	ray_direction = _transform_inverse  * ray_direction;
 
 	// Begin ray-plane intersection
 	glm::vec3 a = _a.toGlmVec3();
@@ -24,10 +24,8 @@ std::optional<float> Triangle::intersect(Ray ray) const
 	glm::vec3 normal = glm::cross(c - a, b - a);
 	normal = glm::normalize(normal);
 	
-	//glm::vec3 p0 = ray.origin().toGlmVec3();
-	glm::vec3 p0 = glm::vec3(ray_origin.x / ray_origin.w, ray_origin.y / ray_origin.w, ray_origin.z / ray_origin.w);
-	//glm::vec3 p1 = ray.direction().toGlmVec3();
-	glm::vec3 p1 = glm::vec3(ray_direction.x, ray_direction.y, ray_direction.z);
+	glm::vec3 p0 = ray.origin().toGlmVec3();
+	glm::vec3 p1 = ray.direction().toGlmVec3();
 	
 	float denominator = glm::dot(p1, normal);
 
@@ -76,6 +74,7 @@ std::optional<float> Triangle::intersect(Ray ray) const
 	float gamma = (d00 * d21 - d01 * d20) / denom;
 	float alpha = 1.0f - beta - gamma;
 	// End compute barycentric coordinates.
+
 
 	if (alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1 && gamma >= 0 && gamma <= 1) {
 		return { t };

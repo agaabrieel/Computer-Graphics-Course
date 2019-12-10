@@ -27,9 +27,9 @@ class Triangle :
 		std::optional<float> intersect(Ray ray) const;
 
 	private:
-		const Vertex _a;
-		const Vertex _b;
-		const Vertex _c;
+		Vertex _a;
+		Vertex _b;
+		Vertex _c;
 
 };
 
