@@ -38,7 +38,6 @@ int main(int argc, char* argv[])
 	
 	BYTE* pixels = scene.raytrace(sceneData.max_recursion_depth);
 
-
 	FreeImage_Initialise();
 	saveImage(scene.width(), scene.height(), pixels, sceneData.output_filename);
 	// TODO do i need to free the pixels here?
