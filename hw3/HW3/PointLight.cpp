@@ -23,5 +23,14 @@ bool PointLight::isVisibleFrom(Point point, const Scene * scene) const
 	Ray ray = Ray(origin, direction);
 	std::optional<IntersectionAsStruct> t = std::nullopt;
 	scene->intersect(ray, t);
-	return !t.has_value();
+	
+	if (!t.has_value()) {
+		return true; // No object intersects on this ray.
+	}
+
+	// The distance to the light is smaller than the distance to the first object intersection
+		// So the light is visible
+		// TODO tidy up
+	return glm::abs(glm::distance(origin, _point.toGlmVec3())) < glm::abs(glm::distance(origin, t.value().intersection_location.toGlmVec3()));
+
 }

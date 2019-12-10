@@ -40,6 +40,7 @@ struct IntersectionAsStruct {
 	Point intersection_location;
 	glm::vec3 normal;
 	Ray ray;
+	float distance;
 };
 
 class Scene

@@ -23,5 +23,7 @@ bool DirectionalLight::isVisibleFrom(Point point, const Scene* scene) const
 	Ray ray = Ray(origin, direction);
 	std::optional<IntersectionAsStruct> t = std::nullopt;
 	scene->intersect(ray, t);
+
+	// Any object in the direction will be obstructing the directional light, since the light is at a point at infinity.
 	return !t.has_value();
 }

@@ -112,7 +112,7 @@ scale 0.1 0.1 0.1
 sphere 0 0 0 1
 popTransform
 
-#sphere3
+##sphere3
 diffuse 0.7 0.5 0.2
 specular 0.2 0.2 0.2
 pushTransform
@@ -121,7 +121,7 @@ scale 0.1 0.1 0.1
 sphere 0 0 0 1
 popTransform
 
-#sphere4
+##sphere4
 diffuse 0.7 0.5 0.2
 specular 0.2 0.2 0.2
 pushTransform

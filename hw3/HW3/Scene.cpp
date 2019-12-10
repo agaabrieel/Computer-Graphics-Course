@@ -121,7 +121,7 @@ void Scene::intersect(const Ray& ray, std::optional<IntersectionAsStruct>& inter
 	glm::vec3 intersection_location = ray.origin().toGlmVec3() + mindist * ray.direction().toGlmVec3();
 	Point p = Point(intersection_location);
 
-	IntersectionAsStruct i = { hit_object.value(), p, normal, ray };
+	IntersectionAsStruct i = { hit_object.value(), p, normal, ray, mindist };
 	intersection.emplace(i);
 	return;
 }
