@@ -121,7 +121,7 @@ void Scene::intersect(const Ray& ray, std::optional<IntersectionAsStruct>& inter
 	glm::vec3 intersection_location = ray.origin().toGlmVec3() + mindist * ray.direction().toGlmVec3();
 	Point p = Point(intersection_location);
 
-	IntersectionAsStruct i = { hit_object.value(), p, normal };
+	IntersectionAsStruct i = { hit_object.value(), p, normal, ray };
 	intersection.emplace(i);
 	return;
 }
@@ -129,9 +129,9 @@ void Scene::intersect(const Ray& ray, std::optional<IntersectionAsStruct>& inter
 Color Scene::findColor(IntersectionAsStruct intersection, int recursive_depth_permitted) const
 {
 	// Base case: no more reflections permitted
-	//if (recursive_depth_permitted < 1) {
-	//	return Color(0.0f, 0.0f, 0.0f);
-	//}
+	if (recursive_depth_permitted < 1) {
+		return Color(0.0f, 0.0f, 0.0f); // Colors are additive so we can just return black.
+	}
 
 	// TODO: for now, using glm::vec3 to handle the vector operations. Later on, could add operations to the custom Vector class.
 
@@ -146,19 +146,21 @@ Color Scene::findColor(IntersectionAsStruct intersection, int recursive_depth_pe
 	for (PointLight point_light : _point_lights) {
 
 		bool isVisible = point_light.isVisibleFrom(intersection.intersection_location, this);
+		if (isVisible) { 
+			// TODO this is duplicated code form isVisibleFrom
+			glm::vec3 light_direction = point_light.point().toGlmVec3() - intersection.intersection_location.toGlmVec3();
+			light_direction = glm::normalize(light_direction);
+			float l_dot_n = glm::dot(light_direction, intersection.normal);
 
-		// TODO this is duplicated code form isVisibleFrom
-		glm::vec3 light_direction = point_light.point().toGlmVec3() - intersection.intersection_location.toGlmVec3();
-		light_direction = glm::normalize(light_direction);
-		float l_dot_n = glm::dot(light_direction, intersection.normal);
-
-		if (isVisible) { // TODO debug value, remove true
-			// TODO double check if we should use half-angle vector?
 			// diffuse
 			final_color += point_light.color().toGlmVec3() * intersected_shape->diffuse().toGlmVec3() * glm::max(l_dot_n, 0.0f);
 
 			// specular
-			final_color += point_light.color().toGlmVec3() * intersected_shape->specular().toGlmVec3() * (pow(glm::max(l_dot_n, 0.0f), intersected_shape->shininess()));
+			glm::vec3 half_angle = (-intersection.ray.direction().toGlmVec3()) + light_direction;
+			half_angle = glm::normalize(half_angle);
+			float h_dot_n = glm::dot(half_angle, intersection.normal);
+
+			final_color += point_light.color().toGlmVec3() * intersected_shape->specular().toGlmVec3() * (pow(glm::max(h_dot_n, 0.0f), intersected_shape->shininess()));
 		}
 
 
@@ -168,25 +170,43 @@ Color Scene::findColor(IntersectionAsStruct intersection, int recursive_depth_pe
 
 	for (DirectionalLight directional_light : _directional_lights) {
 		bool isVisible = directional_light.isVisibleFrom(intersection.intersection_location, this);
+		if (isVisible) { 
+			// No need to compute the direction
+			glm::vec3 light_direction = directional_light.direction().toGlmVec3();
+			float l_dot_n = glm::dot(light_direction, intersection.normal);
 
-		// No need to compute the direction
-		glm::vec3 light_direction = directional_light.direction().toGlmVec3();
-		float l_dot_n = glm::dot(light_direction, intersection.normal);
-
-		if (isVisible) { // TODO debug value, remove true
-			// TODO double check if we should use half-angle vector?
 			// diffuse
 			final_color += directional_light.color().toGlmVec3() * intersected_shape->diffuse().toGlmVec3() * glm::max(l_dot_n, 0.0f);
 
 			// specular
-			final_color += directional_light.color().toGlmVec3() * intersected_shape->specular().toGlmVec3() * (pow(glm::max(l_dot_n, 0.0f), intersected_shape->shininess()));
+			glm::vec3 half_angle = (-intersection.ray.direction().toGlmVec3()) + light_direction;
+			half_angle = glm::normalize(half_angle);
+			float h_dot_n = glm::dot(half_angle, intersection.normal);
+
+			final_color += directional_light.color().toGlmVec3() * intersected_shape->specular().toGlmVec3() * (pow(glm::max(h_dot_n, 0.0f), intersected_shape->shininess()));
 		}
 		// No attenuation?
 		// TODO: implement directional_light contribution to color
 	}
 
-	// TODO: implement recursive element
-	// specular * findColor(reflected ray, recursive_depth_permitted - 1)
+	// It's expensive to compute the reflected ray and intersection, so let's not do it unless we need to.
+	// TODO Check that there is a significant specular component to the intersected object.
+	if (recursive_depth_permitted > 1) {
+		glm::vec3 original_ray_direction = intersection.ray.direction().toGlmVec3();
+		glm::vec3 reflected_ray_origin = intersection.intersection_location.toGlmVec3();
+		glm::vec3 reflected_ray_direction = -original_ray_direction + 2.0f * (glm::dot(original_ray_direction, intersection.normal)) * intersection.normal;
+		reflected_ray_direction = glm::normalize(reflected_ray_direction);
+		reflected_ray_origin += 0.0001f * reflected_ray_direction; // TODO check if necessary, pushes reflected ray slightly away from object
+		Ray reflected_ray = Ray(Point(reflected_ray_origin), Direction(reflected_ray_direction));
+		std::optional<IntersectionAsStruct> reflected_intersection = std::nullopt;
+		intersect(reflected_ray, reflected_intersection);
+
+		if (reflected_intersection.has_value()) {
+
+			glm::vec3 recursive_specular_component = intersected_shape->specular().toGlmVec3() * findColor(reflected_intersection.value(), recursive_depth_permitted - 1).toGlmVec3();
+			final_color += recursive_specular_component;
+		}
+	}
 
 	return Color(final_color.x, final_color.y, final_color.z);
 }

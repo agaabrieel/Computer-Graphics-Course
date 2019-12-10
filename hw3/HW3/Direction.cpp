@@ -11,6 +11,10 @@ Direction::Direction(float x, float y, float z) : Vector(x, y, z) {
 	normalise();
 }
 
+Direction::Direction(glm::vec3 d) : Direction(d.x, d.y, d.z)
+{
+}
+
 Direction::Direction(glm::vec4 d) : Direction(d.x, d.y, d.z)
 {
 }

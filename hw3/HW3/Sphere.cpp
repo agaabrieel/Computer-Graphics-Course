@@ -17,8 +17,6 @@ glm::mat4 Sphere::transform() const { return _transform; }
 
 std::optional<DistanceAndNormal> Sphere::intersect(Ray ray) const 
 {
-	// TODO: account for transformed objects
-
 	// Transform ray to object coordinates.
 	// Do sphere-ray' intersection to get p'
 	Ray ray_prime = ray.toObjectCoordinates(_transform_inverse);

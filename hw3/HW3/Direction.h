@@ -20,6 +20,7 @@ class Direction :
 {
 	public:
 		Direction(float x, float y, float z);
+		Direction(glm::vec3 d);
 		Direction(glm::vec4 d);
 		~Direction();
 
