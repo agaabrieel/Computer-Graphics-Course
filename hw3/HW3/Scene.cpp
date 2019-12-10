@@ -194,7 +194,7 @@ Color Scene::findColor(IntersectionAsStruct intersection, int recursive_depth_pe
 	if (recursive_depth_permitted > 1) {
 		glm::vec3 original_ray_direction = intersection.ray.direction().toGlmVec3();
 		glm::vec3 reflected_ray_origin = intersection.intersection_location.toGlmVec3();
-		glm::vec3 reflected_ray_direction = -original_ray_direction + 2.0f * (glm::dot(original_ray_direction, intersection.normal)) * intersection.normal;
+		glm::vec3 reflected_ray_direction = original_ray_direction + 2.0f * (glm::dot(-original_ray_direction, intersection.normal)) * intersection.normal;
 		reflected_ray_direction = glm::normalize(reflected_ray_direction);
 		reflected_ray_origin += 0.0001f * reflected_ray_direction; // TODO check if necessary, pushes reflected ray slightly away from object
 		Ray reflected_ray = Ray(Point(reflected_ray_origin), Direction(reflected_ray_direction));
