@@ -21,7 +21,7 @@ void saveImage(int width, int height, BYTE* pixels, string fname) {
 	FIBITMAP* img = FreeImage_ConvertFromRawBits(pixels, width, height, width * 3, 24, 0xFF0000, 0x00FF00, 0x0000FF, true);
 	std::cout << "Saving screenshot: " << fname << "\n";
 	FreeImage_Save(FIF_PNG, img, fname.c_str(), 0);
-	// Do i need to free the img data here?
+	// TODO Do i need to free the img data here?
 }
 
 int main(int argc, char* argv[])
@@ -31,6 +31,7 @@ int main(int argc, char* argv[])
 		exit(-1);
 	}
 
+	// TODO add pretty status messages
 
 	ReadFile::FileData sceneData = ReadFile::readfile(argv[1]);
 	Scene scene = sceneData.scene;
@@ -40,7 +41,7 @@ int main(int argc, char* argv[])
 
 	FreeImage_Initialise();
 	saveImage(scene.width(), scene.height(), pixels, sceneData.output_filename);
-	// do i need to free the pixels here?
+	// TODO do i need to free the pixels here?
 	FreeImage_DeInitialise();
 
 	return 0;

@@ -54,13 +54,15 @@ void TransformStack::translate(float tx, float ty, float tz)
 
 void TransformStack::rotate(float angle_radians, const Direction& axis)
 {
-	glm::vec3 axis_glm(axis.x(), axis.y(), axis.z()); // TODO: Temporary kludge to save defining a bunch of vector functions. Could define them in Direction later.
+	// TODO: Temporary kludge to save defining a bunch of vector functions. Could define them in Direction later.
+	glm::vec3 axis_glm = axis.toGlmVec3();
+	axis_glm = glm::normalize(axis_glm); // TODO probably not necessary
 
-	float cos_rads = cos(angle_radians);
+	float cos_rads = glm::cos(angle_radians);
 	// Direction is already normalised.
-	glm::mat3 a_star = glm::mat3(0, axis.z(), -axis.y(), -axis.z(), 0, axis.x(), axis.y(), -axis.x(), 0);
-
-	glm::mat4 m(glm::mat3() + (1 - cos_rads) * glm::outerProduct(axis_glm, axis_glm) + sin(angle_radians) * a_star);
+	glm::mat3 a_star = glm::mat3(0, axis_glm.z, -axis_glm.y, -axis_glm.z, 0, axis_glm.x, axis_glm.y, -axis_glm.x, 0);
+	glm::mat3 m_3 = cos_rads * glm::mat3() + (1 - cos_rads) * glm::outerProduct(axis_glm, axis_glm) + glm::sin(angle_radians) * a_star;
+	glm::mat4 m(m_3);
 	rightmultiply(m);
 }
 
