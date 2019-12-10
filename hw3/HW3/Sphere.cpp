@@ -72,11 +72,15 @@ std::optional<DistanceAndNormal> Sphere::intersect(Ray ray) const
 	}
 
 	glm::vec4 p_prime = glm::vec4(p0_prime + smallest_positive_root * p1_prime, 1);
+	glm::vec4 normal_prime = p_prime - glm::vec4(center, 1);
+	glm::vec4 normal4 = glm::transpose(_transform_inverse) * normal_prime;
+	glm::vec3 normal = glm::vec3(normal4.x, normal4.y, normal4.z);
+	normal = glm::normalize(normal);
 	glm::vec4 p = _transform * p_prime;
 
 	glm::vec3 p3 = glm::vec3(p.x / p.w, p.y / p.w, p.z / p.w);
-	glm::vec3 normal = p3 - center;
-	normal = glm::normalize(normal);
+	//glm::vec3 normal = p3 - center;
+	//normal = glm::normalize(normal);
 	// Transform p' back to p
 	// p' = p0' + t' * p1'
 	// p = Mp'
