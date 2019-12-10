@@ -6,13 +6,15 @@ Triangle::Triangle(Color diffuse, Color specular, float shininess, Color emissio
 	_b(Vertex(transform * b.toGlmVec4())),
 	_c(Vertex(transform * c.toGlmVec4()))
 {
-	glm::vec3 _a_glm = _a.toGlmVec3();
-	glm::vec3 _b_glm = _b.toGlmVec3();
-	glm::vec3 _c_glm = _c.toGlmVec3();
+	_a_glm = _a.toGlmVec3();
+	_b_glm = _b.toGlmVec3();
+	_c_glm = _c.toGlmVec3();
 
-	glm::vec3 normal = glm::cross(_c_glm - _a_glm, _b_glm - _a_glm);
-	normal = glm::normalize(normal);
+	_normal_with_transform = glm::cross(_c_glm - _a_glm, _b_glm - _a_glm);
+	_normal_with_transform = glm::normalize(_normal_with_transform);
 
+	_normal_without_transform = glm::cross(c.toGlmVec3() - a.toGlmVec3(), b.toGlmVec3() - a.toGlmVec3());
+	_normal_without_transform = glm::normalize(_normal_without_transform);
 }
 
 Triangle::~Triangle()
@@ -27,14 +29,14 @@ std::optional<DistanceAndNormal> Triangle::intersect(Ray ray) const
 	glm::vec3 p0 = ray.origin().toGlmVec3();
 	glm::vec3 p1 = ray.direction().toGlmVec3();
 	
-	float denominator = glm::dot(p1, _normal);
+	float denominator = glm::dot(p1, _normal_with_transform);
 
 	// No intersection when parallel to the plane
 	if (denominator == 0.0f) { // TODO: might we allow a small tolerance here for floating point error?
 		return std::nullopt;
 	}
 
-	float t = (glm::dot(_a_glm, _normal) - glm::dot(p0, _normal)) / denominator;
+	float t = (glm::dot(_a_glm, _normal_with_transform) - glm::dot(p0, _normal_with_transform)) / denominator;
 	
 	// The ray intersects the plane in the negative direction.
 	if (t <= 0) {
@@ -79,11 +81,11 @@ std::optional<DistanceAndNormal> Triangle::intersect(Ray ray) const
 
 
 	if (alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1 && gamma >= 0 && gamma <= 1) {
-		return { {t, _normal } };
+		return { {t, -_normal_with_transform } }; // TODO negating the normal fixes the problem with lighting for triangles, but really we should address why the normal is facing the wrong way.
 	}
 	else {
 		return std::nullopt;
 	}
 }
 
-glm::vec3 Triangle::normal() const { return _normal; }
+glm::vec3 Triangle::normal() const { return _normal_with_transform; }

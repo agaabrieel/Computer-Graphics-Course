@@ -152,7 +152,7 @@ Color Scene::findColor(IntersectionAsStruct intersection, int recursive_depth_pe
 		light_direction = glm::normalize(light_direction);
 		float l_dot_n = glm::dot(light_direction, intersection.normal);
 
-		if (isVisible) {
+		if (isVisible) { // TODO debug value, remove true
 			// TODO double check if we should use half-angle vector?
 			// diffuse
 			final_color += point_light.color().toGlmVec3() * intersected_shape->diffuse().toGlmVec3() * glm::max(l_dot_n, 0.0f);
@@ -173,7 +173,7 @@ Color Scene::findColor(IntersectionAsStruct intersection, int recursive_depth_pe
 		glm::vec3 light_direction = directional_light.direction().toGlmVec3();
 		float l_dot_n = glm::dot(light_direction, intersection.normal);
 
-		if (isVisible) {
+		if (isVisible) { // TODO debug value, remove true
 			// TODO double check if we should use half-angle vector?
 			// diffuse
 			final_color += directional_light.color().toGlmVec3() * intersected_shape->diffuse().toGlmVec3() * glm::max(l_dot_n, 0.0f);

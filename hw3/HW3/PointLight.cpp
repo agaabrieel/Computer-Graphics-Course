@@ -18,7 +18,7 @@ bool PointLight::isVisibleFrom(Point point, const Scene * scene) const
 	glm::vec3 direction = _point.toGlmVec3() - origin;
 	direction = glm::normalize(direction);
 
-	origin += direction * 0.01f; // Bring origin of ray slightly towards light source to prevent self-intersection.
+	origin += direction * 0.001f; // Bring origin of ray slightly towards light source to prevent self-intersection.
 
 	Ray ray = Ray(origin, direction);
 	std::optional<IntersectionAsStruct> t = std::nullopt;

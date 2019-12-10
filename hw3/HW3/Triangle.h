@@ -38,7 +38,8 @@ class Triangle :
 		glm::vec3 _b_glm;
 		glm::vec3 _c_glm;
 
-		glm::vec3 _normal;
+		glm::vec3 _normal_with_transform;
+		glm::vec3 _normal_without_transform;
 
 };
 
