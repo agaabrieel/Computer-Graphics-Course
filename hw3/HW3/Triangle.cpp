@@ -1,10 +1,10 @@
 #include "Triangle.h"
 
 Triangle::Triangle(Color diffuse, Color specular, float shininess, Color emission, Color ambient, glm::mat4 transform, Vertex a, Vertex b, Vertex c) :
-	Shape(diffuse, specular, shininess, emission, ambient, transform),
-	_a(Vertex(_transform * a.toGlmVec4())), // Transform vertexes to eye coordinates
-	_b(Vertex(_transform * b.toGlmVec4())),
-	_c(Vertex(_transform * c.toGlmVec4()))
+	Shape(diffuse, specular, shininess, emission, ambient),
+	_a(Vertex(transform * a.toGlmVec4())), // Transform vertexes to eye coordinates
+	_b(Vertex(transform * b.toGlmVec4())),
+	_c(Vertex(transform * c.toGlmVec4()))
 {
 }
 
@@ -14,8 +14,7 @@ Triangle::~Triangle()
 
 std::optional<float> Triangle::intersect(Ray ray) const
 {
-	// TODO: account for transformed objects
-
+	// Triangles are stored with the transform already applied to the vertexes, so we do not need to worry about transforms here.
 	// Begin ray-plane intersection
 	glm::vec3 a = _a.toGlmVec3();
 	glm::vec3 b = _b.toGlmVec3();

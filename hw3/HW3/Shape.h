@@ -40,8 +40,6 @@ class Shape  // abstract
 		float shininess() const;
 		Color emission() const;
 		Color ambient() const;
-		glm::mat4 transform() const; // Is this the best name for this? It's the name from the previous project, but it's not very clear.
-															// Maybe something like: worldToObject?
 
 		virtual std::optional<float> intersect(Ray ray) const = 0;
 			// Returns the parameter t:
@@ -50,14 +48,12 @@ class Shape  // abstract
 				// Later on, we can use boost::maybe or exceptions to handle this better.
 
 	protected:
-		Shape(Color diffuse, Color specular, float shininess, Color emission, Color ambient, glm::mat4 transform);
+		Shape(Color diffuse, Color specular, float shininess, Color emission, Color ambient);
 
 		const Color _diffuse;
 		const Color _specular;
 		const float _shininess;
 		const Color _emission;
-		const Color _ambient; // Maybe null. How to model this? Since the lighting model is additive, one option is maybe (0, 0, 0)
-
-		const glm::mat4 _transform;		
+		const Color _ambient; // Maybe null. How to model this? Since the lighting model is additive, one option is maybe (0, 0, 0)	
 };
 

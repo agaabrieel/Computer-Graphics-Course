@@ -1,7 +1,8 @@
 #include "Sphere.h"
 
 Sphere::Sphere(Color diffuse, Color specular, float shininess, Color emission, Color ambient, glm::mat4 transform, Point center, float radius) :
-	Shape(diffuse, specular, shininess, emission, ambient, transform), _center(center), _radius(radius),
+	Shape(diffuse, specular, shininess, emission, ambient), _center(center), _radius(radius),
+	_transform(transform),
 	_transform_inverse(glm::inverse(_transform)) {}
 
 Sphere::~Sphere()
@@ -11,6 +12,8 @@ Sphere::~Sphere()
 Point Sphere::center() const { return _center; }
 
 float Sphere::radius() const {	return _radius; }
+
+glm::mat4 Sphere::transform() const { return _transform; }
 
 std::optional<float> Sphere::intersect(Ray ray) const 
 {
