@@ -29,6 +29,13 @@ A Shape can:
 #include "Ray.h"
 #include <optional>
 
+
+// TODO put in namespace
+struct DistanceAndNormal {
+	float distance;
+	glm::vec3 normal;
+};
+
 class Shape  // abstract
 {
 	public:
@@ -41,7 +48,7 @@ class Shape  // abstract
 		Color emission() const;
 		Color ambient() const;
 
-		virtual std::optional<float> intersect(Ray ray) const = 0;
+		virtual std::optional<DistanceAndNormal> intersect(Ray ray) const = 0;
 			// Returns the parameter t:
 				// For now, return the smallest positive t if there is an intersection
 				// Otherwise, return a negative number for no intersection

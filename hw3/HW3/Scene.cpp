@@ -87,27 +87,30 @@ void Scene::intersect(const Ray& ray, std::optional<IntersectionAsStruct>& inter
 {
 	float mindist = INFINITY;
 	std::optional<Shape*> hit_object;
+	glm::vec3 normal;
 
 	// Ideally these two loops would be merged but I found it problematic storing shapes:
 		// Shape class is abstract and C++ requires pointers to store derived objects.
 	for (Triangle triangle : _triangles) {
-		std::optional<float> t = triangle.intersect(ray);
-		if (t.has_value() && t.value() < mindist) {
-			mindist = t.value();
+		std::optional<DistanceAndNormal> result = triangle.intersect(ray);
+		if (result.has_value() && result.value().distance < mindist) {
+			mindist = result.value().distance;
 			// TODO: a bad hack. This works but now we're creating new objects in each loop.
 				// Is there a way to get a meaningful pointer to the object in the Scene and return that pointer
 				// such that the pointer does not end up pointing to garbage?
 			hit_object.reset(); 
 			hit_object = new Triangle(triangle);
+			normal = result.value().normal;
 		}
 	}
 
 	for (Sphere sphere : _spheres) {
-		std::optional<float> t = sphere.intersect(ray);
-		if (t.has_value() && t.value() < mindist) {
-			mindist = t.value();
+		std::optional<DistanceAndNormal> result = sphere.intersect(ray);
+		if (result.has_value() && result.value().distance < mindist) {
+			mindist = result.value().distance;
 			hit_object.reset();
 			hit_object = new Sphere(sphere);
+			normal = result.value().normal;
 		}
 	}
 
@@ -118,7 +121,7 @@ void Scene::intersect(const Ray& ray, std::optional<IntersectionAsStruct>& inter
 	glm::vec3 intersection_location = ray.origin().toGlmVec3() + mindist * ray.direction().toGlmVec3();
 	Point p = Point(intersection_location);
 
-	IntersectionAsStruct i = { hit_object.value(), p };
+	IntersectionAsStruct i = { hit_object.value(), p, normal };
 	intersection.emplace(i);
 	return;
 }
@@ -141,20 +144,43 @@ Color Scene::findColor(IntersectionAsStruct intersection, int recursive_depth_pe
 	final_color += intersected_shape->emission().toGlmVec3();
 
 	for (PointLight point_light : _point_lights) {
-		// If the light is visible from the intersection location
-			// Compute the diffuse component to the final color
-			// Compute the specular component to the final color		
 
-		// Attenuation:
+		bool isVisible = point_light.isVisibleFrom(intersection.intersection_location, this);
+
+		// TODO this is duplicated code form isVisibleFrom
+		glm::vec3 light_direction = point_light.point().toGlmVec3() - intersection.intersection_location.toGlmVec3();
+		light_direction = glm::normalize(light_direction);
+		float l_dot_n = glm::dot(light_direction, intersection.normal);
+
+		if (isVisible) {
+			// TODO double check if we should use half-angle vector?
+			// diffuse
+			final_color += point_light.color().toGlmVec3() * intersected_shape->diffuse().toGlmVec3() * glm::max(l_dot_n, 0.0f);
+
+			// specular
+			final_color += point_light.color().toGlmVec3() * intersected_shape->specular().toGlmVec3() * (pow(glm::max(l_dot_n, 0.0f), intersected_shape->shininess()));
+		}
+
+
+		// TODO: Attenuation:
 			// Light contribution / (const + lin * dist + quad * dist^2)
-		// TODO: implement point_light contribution to color
 	}
 
 	for (DirectionalLight directional_light : _directional_lights) {
-		// If the light is visible from the intersection location
-			// Add the diffuse component to the final color
-			// Add the specular component to the final color	
+		bool isVisible = directional_light.isVisibleFrom(intersection.intersection_location, this);
 
+		// No need to compute the direction
+		glm::vec3 light_direction = directional_light.direction().toGlmVec3();
+		float l_dot_n = glm::dot(light_direction, intersection.normal);
+
+		if (isVisible) {
+			// TODO double check if we should use half-angle vector?
+			// diffuse
+			final_color += directional_light.color().toGlmVec3() * intersected_shape->diffuse().toGlmVec3() * glm::max(l_dot_n, 0.0f);
+
+			// specular
+			final_color += directional_light.color().toGlmVec3() * intersected_shape->specular().toGlmVec3() * (pow(glm::max(l_dot_n, 0.0f), intersected_shape->shininess()));
+		}
 		// No attenuation?
 		// TODO: implement directional_light contribution to color
 	}

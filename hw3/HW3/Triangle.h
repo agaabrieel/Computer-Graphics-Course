@@ -24,12 +24,21 @@ class Triangle :
 			glm::mat4 transform, Vertex a, Vertex b, Vertex c);
 		~Triangle();
 		
-		std::optional<float> intersect(Ray ray) const;
+		std::optional<DistanceAndNormal> intersect(Ray ray) const;
+
+		glm::vec3 normal() const;
 
 	private:
 		Vertex _a;
 		Vertex _b;
 		Vertex _c;
+
+		glm::vec3 _a_glm; // TODO: provided at the moment for ease of computation of the normal. Later on we can remove these
+							// when we add more functionality to the custom classes
+		glm::vec3 _b_glm;
+		glm::vec3 _c_glm;
+
+		glm::vec3 _normal;
 
 };
 

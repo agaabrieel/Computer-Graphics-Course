@@ -25,7 +25,7 @@ class Sphere :
 		glm::mat4 transform() const; // Is this the best name for this? It's the name from the previous project, but it's not very clear.
 															// Maybe something like: worldToObject?
 
-		std::optional<float> intersect(Ray ray) const;
+		std::optional<DistanceAndNormal> intersect(Ray ray) const;
 
 	private:
 		const Point _center;

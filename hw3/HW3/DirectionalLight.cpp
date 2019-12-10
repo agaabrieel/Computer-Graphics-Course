@@ -12,7 +12,7 @@ DirectionalLight::~DirectionalLight()
 
 Direction DirectionalLight::direction() const {	return _direction; }
 
-bool DirectionalLight::isVisibleFrom(Point point, Scene* scene) const 
+bool DirectionalLight::isVisibleFrom(Point point, const Scene* scene) const 
 {
 	glm::vec3 origin = point.toGlmVec3();
 	glm::vec3 direction = _direction.toGlmVec3();

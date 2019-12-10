@@ -6,34 +6,35 @@ Triangle::Triangle(Color diffuse, Color specular, float shininess, Color emissio
 	_b(Vertex(transform * b.toGlmVec4())),
 	_c(Vertex(transform * c.toGlmVec4()))
 {
+	glm::vec3 _a_glm = _a.toGlmVec3();
+	glm::vec3 _b_glm = _b.toGlmVec3();
+	glm::vec3 _c_glm = _c.toGlmVec3();
+
+	glm::vec3 normal = glm::cross(_c_glm - _a_glm, _b_glm - _a_glm);
+	normal = glm::normalize(normal);
+
 }
 
 Triangle::~Triangle()
 {
 }
 
-std::optional<float> Triangle::intersect(Ray ray) const
+std::optional<DistanceAndNormal> Triangle::intersect(Ray ray) const
 {
 	// Triangles are stored with the transform already applied to the vertexes, so we do not need to worry about transforms here.
 	// Begin ray-plane intersection
-	glm::vec3 a = _a.toGlmVec3();
-	glm::vec3 b = _b.toGlmVec3();
-	glm::vec3 c = _c.toGlmVec3();
-
-	glm::vec3 normal = glm::cross(c - a, b - a);
-	normal = glm::normalize(normal);
-	
+		
 	glm::vec3 p0 = ray.origin().toGlmVec3();
 	glm::vec3 p1 = ray.direction().toGlmVec3();
 	
-	float denominator = glm::dot(p1, normal);
+	float denominator = glm::dot(p1, _normal);
 
 	// No intersection when parallel to the plane
 	if (denominator == 0.0f) { // TODO: might we allow a small tolerance here for floating point error?
 		return std::nullopt;
 	}
 
-	float t = (glm::dot(a, normal) - glm::dot(p0, normal)) / denominator;
+	float t = (glm::dot(_a_glm, _normal) - glm::dot(p0, _normal)) / denominator;
 	
 	// The ray intersects the plane in the negative direction.
 	if (t <= 0) {
@@ -59,9 +60,9 @@ std::optional<float> Triangle::intersect(Ray ray) const
 		// From https://gamedev.stackexchange.com/questions/23743/whats-the-most-efficient-way-to-find-barycentric-coordinates
 		// Later on, can use custom algorithm, but this will do for now.
 	glm::vec3 p = p0 + t * p1;
-	glm::vec3 v0 = b - a;
-	glm::vec3 v1 = c - a;
-	glm::vec3 v2 = p - a;
+	glm::vec3 v0 = _b_glm - _a_glm;
+	glm::vec3 v1 = _c_glm - _a_glm;
+	glm::vec3 v2 = p - _a_glm;
 
 	float d00 = glm::dot(v0, v0);
 	float d01 = glm::dot(v0, v1);
@@ -74,11 +75,15 @@ std::optional<float> Triangle::intersect(Ray ray) const
 	float alpha = 1.0f - beta - gamma;
 	// End compute barycentric coordinates.
 
+	// TODO: we need to compute and return the surface normal
+
 
 	if (alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1 && gamma >= 0 && gamma <= 1) {
-		return { t };
+		return { {t, _normal } };
 	}
 	else {
 		return std::nullopt;
 	}
 }
+
+glm::vec3 Triangle::normal() const { return _normal; }

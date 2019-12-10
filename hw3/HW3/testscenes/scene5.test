@@ -7,7 +7,9 @@ maxdepth 5
 
 point 0 20 -40 1 1 1
 directional 0.5 0.5 -0.5 0 0.3 0
-ambient 0.01 0.01 0.01
+#ambient 0.01 0.01 0.01
+# Temporary increase in ambient so that we can check geometry without shading
+ambient 0.5 0.5 0.5
 specular 0.4 0.4 0.4
 diffuse 0.4 0.4 0.4
 shininess 40

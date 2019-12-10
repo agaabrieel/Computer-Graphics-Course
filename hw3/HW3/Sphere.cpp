@@ -15,7 +15,7 @@ float Sphere::radius() const {	return _radius; }
 
 glm::mat4 Sphere::transform() const { return _transform; }
 
-std::optional<float> Sphere::intersect(Ray ray) const 
+std::optional<DistanceAndNormal> Sphere::intersect(Ray ray) const 
 {
 	// TODO: account for transformed objects
 
@@ -73,9 +73,15 @@ std::optional<float> Sphere::intersect(Ray ray) const
 
 	glm::vec4 p_prime = glm::vec4(p0_prime + smallest_positive_root * p1_prime, 1);
 	glm::vec4 p = _transform * p_prime;
+
+	glm::vec3 p3 = glm::vec3(p.x / p.w, p.y / p.w, p.z / p.w);
+	glm::vec3 normal = p3 - center;
+	normal = glm::normalize(normal);
 	// Transform p' back to p
 	// p' = p0' + t' * p1'
 	// p = Mp'
 
-	return { glm::distance(p, ray.origin().toGlmVec4()) };
+	// TODO we need to compute and return the surface normal
+
+	return { {glm::distance(p, ray.origin().toGlmVec4()), normal} };
 }

@@ -21,7 +21,7 @@ class Light  // abstract
 		Color color() const;
 		Attenuation attenuation() const;
 		
-		virtual bool isVisibleFrom(Point point, Scene* scene) const = 0; // returns true if there is an unobstructed path from the given point to the light.
+		virtual bool isVisibleFrom(Point point, const Scene* scene) const = 0; // returns true if there is an unobstructed path from the given point to the light.
 
 		
 

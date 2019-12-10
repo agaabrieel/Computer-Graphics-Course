@@ -19,7 +19,7 @@ class DirectionalLight :
 
 		Direction direction() const;
 
-		bool isVisibleFrom(Point point, Scene* scene) const;
+		bool isVisibleFrom(Point point, const Scene* scene) const;
 
 	private:
 		const Direction _direction;
