@@ -153,9 +153,8 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 		}
 	}
 
-	// It's expensive to compute the reflected ray and intersection, so let's not do it unless we need to.
-	// TODO Check that there is a significant specular component to the intersected object.
-	if (recursive_depth_permitted > 1) {
+	// Avoids recursive calls unless the specular component of the intersected object is significant.
+	if (recursive_depth_permitted > 1 && intersected_shape->specular().toGlmVec3().length() > 0.001) {
 		glm::vec3 original_ray_direction = intersection.ray.direction().toGlmVec3();
 		glm::vec3 reflected_ray_origin = intersection.intersection_location.toGlmVec3();
 		glm::vec3 reflected_ray_direction = original_ray_direction + 2.0f * (glm::dot(-original_ray_direction, intersection.normal)) * intersection.normal;
@@ -164,18 +163,16 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 		// Push reflected ray slightly out to avoid self-intersection due to floating point inaccuracy.
 		reflected_ray_origin += 0.0001f * reflected_ray_direction;
 
-
 		Ray reflected_ray = Ray(Point(reflected_ray_origin), Direction(reflected_ray_direction));
 		std::optional<Intersection> reflected_intersection = intersect(reflected_ray);
 
 		if (reflected_intersection.has_value()) {
-
 			glm::vec3 recursive_specular_component = intersected_shape->specular().toGlmVec3() * findColor(reflected_intersection.value(), recursive_depth_permitted - 1).toGlmVec3();
 			final_color += recursive_specular_component;
 		}
 	}
 
-	return Color(final_color.x, final_color.y, final_color.z);
+	return Color(final_color);
 }
 
 // TODO return smart pointer
@@ -184,35 +181,24 @@ BYTE* Scene::raytrace(int max_recursion_depth) const
 	int pix = _width * _height;
 	BYTE* pixels = new BYTE[3 * pix];
 	ProgressBar progressBar(_height, 70);
+	RGBTRIPLE pixel_color_triple;
 
 	for (int i = 0; i < _height; i++) {
 		for (int j = 0; j < _width; j++) {
 			Ray ray = rayThroughPixel(i, j);
 			std::optional<Intersection> intersection = intersect(ray);
-			if (intersection.has_value()) {
-				Color pixel_color = findColor(intersection.value(), max_recursion_depth);
-				//Color pixel_color = Color(0.0f, 0.0f, 1.0f); // TODO: debug value: objects in view are coloured pure blue
-				RGBTRIPLE pixel_color_triple = pixel_color.to_freeimage_rgbtriple();
-				int pixel_start_index = (i * _width * 3) + (j * 3);
 
-				// BlueGreenRed. TODO: consider copying memory as 3 bytes together
-				pixels[pixel_start_index] = pixel_color_triple.rgbtBlue;   // TODO check indexes
-				pixels[pixel_start_index + 1] = pixel_color_triple.rgbtGreen;
-				pixels[pixel_start_index + 2] = pixel_color_triple.rgbtRed;
+			if (intersection.has_value()) {
+				pixel_color_triple = findColor(intersection.value(), max_recursion_depth).to_freeimage_rgbtriple();
 			}
 			else { // No intersection so use global ambient value.
-				Color pixel_color = _ambient_global;
-				//Color pixel_color = Color(0.5f, 0.0f, 0.0f); // TODO: debug value: background is pure dark red.
-				RGBTRIPLE pixel_color_triple = pixel_color.to_freeimage_rgbtriple();
-				int pixel_start_index = (i * _width * 3) + (j * 3);
-
-				// BlueGreenRed. TODO: consider copying memory as 3 bytes together
-				pixels[pixel_start_index] = pixel_color_triple.rgbtBlue;   // TODO check indexes
-				pixels[pixel_start_index + 1] = pixel_color_triple.rgbtGreen;
-				pixels[pixel_start_index + 2] = pixel_color_triple.rgbtRed;
-
-				// TODO reduce duplication : smart pointer to pixel_color
+				pixel_color_triple = _ambient_global.to_freeimage_rgbtriple();
 			}
+
+			// Copies the raw color data for this pixel over the to pixels array. Each pixel is three bytes of data.
+			int index_offset = (i * _width * 3) + (j * 3);
+			memcpy(pixels + index_offset, &pixel_color_triple, sizeof RGBTRIPLE);
+
 		}
 		++progressBar;
 		progressBar.display();

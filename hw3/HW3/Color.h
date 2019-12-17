@@ -21,7 +21,7 @@ class Color
 	public:
 		Color(); // Initialise Color with (0, 0, 0)
 		Color(float red, float green, float blue);
-		~Color();
+		Color(glm::vec3 rgb);
 
 		float red() const;
 		float green() const;

@@ -5,14 +5,12 @@ Color::Color() : Color(0.0, 0.0, 0.0) {}
 
 Color::Color(float red, float green, float blue) : _red(red), _green(green), _blue(blue) {}
 
-Color::~Color()
+Color::Color(glm::vec3 rgb) : Color(rgb.r, rgb.g, rgb.b)
 {
 }
 
 float Color::red() const { return _red; }
-
 float Color::green() const { return _green; }
-
 float Color::blue() const { return _blue; }
 
 glm::vec3 Color::toGlmVec3()
