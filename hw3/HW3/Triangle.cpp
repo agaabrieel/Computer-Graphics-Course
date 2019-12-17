@@ -17,9 +17,6 @@ Triangle::Triangle(Color diffuse, Color specular, float shininess, Color emissio
 	_normal_without_transform = glm::normalize(_normal_without_transform);
 }
 
-Triangle::~Triangle()
-{
-}
 
 std::optional<DistanceAndNormal> Triangle::intersect(Ray ray) const
 {

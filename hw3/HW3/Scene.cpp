@@ -56,30 +56,25 @@ Ray Scene::rayThroughPixel(int i, int j) const
 std::optional<Scene::Intersection> Scene::intersect(const Ray& ray) const
 {
 	float mindist = INFINITY;
-	std::optional<Shape*> hit_object;
+	std::optional<const Shape*> hit_object;
 	glm::vec3 normal;
 
-	// Ideally these two loops would be merged but I found it problematic storing shapes:
-		// Shape class is abstract and C++ requires pointers to store derived objects.
-	for (Triangle triangle : _triangles) {
+	for (const Triangle& triangle : _triangles) {
 		std::optional<DistanceAndNormal> result = triangle.intersect(ray);
 		if (result.has_value() && result.value().distance < mindist) {
 			mindist = result.value().distance;
-			// TODO: a bad hack. This works but now we're creating new objects in each loop.
-				// Is there a way to get a meaningful pointer to the object in the Scene and return that pointer
-				// such that the pointer does not end up pointing to garbage?
 			hit_object.reset(); 
-			hit_object = new Triangle(triangle);
+			hit_object = &triangle;
 			normal = result.value().normal;
 		}
 	}
 
-	for (Sphere sphere : _spheres) {
+	for (const Sphere& sphere : _spheres) {
 		std::optional<DistanceAndNormal> result = sphere.intersect(ray);
 		if (result.has_value() && result.value().distance < mindist) {
 			mindist = result.value().distance;
 			hit_object.reset();
-			hit_object = new Sphere(sphere);
+			hit_object = &sphere;
 			normal = result.value().normal;
 		}
 	}
@@ -104,7 +99,7 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 
 	// TODO: for now, using glm::vec3 to handle the vector operations. Later on, could add operations to the custom Vector class.
 
-	Shape* intersected_shape = intersection.intersected_shape;
+	const Shape* intersected_shape = intersection.intersected_shape;
 
 	// Ambient term, per object
 	glm::vec3 final_color = intersected_shape->ambient().toGlmVec3();

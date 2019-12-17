@@ -22,7 +22,6 @@ class Triangle :
 	public:
 		Triangle(Color diffuse, Color specular, float shininess, Color emission, Color ambient, 
 			glm::mat4 transform, Vertex a, Vertex b, Vertex c);
-		~Triangle();
 		
 		std::optional<DistanceAndNormal> intersect(Ray ray) const;
 

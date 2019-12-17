@@ -21,7 +21,7 @@ class Scene
 	public:
 		// Stores data related to an intersection between a Ray and a Shape
 		struct Intersection {
-			Shape* intersected_shape;
+			const Shape* intersected_shape;
 			Point intersection_location;
 			glm::vec3 normal;
 			Ray ray;
