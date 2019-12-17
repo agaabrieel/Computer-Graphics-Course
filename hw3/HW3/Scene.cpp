@@ -31,13 +31,8 @@ Scene::Scene(int width, int height, Camera camera, std::vector<Triangle> triangl
 	_v = glm::cross(_w, _u);
 }
 
-Scene::~Scene()
-{
-}
-
 
 int Scene::width() const { return _width; }
-
 int Scene::height() const {	return _height; }
 
 Ray Scene::rayThroughPixel(int i, int j) const

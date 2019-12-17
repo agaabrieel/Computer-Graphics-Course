@@ -28,10 +28,8 @@ class Scene
 			float distance;
 		};
 
-
 		Scene(int width, int height, Camera camera, std::vector<Triangle> triangles, std::vector<Sphere> spheres, 
 			std::vector<DirectionalLight> directional_lights, std::vector<PointLight> point_lights);
-		~Scene();
 	
 		int width() const;
 		int height() const;
