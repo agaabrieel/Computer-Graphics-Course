@@ -1,3 +1,8 @@
+/* ReadFile.cpp
+
+	==> Parses the file with filename to a Scene object 
+*/
+
 #include "ReadFile.h"
 #include <iostream>
 #include <fstream>
@@ -15,7 +20,7 @@ using namespace std;
 
 // Function to read the input data values
 // From HW2 skeleton.
-bool ReadFile::readvals(std::stringstream& s, const int numvals, float* values)
+bool ReadFile::readvals(stringstream& s, const int numvals, float* values)
 {
 	for (int i = 0; i < numvals; i++) {
 		s >> values[i];
@@ -27,60 +32,58 @@ bool ReadFile::readvals(std::stringstream& s, const int numvals, float* values)
 	return true;
 }
 
+void ReadFile::ignoreCommandWithMessage(string cmd, int number_of_arguments, float* arguments) {
+	cout << "Ignoring command " << cmd << " with " << (number_of_arguments == 1 ? "argument" : "arguments");
+	for (int i = 0; i < number_of_arguments; i++) {
+		cout << " " << arguments[i];
+	}
+	cout << endl;
+}
+
+// Parse the file with filename to a Scene object. Returns the Scene with additional raytracing settings as specified in the file.
 ReadFile::FileData ReadFile::readfile(const char* filename)
 {
-	/*
-	need to have:
-		list of vertexes (temporary, 0-indexed)
-		Scene object
-		Options struct
-		Camera struct
-		*/
+	// Scene settings
+	int width = 0, height = 0;		// Initialised to 0 so we can check if they aren't defined in the test file.
+	int maxdepth = 5;				// Default recursive depth of 5.
 
-	int width = 0, height = 0; // Initialised to 0 so we can check if they aren't defined in the test file.
-	int maxdepth = 5; // Default recursive depth of 5.
-	unique_ptr<Camera> camera;  // Solution to avoid this is to have a default camera
-				// at (0, 0, 0) looking down the -Z axis with up as (0, 1, 0);
-
-	vector<Vertex> vertexes; // Potentially slow since we need to access by random indexes.
-								// but we want to allow an arbitrary number of vertexes.
-							// However, the bottleneck will probably be in the Raytracing, not Parsing
-								// in this program, so I don't think it's a big deal.
+	// Scene objects
+	unique_ptr<Camera> camera;  
+	vector<Vertex> vertexes; 
 	vector<Triangle> triangles;
 	vector<Sphere> spheres;
 	vector<DirectionalLight> directional_lights;
 	vector<PointLight> point_lights;
 
-	// Material properties. Start with additive identity, since Colors are additive.
-		// These have to be pointers since they will be reassigned
-	unique_ptr<Color> diffuse(new Color(0.0f, 0.0f, 0.0f)); // The scene files allow creating objects without specifying material properties, so I start with black here.
+	// Material properties. Start with additive identity (black), since Colors are additive.
+	unique_ptr<Color> diffuse(new Color(0.0f, 0.0f, 0.0f)); 
 	unique_ptr<Color> specular(new Color(0.0f, 0.0f, 0.0f));
 	float shininess = 0;
-	unique_ptr<Color> emission(new Color(0.0f, 0.0f, 0.0f)); // Objects do not emit light by default
-	unique_ptr<Color> ambient(new Color(0.2f, 0.2f, 0.2f));  // Default value for ambient property of objects
-	unique_ptr<Attenuation> attenuation(new Attenuation(1, 0, 0)); // Default attenuation
+	unique_ptr<Color> emission(new Color(0.0f, 0.0f, 0.0f));		// Objects do not emit light by default
+	unique_ptr<Color> ambient(new Color(0.2f, 0.2f, 0.2f));			// Default value for ambient property of objects
+	unique_ptr<Attenuation> attenuation(new Attenuation(1, 0, 0));	// Default attenuation
 
 	// Start a new matrix transform stack with the identity matrix
 	TransformStack transform_stack = TransformStack();
 
+	// Start reading file
 	string str, cmd, output_file_name;
 	ifstream in;
 	in.open(filename);
+
 	if (in.is_open()) {
-
-
-
 		getline(in, str);
 		while (in) {
 			if ((str.find_first_not_of(" \t\r\n") != string::npos) && (str[0] != '#')) {
-				// Ruled out comment and blank lines 
+				// #comment		-> ignore
+				// blank line	-> ignore
 
 				stringstream s(str);
 				s >> cmd;
 				float values[10]; // Stores the parameters for the command. Need up to 10 for camera.
-									// Using float instead of GLfloat to see if we can remove dependency on OpenGL.
 				bool validinput;
 
+				// size width height
 				if (cmd == "size") {
 					validinput = readvals(s, 2, values);
 					if (validinput) {
@@ -89,6 +92,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					}
 				}
 
+				// maxdepth depth
 				else if (cmd == "maxdepth") {
 					validinput = readvals(s, 1, values);
 					if (validinput) {
@@ -96,13 +100,15 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					}
 				}
 
+				// output filename
 				else if (cmd == "output") {
 					s >> output_file_name;
 				}
 
+				// camera lookfromx lookfromy lookfromz lookatx lookaty lookatz upx upy upz fovy
 				else if (cmd == "camera") {
 					validinput = readvals(s, 10, values);
-					if (validinput && camera.get() == NULL) { // TODO Only update camera if it has not already been setup. Could throw an error if it is redefined? 
+					if (validinput && camera.get() == NULL) { // Only parses the first camera command and then ignores duplicates
 						Point lookfrom = Point(values[0], values[1], values[2]);
 						Point lookat = Point(values[3], values[4], values[5]);
 						Direction up = Direction(values[6], values[7], values[8]);
@@ -111,8 +117,13 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 
 						camera.reset(new Camera(lookfrom, lookat, up, fovy_radians));
 					}
+
+					else {
+						ignoreCommandWithMessage(cmd, 10, values);
+					}
 				}
 
+				// sphere x y z radius
 				else if (cmd == "sphere") {
 					validinput = readvals(s, 4, values);
 					if (validinput) {
@@ -124,23 +135,23 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					}
 				}
 
+				// maxverts number
 				else if (cmd == "maxverts") {
 					validinput = readvals(s, 1, values);
 					if (validinput) {
-						// Support for maxverts is optional
-						// I ignore it and allow support for an arbitrary number of vertices.
-						cout << "Ignoring command maxverts with argument " << values[0] << "\n";
+						ignoreCommandWithMessage(cmd, 1, values);
 					}
 				}
 
+				// maxvertnorms number
 				else if (cmd == "maxvertnorms") {
 					validinput = readvals(s, 1, values);
 					if (validinput) {
-						// Support for maxvertnorms is optional
-						cout << "Ignoring command maxvertnorms with argument " << values[0] << "\n";
+						ignoreCommandWithMessage(cmd, 1, values);
 					}
 				}
 
+				// vertex x y z
 				else if (cmd == "vertex") {
 					validinput = readvals(s, 3, values);
 					if (validinput) {
@@ -149,43 +160,37 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					}
 				}
 
+				// vertexnormal x y z nx ny nz
 				else if (cmd == "vertexnormal") {
 					validinput = readvals(s, 6, values);
 					if (validinput) {
-						// Support for vertexnormal is optional
-						cout << "Ignoring command vertexnormal with arguments "
-							<< values[0] << " "
-							<< values[1] << " "
-							<< values[2] << " "
-							<< values[3] << " "
-							<< values[4] << " "
-							<< values[5] << "\n";
+						ignoreCommandWithMessage(cmd, 6, values);
 					}
 				}
 
+				// tri v1 v2 v3
 				else if (cmd == "tri") {
 					validinput = readvals(s, 3, values);
 					if (validinput && diffuse.get()) {
+						// Assumes the vertexes have already been declared and are referenced by indexes into the vertexes list.
 						Triangle triangle = Triangle(*diffuse, *specular, shininess, *emission, *ambient, transform_stack.top(),
 							vertexes.at((int)values[0]),
 							vertexes.at((int)values[1]),
-							vertexes.at((int)values[2])); // TODO handle outofbounds
+							vertexes.at((int)values[2]));
 
 						triangles.push_back(triangle);
 					}
 				}
 
+				// trinormal
 				else if (cmd == "trinormal") {
 					validinput = readvals(s, 3, values);
 					if (validinput) {
-						// Support for trinormal is optional
-						cout << "Ignoring command trinormal with arguments "
-							<< values[0] << " "
-							<< values[1] << " "
-							<< values[2] << "\n";
+						ignoreCommandWithMessage(cmd, 3, values);
 					}
 				}
 
+				// translate x y z
 				else if (cmd == "translate") {
 					validinput = readvals(s, 3, values);
 					if (validinput) {
@@ -193,6 +198,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					}
 				}
 
+				// rotate x y z angle
 				else if (cmd == "rotate") {
 					validinput = readvals(s, 4, values);
 					if (validinput) {
@@ -202,6 +208,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					}
 				}
 
+				// scale x y z
 				else if (cmd == "scale") {
 					validinput = readvals(s, 3, values);
 					if (validinput) {
@@ -209,14 +216,17 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					}
 				}
 
+				// pushTransform
 				else if (cmd == "pushTransform") {
 					transform_stack.pushTransform();
 				}
 
+				// popTransform
 				else if (cmd == "popTransform") {
 					transform_stack.popTransform();
 				}
 
+				// directional x y z r g b
 				else if (cmd == "directional") {
 					validinput = readvals(s, 6, values);
 					if (validinput) {
@@ -227,6 +237,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					}
 				}
 
+				// point x y z r g b
 				else if (cmd == "point") {
 					validinput = readvals(s, 6, values);
 					if (validinput) {
@@ -237,6 +248,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					}
 				}
 
+				// attenuation const linear quadractic
 				else if (cmd == "attenuation") {
 					validinput = readvals(s, 3, values);
 					if (validinput) {
@@ -244,6 +256,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					}
 				}
 
+				// ambient r g b
 				else if (cmd == "ambient") {
 					validinput = readvals(s, 3, values);
 					if (validinput) {
@@ -251,6 +264,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					}
 				}
 
+				// diffuse r g b
 				else if (cmd == "diffuse") {
 					validinput = readvals(s, 3, values);
 					if (validinput) {
@@ -258,6 +272,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					}
 				}
 
+				// specular r g b
 				else if (cmd == "specular") {
 					validinput = readvals(s, 3, values);
 					if (validinput) {
@@ -265,6 +280,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					}
 				}
 
+				// shininess s
 				else if (cmd == "shininess") {
 					validinput = readvals(s, 1, values);
 					if (validinput) {
@@ -272,6 +288,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					}
 				}
 
+				// emission r g b
 				else if (cmd == "emission") {
 					validinput = readvals(s, 3, values);
 					if (validinput) {
@@ -286,42 +303,33 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 			getline(in, str);
 		}
 
+		// ============= BEGIN POST-PARSE PROCESSING =================
+
+		// Asserts successful parse of mandatory commands
 		if (width == 0) {
 			cerr << "Width was not specified.\n";
 			throw 2;
 		}
-
 		if (height == 0) {
 			cerr << "Height was not specified.\n";
 			throw 2;
 		}
-
 		if (camera.get() == NULL) {
 			cerr << "Camera was not specified.\n";
 			throw 2;
 		}
 
+		// Use default file name if none given
 		if (output_file_name.size() == 0) {
 			output_file_name = DEFAULT_FILE_NAME;
 		}
 
-		Scene scene = Scene(width, height, *camera); // Alternative would be to pre-init the scene and add shapes as we go but that is difficult
-																// because we wouldn't have the camera. We could make it so the scene isn't initialised
-																// with the camera, instead using setCamera, but then we have the situation where the scene
-																// may not have a camera, which is also not useful.
-
-		for (Triangle triangle : triangles) {
-			scene.addTriangle(triangle);
-		}
-		for (Sphere sphere : spheres) {
-			scene.addSphere(sphere);
-		}
-		for (DirectionalLight directional_light : directional_lights) {
-			scene.addDirectionalLight(directional_light);
-		}
-		for (PointLight point_light : point_lights) {
-			scene.addPointLight(point_light);
-		}
+		// Build scene from parsed values
+		Scene scene = Scene(width, height, *camera); 
+		for (Triangle triangle : triangles) { scene.addTriangle(triangle); }
+		for (Sphere sphere : spheres) { scene.addSphere(sphere); }
+		for (DirectionalLight directional_light : directional_lights) {	scene.addDirectionalLight(directional_light); }
+		for (PointLight point_light : point_lights) { scene.addPointLight(point_light); }
 
 		FileData returnData = { scene, output_file_name, maxdepth };
 		return returnData;
@@ -332,130 +340,3 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 		throw 2;
 	}
 }
-
-
-
-
-// This file will contain the input file parser
-
-// Commands still to parse:
-
-/*
-#comment - Just ignore
-blank line - also ignore
-
-need to have:
-	list of vertexes (temporary, 0-indexed)
-	Scene object
-	Options struct
-	Camera struct
-
-	a temporary matrix stack, starting with the identity
-	attentuation -> current value, starts at (1, 0, 0)
-	ambient -> a Color, starts at (.2, .2, .2)
-	diffuse -> a Color
-	specular -> a Color
-	shininess -> a float (?)
-	emission -> a Color
-
-commands:
-
-size width height
-	-> create the Scene object with this paramter (this is first command in file so we should be able to make sure this is initiliased before other things)
-
-maxdepth depth
-	-> store temporarily
-	-> put in the Options struct at the end
-
-output filename
-	-> store temporarily
-	-> put in the Options struct at the end
-
-camera lookfromx lookfromy lookfromz lookatx lookaty lookatz upx upy upz fovy
-	-> make a Camera object/struct to store this
-
-sphere x y z radius
-	-> make a Sphere object with the current values for material properties
-	-> add the Sphere to the scene
-
-maxverts number
-	-> ignore, we will allow arbitrary number of vertexes
-
-maxvertnorms number
-	-> ignore, this is optional
-	-> we could add functionality later, but for now let's keep it simple
-
-vertex x y z
-	-> make a Vertex object and add it to the temporary list of objects. Indexing will be important, we need to know the order the vertexes are added,
-		since that is how they are referred to in this file. They are 0-indexed
-
-vertexnormal x y z nx ny nz
-	-> ignore, this is optional
-	-> we could add functionality later, but for now let's keep it simple
-
-tri v1 v2 v3
-	-> create a Triangle with the three vertices listed in the temporary vertex list at given indexes
-	-> add the triangle to the Scene
-
-trinormal
-	-> ignore, this is optional
-	-> we could add functionality later, but for now let's keep it simple
-
-translate x y z
-	-> get a translation matrix for the given values and right multiply it with the top of the matrix stack
-
-rotate x y z angle
-	-> get a rotation matrix for the given values and right multiply it with the top of the matrix stack
-
-scale x y z
-	-> get a scale matrix and right multiply it with the top of the stack
-
-pushTransform
-	-> add a copy of the top of the matrix stack to the top of the stack
-
-popTransform
-	-> check the matrix stack is not empty
-	-> pop the top of the matrix stack
-
-directional x y z r g b
-	-> create a color from the r g b
-	-> create a direction from the x y z
-	-> create a DirectionalLight from these
-	-> add the DirectionalLight to the scene
-
-point x y z r g b
-	-> create a color from the r g b
-	-> create a Point from the x y z
-	-> create a PointLight from these
-	-> add the PointLight to the Scene
-
-attenuation const linear quadractic
-	-> update attenuation to have these values
-
-ambient r g b
-	-> make a Color with the r g b
-	-> update ambient to this Color
-
-diffuse r g b
-	-> make a Color with the r g b
-	-> update diffuse to this Color
-
-specular r g b
-	-> make a Color with the r g b
-	-> update specular to this Color
-
-diffuse s
-	-> update shininess to this value
-
-emission r g b
-	-> make a Color with the r g b
-	-> update emission to this Color
-
-
-
-
-Need to return:
-	The Scene
-	The Camera
-	The Options
-*/

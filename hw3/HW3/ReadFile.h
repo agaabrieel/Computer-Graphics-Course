@@ -13,7 +13,8 @@ namespace ReadFile {
 	};
 
 	// From HW2
-	bool readvals(std::stringstream& s, const int numvals, float* values); // Does this need to be GLfloat? Maybe it's a float[] ?
+	bool readvals(std::stringstream& s, const int numvals, float* values);
+	void ignoreCommandWithMessage(std::string cmd, int number_of_arguments, float* arguments);
 	FileData readfile(const char* filename);
 
 }
