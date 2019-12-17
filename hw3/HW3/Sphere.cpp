@@ -73,13 +73,6 @@ std::optional<DistanceAndNormal> Sphere::intersect(Ray ray) const
 	glm::vec4 p = _transform * p_prime;
 
 	glm::vec3 p3 = glm::vec3(p.x / p.w, p.y / p.w, p.z / p.w);
-	//glm::vec3 normal = p3 - center;
-	//normal = glm::normalize(normal);
-	// Transform p' back to p
-	// p' = p0' + t' * p1'
-	// p = Mp'
-
-	// TODO we need to compute and return the surface normal
 
 	return { {glm::distance(p, ray.origin().toGlmVec4()), normal} };
 }

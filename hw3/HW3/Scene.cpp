@@ -55,14 +55,14 @@ Ray Scene::rayThroughPixel(int i, int j) const
 
 std::optional<Scene::Intersection> Scene::intersect(const Ray& ray) const
 {
-	float mindist = INFINITY;
+	float smallest_intersection_distance = INFINITY;
 	std::optional<const Shape*> hit_object;
 	glm::vec3 normal;
 
 	for (const Triangle& triangle : _triangles) {
 		std::optional<DistanceAndNormal> result = triangle.intersect(ray);
-		if (result.has_value() && result.value().distance < mindist) {
-			mindist = result.value().distance;
+		if (result.has_value() && result.value().distance < smallest_intersection_distance) {
+			smallest_intersection_distance = result.value().distance;
 			hit_object.reset(); 
 			hit_object = &triangle;
 			normal = result.value().normal;
@@ -71,8 +71,8 @@ std::optional<Scene::Intersection> Scene::intersect(const Ray& ray) const
 
 	for (const Sphere& sphere : _spheres) {
 		std::optional<DistanceAndNormal> result = sphere.intersect(ray);
-		if (result.has_value() && result.value().distance < mindist) {
-			mindist = result.value().distance;
+		if (result.has_value() && result.value().distance < smallest_intersection_distance) {
+			smallest_intersection_distance = result.value().distance;
 			hit_object.reset();
 			hit_object = &sphere;
 			normal = result.value().normal;
@@ -83,10 +83,10 @@ std::optional<Scene::Intersection> Scene::intersect(const Ray& ray) const
 		return {};
 	}
 
-	glm::vec3 intersection_location = ray.origin().toGlmVec3() + mindist * ray.direction().toGlmVec3();
+	glm::vec3 intersection_location = ray.origin().toGlmVec3() + smallest_intersection_distance * ray.direction().toGlmVec3();
 	Point p = Point(intersection_location);
 
-	Intersection i = { hit_object.value(), p, normal, ray, mindist };
+	Intersection i = { hit_object.value(), p, normal, ray, smallest_intersection_distance };
 	return { i };
 }
 
@@ -127,9 +127,11 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 			final_color += point_light.color().toGlmVec3() * intersected_shape->specular().toGlmVec3() * (pow(glm::max(h_dot_n, 0.0f), intersected_shape->shininess()));
 		}
 
-
-		// TODO: Attenuation:
-			// Light contribution / (const + lin * dist + quad * dist^2)
+		// Handle attenuatioin for Point Lights
+		Attenuation atten = point_light.attenuation();
+		float d = intersection.distance;
+		float attenuation_denominator = atten.constant() + (atten.linear()) * (d + atten.quadratic() * d * d);
+		final_color /= attenuation_denominator;
 	}
 
 	for (DirectionalLight directional_light : _directional_lights) {
@@ -149,8 +151,6 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 
 			final_color += directional_light.color().toGlmVec3() * intersected_shape->specular().toGlmVec3() * (pow(glm::max(h_dot_n, 0.0f), intersected_shape->shininess()));
 		}
-		// No attenuation?
-		// TODO: implement directional_light contribution to color
 	}
 
 	// It's expensive to compute the reflected ray and intersection, so let's not do it unless we need to.

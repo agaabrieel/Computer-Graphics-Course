@@ -24,7 +24,7 @@ class Scene
 			const Shape* intersected_shape;
 			Point intersection_location;
 			glm::vec3 normal;
-			Ray ray;
+			const Ray& ray;
 			float distance;
 		};
 
