@@ -325,11 +325,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 		}
 
 		// Build scene from parsed values
-		Scene scene = Scene(width, height, *camera); 
-		for (Triangle triangle : triangles) { scene.addTriangle(triangle); }
-		for (Sphere sphere : spheres) { scene.addSphere(sphere); }
-		for (DirectionalLight directional_light : directional_lights) {	scene.addDirectionalLight(directional_light); }
-		for (PointLight point_light : point_lights) { scene.addPointLight(point_light); }
+		Scene scene = Scene(width, height, *camera, triangles, spheres, directional_lights, point_lights); 
 
 		FileData returnData = { scene, output_file_name, maxdepth };
 		return returnData;

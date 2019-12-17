@@ -21,8 +21,7 @@ bool PointLight::isVisibleFrom(Point point, const Scene * scene) const
 	origin += direction * 0.001f; // Bring origin of ray slightly towards light source to prevent self-intersection.
 
 	Ray ray = Ray(origin, direction);
-	std::optional<IntersectionAsStruct> t = std::nullopt;
-	scene->intersect(ray, t);
+	std::optional<Scene::Intersection> t = scene->intersect(ray);
 	
 	if (!t.has_value()) {
 		return true; // No object intersects on this ray.

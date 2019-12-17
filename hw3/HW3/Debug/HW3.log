@@ -1,8 +1,5 @@
-﻿  DirectionalLight.cpp
-  PointLight.cpp
-  ReadFile.cpp
+﻿  main.cpp
   Scene.cpp
-  main.cpp
   Generating Code...
 C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\include\ProgressBar.hpp(35,27): warning C4018: '<': signed/unsigned mismatch
   HW3.vcxproj -> C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\Debug\Raytracer.exe

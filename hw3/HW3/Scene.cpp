@@ -4,18 +4,13 @@
 #include <memory>
 #include "ProgressBar.hpp"  // https://github.com/prakhar1989/progress-cpp
 
-Scene::Scene(int width, int height, Camera camera) :
-	// Default value for the background in the reference images appears to be pitch black, not (0.2, 0.2, 0.2)
-	Scene(width, height, camera, Color(0.0f, 0.0f, 0.0f)) {}
+const Color AMBIENT_GLOBAL_DEFAULT = Color(0.0f, 0.0f, 0.0f);
 
-Scene::Scene(int width, int height, Camera camera, Color ambient_global) :
-	_width(width), _height(height), _camera(camera), _ambient_global(ambient_global)
+Scene::Scene(int width, int height, Camera camera, std::vector<Triangle> triangles, std::vector<Sphere> spheres, 
+	std::vector<DirectionalLight> directional_lights, std::vector<PointLight> point_lights) :
+	_width(width), _height(height), _camera(camera), _ambient_global(AMBIENT_GLOBAL_DEFAULT),
+	_triangles(triangles), _spheres(spheres), _directional_lights(directional_lights), _point_lights(point_lights)
 {
-	_triangles = std::vector<Triangle>();
-	_spheres = std::vector<Sphere>();
-	_point_lights = std::vector<PointLight>();
-	_directional_lights = std::vector<DirectionalLight>();
-
 	// Precompute these values now since they will be needed repeatedly and won't change.
 	_aspect_ratio = (float)_width / (float)_height;
 	_width_over_two = _width / 2.0f;
@@ -27,27 +22,6 @@ Scene::Scene(int width, int height, Camera camera, Color ambient_global) :
 Scene::~Scene()
 {
 }
-
-void Scene::addTriangle(Triangle triangle)
-{
-	_triangles.push_back(triangle);
-}
-
-void Scene::addSphere(Sphere sphere)
-{
-	_spheres.push_back(sphere);
-}
-
-void Scene::addDirectionalLight(DirectionalLight directional_light)
-{
-	_directional_lights.push_back(directional_light);
-}
-
-void Scene::addPointLight(PointLight point_light)
-{
-	_point_lights.push_back(point_light);
-}
-
 
 
 int Scene::width() const { return _width; }
@@ -83,7 +57,7 @@ Ray Scene::rayThroughPixel(int i, int j) const
 
 
 
-void Scene::intersect(const Ray& ray, std::optional<IntersectionAsStruct>& intersection) const
+std::optional<Scene::Intersection> Scene::intersect(const Ray& ray) const
 {
 	float mindist = INFINITY;
 	std::optional<Shape*> hit_object;
@@ -115,18 +89,17 @@ void Scene::intersect(const Ray& ray, std::optional<IntersectionAsStruct>& inter
 	}
 
 	if (!hit_object.has_value()) {
-		return;
+		return {};
 	}
 
 	glm::vec3 intersection_location = ray.origin().toGlmVec3() + mindist * ray.direction().toGlmVec3();
 	Point p = Point(intersection_location);
 
-	IntersectionAsStruct i = { hit_object.value(), p, normal, ray, mindist };
-	intersection.emplace(i);
-	return;
+	Intersection i = { hit_object.value(), p, normal, ray, mindist };
+	return { i };
 }
 
-Color Scene::findColor(IntersectionAsStruct intersection, int recursive_depth_permitted) const
+Color Scene::findColor(Intersection intersection, int recursive_depth_permitted) const
 {
 	// Base case: no more reflections permitted
 	if (recursive_depth_permitted < 1) {
@@ -202,8 +175,7 @@ Color Scene::findColor(IntersectionAsStruct intersection, int recursive_depth_pe
 
 
 		Ray reflected_ray = Ray(Point(reflected_ray_origin), Direction(reflected_ray_direction));
-		std::optional<IntersectionAsStruct> reflected_intersection = std::nullopt;
-		intersect(reflected_ray, reflected_intersection);
+		std::optional<Intersection> reflected_intersection = intersect(reflected_ray);
 
 		if (reflected_intersection.has_value()) {
 
@@ -225,8 +197,7 @@ BYTE* Scene::raytrace(int max_recursion_depth) const
 	for (int i = 0; i < _height; i++) {
 		for (int j = 0; j < _width; j++) {
 			Ray ray = rayThroughPixel(i, j);
-			std::optional<IntersectionAsStruct> intersection = std::nullopt;
-			intersect(ray, intersection);
+			std::optional<Intersection> intersection = intersect(ray);
 			if (intersection.has_value()) {
 				Color pixel_color = findColor(intersection.value(), max_recursion_depth);
 				//Color pixel_color = Color(0.0f, 0.0f, 1.0f); // TODO: debug value: objects in view are coloured pure blue
