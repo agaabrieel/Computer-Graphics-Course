@@ -94,7 +94,7 @@
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="Vector.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
