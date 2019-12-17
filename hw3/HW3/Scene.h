@@ -36,19 +36,19 @@ class Scene
 		int width() const;
 		int height() const;
 
-		// Returns the Ray that goes from the camera through the "viewing screen" at pixel with coords i, j
-		Ray rayThroughPixel(int i, int j) const; 
-		 
-		// Finds the object in the scene that is closest to the camera and intersects the ray, if such an object exists.
-		std::optional<Intersection> intersect(const Ray& ray) const;  
-	
-		// Finds the appropriate color given the object and location in intersection (i.e. it shades the pixel)
-		Color findColor(Intersection intersection, int recursive_depth_permitted) const; 
+		// Finds the object in the scene that is closest to the camera that intersects the ray, if such an object exists.
+		std::optional<Intersection> intersect(const Ray& ray) const;
 
 		// Returns a byte array containing the raw pixels of the raytraced image
 		BYTE* raytrace(int max_recursion_depth) const; 
 	
 	private:
+		// Returns the Ray that goes from the camera through the "viewing screen" at pixel with coords i, j
+		Ray rayThroughPixel(int i, int j) const;
+
+		// Finds the appropriate color given the object and location in intersection (i.e. it shades the pixel)
+		Color findColor(Intersection intersection, int recursive_depth_permitted) const;
+
 		// Scene settings
 		const Camera _camera;
 		const int _width;
@@ -67,7 +67,10 @@ class Scene
 		float _aspect_ratio;
 		float _width_over_two;
 		float _height_over_two;
-		float _tan_fovx_over_two;
-		float _tan_fovy_over_two;	
+		float _alpha_multiplicand;
+		float _beta_multiplicand;
+		glm::vec3 _u;
+		glm::vec3 _v;
+		glm::vec3 _w;
 };
 

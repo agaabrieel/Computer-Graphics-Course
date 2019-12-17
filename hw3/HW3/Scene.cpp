@@ -15,8 +15,20 @@ Scene::Scene(int width, int height, Camera camera, std::vector<Triangle> triangl
 	_aspect_ratio = (float)_width / (float)_height;
 	_width_over_two = _width / 2.0f;
 	_height_over_two = _height / 2.0f;
-	_tan_fovy_over_two = tan(_camera.fovy_radians() / 2);
-	_tan_fovx_over_two = _tan_fovy_over_two * _aspect_ratio;
+	float tan_fovy_over_two = tan(_camera.fovy_radians() / 2);
+	float tan_fovx_over_two = tan_fovy_over_two * _aspect_ratio;
+	_alpha_multiplicand = tan_fovx_over_two / _width_over_two;
+	_beta_multiplicand = tan_fovy_over_two / _height_over_two;
+
+	// Set up basis vectors for camera space.
+	glm::vec3 center = _camera.lookat().toGlmVec3();	// center is what we are looking at
+	glm::vec3 eye = _camera.lookfrom().toGlmVec3();		// eye is the camera location
+	glm::vec3 a = eye - center;
+	glm::vec3 b = _camera.up().toGlmVec3();
+	_w = glm::normalize(a);
+	_u = glm::cross(b, _w);
+	_u = glm::normalize(_u);
+	_v = glm::cross(_w, _u);
 }
 
 Scene::~Scene()
@@ -30,29 +42,18 @@ int Scene::height() const {	return _height; }
 
 Ray Scene::rayThroughPixel(int i, int j) const
 {
-	// TODO ray should go through center of pixel!
+	// Adjustment to hit center of pixel, rather than corner.
+	float i_float = i + 0.5f;
+	float j_float = j + 0.5f;
 
-	glm::vec3 center = _camera.lookat().toGlmVec3(); // center is what we are looking at
-	glm::vec3 eye = _camera.lookfrom().toGlmVec3(); // eye is the camera location
-	glm::vec3 a = eye - center;
+	float alpha = (j_float - _width_over_two) * _alpha_multiplicand;
+	float beta = (_height_over_two - i_float) * _beta_multiplicand;
 
-	glm::vec3 b = _camera.up().toGlmVec3();
-
-	glm::vec3 w = glm::normalize(a);
-	
-	glm::vec3 u = glm::cross(b, w);
-	u = glm::normalize(u);
-
-	glm::vec3 v = glm::cross(w, u);
-
-	float alpha = _tan_fovx_over_two * ((j - _width_over_two) / _width_over_two);
-	float beta = _tan_fovy_over_two * ((_height_over_two - i) / _height_over_two);
-
-	glm::vec3 direction = alpha * u + beta * v - w;
+	glm::vec3 direction = alpha * _u + beta * _v - _w;
 	direction = glm::normalize(direction);
 
 	// The ray has origin at the camera location and looks in the given direction
-	return Ray(_camera.lookfrom(), Direction(direction.x, direction.y, direction.z)); 
+	return Ray(_camera.lookfrom(), Direction(direction)); 
 }
 
 
