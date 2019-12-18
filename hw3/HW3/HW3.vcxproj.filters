@@ -60,9 +60,6 @@
     <ClCompile Include="PointLight.cpp">
       <Filter>Source Files\Model\Lights</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Model</Filter>
-    </ClCompile>
     <ClCompile Include="Color.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
@@ -111,9 +108,6 @@
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
-      <Filter>Header Files\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="Ray.h">

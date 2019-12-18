@@ -15,16 +15,16 @@ Scene::Scene(int width, int height, Camera camera, std::vector<Triangle> triangl
 	_aspect_ratio = (float)_width / (float)_height;
 	_width_over_two = _width / 2.0f;
 	_height_over_two = _height / 2.0f;
-	float tan_fovy_over_two = tan(_camera.fovy_radians() / 2);
+	float tan_fovy_over_two = tan(_camera.fovy_radians / 2);
 	float tan_fovx_over_two = tan_fovy_over_two * _aspect_ratio;
 	_alpha_multiplicand = tan_fovx_over_two / _width_over_two;
 	_beta_multiplicand = tan_fovy_over_two / _height_over_two;
 
 	// Set up basis vectors for camera space.
-	Point center = _camera.lookat();	// center is what we are looking at
-	Point eye = _camera.lookfrom();		// eye is the camera location
+	Point center = _camera.lookat;	// center is what we are looking at
+	Point eye = _camera.lookfrom;		// eye is the camera location
 	Vector3 a = eye - center;
-	Vector3 b = _camera.up();
+	Vector3 b = _camera.up;
 	_w = a.normalize();
 	_u = b.cross(_w);
 	_u = _u.normalize();
@@ -48,12 +48,12 @@ Ray Scene::rayThroughPixel(int i, int j) const
 	direction = direction.normalize();
 
 	// The ray has origin at the camera location and looks in the given direction
-	return Ray(_camera.lookfrom(), direction); 
+	return Ray(_camera.lookfrom, direction); 
 }
 
 
 
-std::optional<Scene::Intersection> Scene::intersect(const Ray& ray) const
+std::optional<Intersection> Scene::intersect(const Ray& ray) const
 {
 	float smallest_intersection_distance = INFINITY;
 	std::optional<const Shape*> hit_object;
@@ -123,7 +123,7 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 		}
 
 		// Handle attenuatioin for Point Lights
-		Light::Attenuation atten = point_light.attenuation();
+		Attenuation atten = point_light.attenuation();
 		float distance_to_light = point_light.point().distanceTo(intersection.intersection_location); // TODO maybe we already have this
 		float attenuation_denominator = atten.constant + (atten.linear * distance_to_light) + (atten.quadratic * distance_to_light * distance_to_light);
 		final_color /= attenuation_denominator;

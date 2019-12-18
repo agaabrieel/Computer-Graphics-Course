@@ -4,4 +4,4 @@ Light::Light(Color color, Attenuation attenuation) : _color(color), _attenuation
 
 Color Light::color() const { return _color; }
 
-Light::Attenuation Light::attenuation() const { return _attenuation; }
+Attenuation Light::attenuation() const { return _attenuation; }

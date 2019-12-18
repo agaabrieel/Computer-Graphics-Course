@@ -8,6 +8,10 @@ Point::Point(glm::vec4 p) : _x(p.x / p.w), _y(p.y / p.w), _z(p.z / p.w)
 {
 }
 
+Point::Point() : Point(0.0f, 0.0f, 0.0f)
+{
+}
+
 float Point::x() const { return _x; }
 
 float Point::y() const { return _y; }

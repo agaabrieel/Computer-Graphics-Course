@@ -47,7 +47,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 	int maxdepth = 5;				// Default recursive depth of 5.
 
 	// Scene objects
-	unique_ptr<Camera> camera;  
+	Camera camera;  
 	vector<Point> vertexes; 
 	vector<Triangle> triangles;
 	vector<Sphere> spheres;
@@ -60,7 +60,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 	float shininess = 0;
 	unique_ptr<Color> emission(new Color(0.0f, 0.0f, 0.0f));		// Objects do not emit light by default
 	unique_ptr<Color> ambient(new Color(0.2f, 0.2f, 0.2f));			// Default value for ambient property of objects
-	Light::Attenuation attenuation = { 1.0f, 0.0f, 0.0f };
+	Attenuation attenuation = { 1.0f, 0.0f, 0.0f };
 
 	// Start a new matrix transform stack with the identity matrix
 	TransformStack transform_stack = TransformStack();
@@ -107,18 +107,13 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 				// camera lookfromx lookfromy lookfromz lookatx lookaty lookatz upx upy upz fovy
 				else if (cmd == "camera") {
 					validinput = readvals(s, 10, values);
-					if (validinput && camera.get() == NULL) { // Only parses the first camera command and then ignores duplicates
+					if (validinput) {
 						Point lookfrom = Point(values[0], values[1], values[2]);
 						Point lookat = Point(values[3], values[4], values[5]);
 						Vector3 up = Vector3(values[6], values[7], values[8]).normalize();
 						float fovy_degrees = values[9];
 						float fovy_radians = glm::radians(fovy_degrees);
-
-						camera.reset(new Camera(lookfrom, lookat, up, fovy_radians));
-					}
-
-					else {
-						ignoreCommandWithMessage(cmd, 10, values);
+						camera = { lookfrom, lookat, up, fovy_radians };
 					}
 				}
 
@@ -313,10 +308,6 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 			cerr << "Height was not specified.\n";
 			throw 2;
 		}
-		if (camera.get() == NULL) {
-			cerr << "Camera was not specified.\n";
-			throw 2;
-		}
 
 		// Use default file name if none given
 		if (output_file_name.size() == 0) {
@@ -324,7 +315,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 		}
 
 		// Build scene from parsed values
-		Scene scene = Scene(width, height, *camera, triangles, spheres, directional_lights, point_lights); 
+		Scene scene = Scene(width, height, camera, triangles, spheres, directional_lights, point_lights); 
 
 		FileData returnData = { scene, output_file_name, maxdepth };
 		return returnData;

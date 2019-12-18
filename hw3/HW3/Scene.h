@@ -2,30 +2,37 @@
 	
 	Contains all information about the Scene, including Lights, Camera, Objects, etc and is able to output a raytraced image based on this information.
 */
-
-
 #pragma once
 #include <vector>
 #include "Shape.h"
 #include "Sphere.h"
 #include "Triangle.h"
-#include "Camera.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include <optional>
 
+struct Camera {
+	Point lookfrom;
+	Point lookat;
+	Vector3 up;
+	float fovy_radians;
+};
+
+// Stores data related to an intersection between a Ray and a Shape
+struct Intersection {
+	const Shape* intersected_shape;
+	Point intersection_location;
+	Vector3 normal;
+	const Ray& ray;
+	float distance;
+};
 
 class Scene
 {
 	public:
-		// Stores data related to an intersection between a Ray and a Shape
-		struct Intersection {
-			const Shape* intersected_shape;
-			Point intersection_location;
-			Vector3 normal;
-			const Ray& ray;
-			float distance;
-		};
+		
+
+		
 
 		Scene(int width, int height, Camera camera, std::vector<Triangle> triangles, std::vector<Sphere> spheres, 
 			std::vector<DirectionalLight> directional_lights, std::vector<PointLight> point_lights);

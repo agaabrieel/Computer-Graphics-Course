@@ -12,6 +12,7 @@ class Point
 		Point(float x, float y, float z);
 		Point(glm::vec3 p);
 		Point(glm::vec4 p);
+		Point();
 
 		float x() const;
 		float y() const;

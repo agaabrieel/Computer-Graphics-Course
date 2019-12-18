@@ -4,14 +4,16 @@
 
 class Scene;
 
+struct Attenuation {
+	float constant;
+	float linear;
+	float quadratic;
+};
+
 class Light  // abstract
 {
 	public:
-		struct Attenuation {
-			float constant;
-			float linear;
-			float quadratic;
-		};
+		
 
 		Light(Color color, Attenuation attenuation);
 

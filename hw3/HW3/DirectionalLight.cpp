@@ -17,7 +17,7 @@ bool DirectionalLight::isVisibleFrom(Point point, const Scene* scene) const
 	origin += direction * 0.001f; // Bring origin of ray slightly towards light source to prevent self-intersection.
 
 	Ray ray = Ray(origin, direction);
-	std::optional<Scene::Intersection> t = scene->intersect(ray);
+	std::optional<Intersection> t = scene->intersect(ray);
 
 	// Any object in the direction will be obstructing the directional light, since the light is at a point at infinity.
 	return !t.has_value();
