@@ -1,7 +1,9 @@
 #include "Shape.h"
 
 Shape::Shape(Color diffuse, Color specular, float shininess, Color emission, Color ambient) :
-	_diffuse(diffuse), _specular(specular), _shininess(shininess), _emission(emission), _ambient(ambient) {}
+	_diffuse(diffuse), _specular(specular), _shininess(shininess), _emission(emission), _ambient(ambient) 
+{
+}
 
 Color Shape::diffuse() const { return _diffuse; }
 Color Shape::specular() const {	return _specular; }

@@ -1,13 +1,12 @@
 #pragma once
-// TODO remove dependency on GLM
 #ifndef GLM_FORCE_RADIANS
 #define GLM_FORCE_RADIANS
 #endif
 #include <glm/glm.hpp>
 #include <optional>
 
-#include "Color.h"
 #include "Ray.h"
+#include "Color.h"
 
 struct Intersection;
 

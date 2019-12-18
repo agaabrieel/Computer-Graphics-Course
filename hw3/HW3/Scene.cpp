@@ -1,6 +1,7 @@
-#include "ProgressBar.hpp"  // https://github.com/prakhar1989/progress-cpp
 #include "Scene.h"
 #include "Shape.h"
+#include <memory>
+#include "ProgressBar.hpp"  // https://github.com/prakhar1989/progress-cpp
 
 const Color AMBIENT_GLOBAL_DEFAULT = Color(0.0f, 0.0f, 0.0f);
 
@@ -19,13 +20,16 @@ Scene::Scene(int width, int height, Camera camera, std::vector<Triangle> triangl
 	_beta_multiplicand = tan_fovy_over_two / _height_over_two;
 
 	// Set up basis vectors for camera space.
-	Vector3 a = _camera.lookat - camera.lookfrom;
+	Point center = _camera.lookat;	// center is what we are looking at
+	Point eye = _camera.lookfrom;	// eye is the camera location
+	Vector3 a = eye - center;
 	Vector3 b = _camera.up;
 	_w = a.normalize();
 	_u = b.cross(_w);
 	_u = _u.normalize();
 	_v = _w.cross(_u);
 }
+
 
 int Scene::width() const { return _width; }
 int Scene::height() const {	return _height; }
