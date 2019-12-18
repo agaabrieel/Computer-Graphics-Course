@@ -15,8 +15,13 @@ class Triangle :
 		Point _b;
 		Point _c;
 
-		Vector3 _normal_with_transform;
-		Vector3 _normal_without_transform;
+		Vector3 _v0;
+		Vector3 _v1;
+		float _d00;
+		float _d01;
+		float _d11;
+		float _invDenom;
 
+		Vector3 _normal;
 };
 
