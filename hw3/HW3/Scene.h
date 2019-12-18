@@ -30,11 +30,11 @@ class Scene
 
 		// Returns a byte array containing the raw pixels of the raytraced image
 		BYTE* raytrace(int max_recursion_depth) const; 
-	
-	private:
+
 		// Finds the object in the scene that is closest to the camera that intersects the ray, if such an object exists.
 		std::optional<Intersection> intersect(const Ray& ray) const;
-
+	
+	private:
 		// Returns the Ray that goes from the camera through the "viewing screen" at pixel with coords i, j
 		Ray rayThroughPixel(int i, int j) const;
 

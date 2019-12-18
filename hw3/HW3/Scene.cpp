@@ -1,6 +1,5 @@
 #include "Scene.h"
-#include "Sphere.h" // TODO remove after implementing intersect
-#include "Triangle.h"
+#include "Shape.h"
 #include <memory>
 #include "ProgressBar.hpp"  // https://github.com/prakhar1989/progress-cpp
 

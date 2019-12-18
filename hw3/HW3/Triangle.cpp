@@ -23,8 +23,8 @@ std::optional<Intersection> Triangle::intersect(const Ray& ray) const
 	
 	float denominator = p1.dot(_normal_with_transform);
 
-	// No intersection when parallel to the plane
-	if (denominator == 0.0f) { // TODO: might we allow a small tolerance here for floating point error?
+	// No intersection when parallel to the plane, with a small tolerance here for floating point error
+	if (abs(denominator) < 0.0001f) {
 		return std::nullopt;
 	}
 
