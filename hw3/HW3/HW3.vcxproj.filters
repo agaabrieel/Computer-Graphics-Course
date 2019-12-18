@@ -72,9 +72,6 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Attenuation.cpp">
-      <Filter>Source Files\Model\Lights</Filter>
-    </ClCompile>
     <ClCompile Include="Ray.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
@@ -118,9 +115,6 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Attenuation.h">
-      <Filter>Header Files\Model\Lights</Filter>
     </ClInclude>
     <ClInclude Include="Ray.h">
       <Filter>Header Files\Model</Filter>

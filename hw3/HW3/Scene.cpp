@@ -123,9 +123,9 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 		}
 
 		// Handle attenuatioin for Point Lights
-		Attenuation atten = point_light.attenuation();
+		Light::Attenuation atten = point_light.attenuation();
 		float distance_to_light = point_light.point().distanceTo(intersection.intersection_location); // TODO maybe we already have this
-		float attenuation_denominator = atten.constant() + (atten.linear() * distance_to_light) + (atten.quadratic() * distance_to_light * distance_to_light);
+		float attenuation_denominator = atten.constant + (atten.linear * distance_to_light) + (atten.quadratic * distance_to_light * distance_to_light);
 		final_color /= attenuation_denominator;
 	}
 

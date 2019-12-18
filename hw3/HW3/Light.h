@@ -1,6 +1,5 @@
 #pragma once
 #include "Color.h"
-#include "Attenuation.h"
 #include "Point.h"
 
 class Scene;
@@ -8,6 +7,12 @@ class Scene;
 class Light  // abstract
 {
 	public:
+		struct Attenuation {
+			float constant;
+			float linear;
+			float quadratic;
+		};
+
 		Light(Color color, Attenuation attenuation);
 
 		Color color() const;

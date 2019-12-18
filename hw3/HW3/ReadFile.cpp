@@ -60,7 +60,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 	float shininess = 0;
 	unique_ptr<Color> emission(new Color(0.0f, 0.0f, 0.0f));		// Objects do not emit light by default
 	unique_ptr<Color> ambient(new Color(0.2f, 0.2f, 0.2f));			// Default value for ambient property of objects
-	unique_ptr<Attenuation> attenuation(new Attenuation(1, 0, 0));	// Default attenuation
+	Light::Attenuation attenuation = { 1.0f, 0.0f, 0.0f };
 
 	// Start a new matrix transform stack with the identity matrix
 	TransformStack transform_stack = TransformStack();
@@ -231,7 +231,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					if (validinput) {
 						Vector3 direction = Vector3(values[0], values[1], values[2]).normalize();
 						Color color = Color(values[3], values[4], values[5]);
-						DirectionalLight directional_light = DirectionalLight(color, *attenuation, direction);
+						DirectionalLight directional_light = DirectionalLight(color, attenuation, direction);
 						directional_lights.push_back(directional_light);
 					}
 				}
@@ -242,7 +242,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					if (validinput) {
 						Point point = Point(values[0], values[1], values[2]);
 						Color color = Color(values[3], values[4], values[5]);
-						PointLight point_light = PointLight(color, *attenuation, point);
+						PointLight point_light = PointLight(color, attenuation, point);
 						point_lights.push_back(point_light);
 					}
 				}
@@ -251,7 +251,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 				else if (cmd == "attenuation") {
 					validinput = readvals(s, 3, values);
 					if (validinput) {
-						attenuation.reset(new Attenuation(values[0], values[1], values[2]));
+						attenuation = { values[0], values[1], values[2] };
 					}
 				}
 
