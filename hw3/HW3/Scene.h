@@ -6,11 +6,11 @@
 #include <optional>
 #include <vector>
 
+#include "DirectionalLight.h"
+#include "PointLight.h"
 #include "Shape.h"
 #include "Sphere.h"
 #include "Triangle.h"
-#include "DirectionalLight.h"
-#include "PointLight.h"
 
 struct Camera {
 	Point lookfrom;

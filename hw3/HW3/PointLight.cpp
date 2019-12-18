@@ -1,6 +1,8 @@
+#include <algorithm> // max
+#include <optional>
+
 #include "PointLight.h"
 #include "Ray.h"
-#include <optional>
 #include "Scene.h"
 
 PointLight::PointLight(Color color, Attenuation attenuation, Point point) : Light(color), _point(point), _attenuation(attenuation) {}
@@ -26,14 +28,14 @@ Color PointLight::computeContribution(Intersection hit_object, const Scene* scen
 	if (!shadow_ray_intersection.has_value() || distance_ho_to_light < shadow_ray_intersection.value().distance) {
 		// diffuse
 		float l_dot_n = shadow_ray_direction.dot(hit_object.normal);
-		Color light_contribution = _color * hit_object.intersected_shape->diffuse() * glm::max(l_dot_n, 0.0f);
+		Color light_contribution = _color * hit_object.intersected_shape->diffuse() * std::max(l_dot_n, 0.0f);
 
 		// specular
 		Vector3 half_angle = (-hit_object.ray.direction()) + shadow_ray_direction;
 		half_angle = half_angle.normalize();
 		float h_dot_n = half_angle.dot(hit_object.normal);
 
-		light_contribution += _color * hit_object.intersected_shape->specular() * (pow(glm::max(h_dot_n, 0.0f), hit_object.intersected_shape->shininess()));
+		light_contribution += _color * hit_object.intersected_shape->specular() * (pow(std::max(h_dot_n, 0.0f), hit_object.intersected_shape->shininess()));
 
 		// Handle attenuation for Point Lights
 		float attenuation_denominator = 

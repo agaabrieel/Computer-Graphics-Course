@@ -56,6 +56,7 @@ std::optional<Intersection> Sphere::intersect(const Ray& ray) const
 		return std::nullopt;
 	}
 
+	// TODO remove dependency on glm
 	glm::vec4 p_prime = glm::vec4((p0_prime + smallest_positive_root * p1_prime).toGlmVec3(), 1);
 	glm::vec4 normal_prime = p_prime - glm::vec4(center.toGlmVec3(), 1);
 	glm::vec4 normal4 = glm::transpose(_transform_inverse) * normal_prime;

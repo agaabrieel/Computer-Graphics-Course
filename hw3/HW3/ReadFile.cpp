@@ -3,13 +3,14 @@
 	==> Parses the file with filename to a Scene object 
 */
 
-#include "ReadFile.h"
-#include <iostream>
 #include <fstream>
-#include "TransformStack.h"
+#include <iostream>
 #include <vector>
-#include "Triangle.h"
+
+#include "ReadFile.h"
 #include "Sphere.h"
+#include "TransformStack.h"
+#include "Triangle.h"
 
 #ifndef DEFAULT_FILE_NAME
 #define DEFAULT_FILE_NAME "raytrace.png"
@@ -60,6 +61,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 	float shininess = 0;
 	unique_ptr<Color> emission(new Color(0.0f, 0.0f, 0.0f));		// Objects do not emit light by default
 	unique_ptr<Color> ambient(new Color(0.2f, 0.2f, 0.2f));			// Default value for ambient property of objects
+
 	Attenuation attenuation = { 1.0f, 0.0f, 0.0f };
 
 	// Start a new matrix transform stack with the identity matrix
