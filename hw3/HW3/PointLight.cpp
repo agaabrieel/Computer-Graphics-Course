@@ -5,9 +5,6 @@
 
 PointLight::PointLight(Color color, Attenuation attenuation, Point point) : Light(color), _point(point), _attenuation(attenuation) {}
 
-Point PointLight::point() const { return _point; }
-Attenuation PointLight::attenuation() const { return _attenuation; }
-
 Vector3 PointLight::directionFrom(const Point& point) const
 {
 	Vector3 light_direction = _point - point;
@@ -38,7 +35,7 @@ Color PointLight::computeContribution(Intersection hit_object, const Scene* scen
 
 		light_contribution += _color * hit_object.intersected_shape->specular() * (pow(glm::max(h_dot_n, 0.0f), hit_object.intersected_shape->shininess()));
 
-		// Handle attenuatioin for Point Lights
+		// Handle attenuation for Point Lights
 		float attenuation_denominator = 
 			_attenuation.constant + 
 			(_attenuation.linear * distance_ho_to_light) + 

@@ -97,7 +97,7 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 	}
 
 	// Avoids recursive calls unless the specular component of the intersected object is significant.
-	if (recursive_depth_permitted > 1 && intersected_shape->specular().toGlmVec3().length() > 0.001) {
+	if (recursive_depth_permitted > 1 && intersected_shape->specular().isNonZero()) {
 		Vector3 original_ray_direction = intersection.ray.direction();
 		Point reflected_ray_origin = intersection.intersection_location;
 		Vector3 reflected_ray_direction = original_ray_direction + 2.0f * (-original_ray_direction).dot(intersection.normal) * intersection.normal;
@@ -127,7 +127,6 @@ BYTE* Scene::raytrace(int max_recursion_depth) const
 
 	for (int i = 0; i < _height; i++) {
 		for (int j = 0; j < _width; j++) {
-
 			// Finds closest object that is intersected by the ray through pixel (i, j)
 			Ray ray = rayThroughPixel(i, j);
 			std::optional<Intersection> intersection = intersect(ray);

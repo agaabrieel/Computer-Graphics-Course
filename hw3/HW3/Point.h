@@ -1,9 +1,9 @@
 #pragma once
-
 #ifndef GLM_FORCE_RADIANS
 #define GLM_FORCE_RADIANS
 #endif
 #include <glm/glm.hpp>
+
 #include "Vector3.h"
 
 class Point
@@ -13,10 +13,6 @@ class Point
 		Point(glm::vec3 p);
 		Point(glm::vec4 p);
 		Point();
-
-		float x() const;
-		float y() const;
-		float z() const;
 
 		Vector3 operator-(const Point& p) const;
 		void operator+=(const Vector3& v);
@@ -32,6 +28,5 @@ class Point
 		float _x;
 		float _y;
 		float _z;
-
 };
 

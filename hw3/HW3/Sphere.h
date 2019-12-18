@@ -8,9 +8,6 @@ class Sphere :
 	public:
 		Sphere(Color diffuse, Color specular, float shininess, Color emission, Color ambient, 
 			glm::mat4 transform, Point center, float radius);
-		
-		Point center() const;
-		float radius_squared() const;
 
 		std::optional<Intersection> intersect(const Ray& ray) const;
 

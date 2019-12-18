@@ -1,11 +1,12 @@
 #pragma once
-#include "Color.h"
 #ifndef GLM_FORCE_RADIANS
 #define GLM_FORCE_RADIANS
 #endif
 #include <glm/glm.hpp>
-#include "Ray.h"
 #include <optional>
+
+#include "Ray.h"
+#include "Color.h"
 
 struct Intersection;
 

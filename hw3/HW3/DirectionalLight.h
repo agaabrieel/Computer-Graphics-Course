@@ -9,7 +9,6 @@ class DirectionalLight :
 	public:
 		DirectionalLight(Color color, Vector3 direction);
 
-		Vector3 direction() const;
 		Color computeContribution(Intersection intersection, const Scene* scene) const;
 
 	private:

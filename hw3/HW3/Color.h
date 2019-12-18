@@ -12,11 +12,6 @@ class Color
 		Color(float red, float green, float blue);
 		Color(glm::vec3 rgb);
 
-		float red() const;
-		float green() const;
-		float blue() const;
-
-		glm::vec3 toGlmVec3();
 		RGBTRIPLE to_freeimage_rgbtriple() const;
 
 		Color operator+(const Color& c) const;
@@ -25,6 +20,8 @@ class Color
 		void operator=(const Color& c);
 		void operator+=(const Color& c);
 		void operator/=(float f);
+
+		bool isNonZero() const;
 
 	private:
 		float _red;

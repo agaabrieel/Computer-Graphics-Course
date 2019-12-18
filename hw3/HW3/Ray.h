@@ -1,5 +1,6 @@
 #pragma once
 #include "Point.h"
+#include "Vector3.h"
 
 class Ray
 {

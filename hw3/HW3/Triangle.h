@@ -10,8 +10,6 @@ class Triangle :
 		
 		std::optional<Intersection> intersect(const Ray& ray) const;
 
-		Vector3 normal() const;
-
 	private:
 		Point _a;
 		Point _b;

@@ -8,12 +8,10 @@ class PointLight :
 	public:
 		PointLight(Color color, Attenuation attenuation, Point point);
 
-		Point point() const;
-		Attenuation attenuation() const;
-		Vector3 directionFrom(const Point& point) const;
 		Color computeContribution(Intersection hit_object, const Scene* scene) const;
 
 	private: 
+		Vector3 directionFrom(const Point& point) const;
 		const Point _point;
 		const Attenuation _attenuation;
 };

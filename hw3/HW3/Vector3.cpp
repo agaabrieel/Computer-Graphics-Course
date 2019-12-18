@@ -78,13 +78,5 @@ glm::mat3 Vector3::outerProduct(const Vector3& v2) const
 {
 	return glm::mat3(_x * v2._x, _y * v2._x, _z * v2._x,
 		_x * v2._y, _y * v2._y, _z * v2._y,
-		_x * v2._z, _y * v2._z, _z * v2._z); // TODO temporary debug
-
-	//return glm::outerProduct(toGlmVec3(), v2.toGlmVec3());
+		_x * v2._z, _y * v2._z, _z * v2._z);
 }
-
-glm::vec3 Vector3::toGlmVec3() const
-{
-	return glm::vec3(_x, _y, _z);
-}
-

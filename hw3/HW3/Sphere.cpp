@@ -5,9 +5,6 @@ Sphere::Sphere(Color diffuse, Color specular, float shininess, Color emission, C
 	_transform(transform),
 	_transform_inverse(glm::inverse(_transform)) {}
 
-Point Sphere::center() const { return _center; }
-float Sphere::radius_squared() const {	return _radius_squared; }
-
 std::optional<Intersection> Sphere::intersect(const Ray& ray) const 
 {
 	// Transform ray to object coordinates.

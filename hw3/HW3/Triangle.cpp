@@ -63,5 +63,3 @@ std::optional<Intersection> Triangle::intersect(const Ray& ray) const
 		return std::nullopt;
 	}
 }
-
-Vector3 Triangle::normal() const { return _normal_with_transform; }

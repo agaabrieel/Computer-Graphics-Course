@@ -26,7 +26,6 @@ class Vector3
 		Vector3 cross(const Vector3& v2) const;
 		Vector3 normalize() const;
 		glm::mat3 outerProduct(const Vector3& v2) const;
-		glm::vec3 toGlmVec3() const;
 
 	protected:
 		float _x;

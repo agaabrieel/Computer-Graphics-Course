@@ -6,8 +6,6 @@
 DirectionalLight::DirectionalLight(Color color, Vector3 direction) : 
 	Light(color), _direction(direction.normalize()) {}
 
-Vector3 DirectionalLight::direction() const {	return _direction; }
-
 Color DirectionalLight::computeContribution(Intersection hit_object, const Scene* scene) const
 {
 	// Bring origin of ray slightly towards light source to prevent self-intersection.

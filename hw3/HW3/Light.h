@@ -16,7 +16,6 @@ class Light  // abstract
 	public:
 		Light(Color color);
 
-		Color color() const;
 		virtual Color computeContribution(Intersection hit_object, const Scene* scene) const = 0;
 
 	protected:
