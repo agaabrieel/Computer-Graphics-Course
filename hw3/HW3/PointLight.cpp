@@ -8,24 +8,22 @@ PointLight::PointLight(Color color, Attenuation attenuation, Point point) : Ligh
 Point PointLight::point() const { return _point; }
 Attenuation PointLight::attenuation() const { return _attenuation; }
 
-bool PointLight::isVisibleFrom(Point point, const Scene * scene) const
+bool PointLight::isVisibleFrom(Point object_location, const Scene * scene) const
 {
-	glm::vec3 origin = point.toGlmVec3();
-	glm::vec3 direction = _point.toGlmVec3() - origin;
-	direction = glm::normalize(direction);
+	Vector3 shadow_ray_direction = _point - object_location;
+	shadow_ray_direction = shadow_ray_direction.normalize();
 
-	origin += direction * 0.001f; // Bring origin of ray slightly towards light source to prevent self-intersection.
+	// Bring origin of ray slightly towards light source to prevent self-intersection.
+	Point shadow_ray_origin = object_location + shadow_ray_direction * 0.001f; 
 
-	Ray ray = Ray(origin, direction);
-	std::optional<Intersection> t = scene->intersect(ray);
+	Ray shadow_ray = Ray(shadow_ray_origin, shadow_ray_direction);
+	std::optional<Intersection> intersection = scene->intersect(shadow_ray);
 	
-	if (!t.has_value()) {
+	if (!intersection.has_value()) {
 		return true; // No object intersects on this ray.
 	}
 
-	// The distance to the light is smaller than the distance to the first object intersection
-		// So the light is visible
-		// TODO tidy up
-	return glm::abs(glm::distance(origin, _point.toGlmVec3())) < glm::abs(glm::distance(origin, t.value().intersection_location.toGlmVec3()));
+	// The distance to the light is smaller than the distance to the first object intersection, so the light is visible
+	return object_location.distanceTo(_point) < intersection.value().distance;
 
 }

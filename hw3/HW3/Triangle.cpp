@@ -57,9 +57,7 @@ std::optional<Intersection> Triangle::intersect(const Ray& ray) const
 
 	if (alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1 && gamma >= 0 && gamma <= 1) {
 		// TODO negating the normal fixes the problem with lighting for triangles, but really we should address why the normal is facing the wrong way.
-		Intersection i = { this, p, -_normal_with_transform, ray, t };
-		
-		return { i };
+		return { { this, p, -_normal_with_transform, ray, t } };
 	}
 	else {
 		return std::nullopt;

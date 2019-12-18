@@ -84,16 +84,11 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 		return Color(0.0f, 0.0f, 0.0f); // Colors are additive so we can just return black.
 	}
 
+	// Start with per-object ambient and emission terms
 	const Shape* intersected_shape = intersection.intersected_shape;
-
-	// Ambient term, per object
-	Color final_color = intersected_shape->ambient();
-
-	// Emission term, per object
-	final_color += intersected_shape->emission();
+	Color final_color = intersected_shape->ambient() + intersected_shape->emission();
 
 	for (PointLight point_light : _point_lights) {
-
 		bool isVisible = point_light.isVisibleFrom(intersection.intersection_location, this);
 		if (isVisible) { 
 			// TODO this is duplicated code form isVisibleFrom
@@ -159,7 +154,6 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 	return final_color;
 }
 
-// TODO return smart pointer
 BYTE* Scene::raytrace(int max_recursion_depth) const
 {
 	int pix = _width * _height;
