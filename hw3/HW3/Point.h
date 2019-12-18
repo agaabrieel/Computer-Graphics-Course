@@ -1,4 +1,6 @@
 #pragma once
+
+// TODO remove dependency on GLM
 #ifndef GLM_FORCE_RADIANS
 #define GLM_FORCE_RADIANS
 #endif

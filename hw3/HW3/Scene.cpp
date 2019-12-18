@@ -1,7 +1,6 @@
+#include "ProgressBar.hpp"  // https://github.com/prakhar1989/progress-cpp
 #include "Scene.h"
 #include "Shape.h"
-#include <memory>
-#include "ProgressBar.hpp"  // https://github.com/prakhar1989/progress-cpp
 
 const Color AMBIENT_GLOBAL_DEFAULT = Color(0.0f, 0.0f, 0.0f);
 
@@ -29,7 +28,6 @@ Scene::Scene(int width, int height, Camera camera, std::vector<Triangle> triangl
 	_u = _u.normalize();
 	_v = _w.cross(_u);
 }
-
 
 int Scene::width() const { return _width; }
 int Scene::height() const {	return _height; }

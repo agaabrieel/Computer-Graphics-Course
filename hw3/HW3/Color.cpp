@@ -1,13 +1,10 @@
-#include "Color.h"
-#include <math.h>
+#include <cstdlib>
 
-Color::Color() : Color(0.0, 0.0, 0.0) {}
+#include "Color.h"
 
 Color::Color(float red, float green, float blue) : _red(red), _green(green), _blue(blue) {}
-
-Color::Color(glm::vec3 rgb) : Color(rgb.r, rgb.g, rgb.b)
-{
-}
+Color::Color(glm::vec3 rgb) : Color(rgb.r, rgb.g, rgb.b) {}
+Color::Color() : Color(0.0, 0.0, 0.0) {}
 
 RGBTRIPLE Color::to_freeimage_rgbtriple() const
 {
@@ -16,29 +13,6 @@ RGBTRIPLE Color::to_freeimage_rgbtriple() const
 	triple.rgbtGreen = color_channel_float_to_byte(_green);
 	triple.rgbtRed = color_channel_float_to_byte(_red);
 	return triple;
-}
-
-Color Color::operator+(const Color& c) const
-{
-	return Color(this->_red + c._red, this->_green + c._green, this->_blue + c._blue);
-}
-
-Color Color::operator*(const Color& c) const
-{
-	return Color(
-		_red * c._red,
-		_green * c._green,
-		_blue * c._blue
-	);
-}
-
-Color Color::operator*(float f) const
-{
-	return Color(
-		_red * f,
-		_green * f,
-		_blue * f
-	);
 }
 
 void Color::operator=(const Color& c)
@@ -61,6 +35,10 @@ void Color::operator/=(float f)
 	_green /= f;
 	_blue /= f;
 }
+
+Color Color::operator+(const Color& c) const { return Color(_red + c._red, _green + c._green, _blue + c._blue); }
+Color Color::operator*(const Color& c) const { return Color(_red * c._red, _green * c._green, _blue * c._blue); }
+Color Color::operator*(float f) const {	return Color(_red * f, _green * f, _blue * f); }
 
 bool Color::isNonZero() const
 {
