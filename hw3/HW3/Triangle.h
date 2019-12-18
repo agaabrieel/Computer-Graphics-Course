@@ -8,7 +8,7 @@ class Triangle :
 		Triangle(Color diffuse, Color specular, float shininess, Color emission, Color ambient, 
 			glm::mat4 transform, Point a, Point b, Point c);
 		
-		std::optional<DistanceAndNormal> intersect(Ray ray) const;
+		std::optional<Intersection> intersect(const Ray& ray) const;
 
 		Vector3 normal() const;
 

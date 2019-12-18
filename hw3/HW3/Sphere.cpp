@@ -1,17 +1,14 @@
 #include "Sphere.h"
 
 Sphere::Sphere(Color diffuse, Color specular, float shininess, Color emission, Color ambient, glm::mat4 transform, Point center, float radius) :
-	Shape(diffuse, specular, shininess, emission, ambient), _center(center), _radius(radius),
+	Shape(diffuse, specular, shininess, emission, ambient), _center(center), _radius_squared(radius * radius),
 	_transform(transform),
 	_transform_inverse(glm::inverse(_transform)) {}
 
 Point Sphere::center() const { return _center; }
+float Sphere::radius_squared() const {	return _radius_squared; }
 
-float Sphere::radius() const {	return _radius; }
-
-glm::mat4 Sphere::transform() const { return _transform; }
-
-std::optional<DistanceAndNormal> Sphere::intersect(Ray ray) const 
+std::optional<Intersection> Sphere::intersect(const Ray& ray) const 
 {
 	// Transform ray to object coordinates.
 	// Do sphere-ray' intersection to get p'
@@ -25,7 +22,7 @@ std::optional<DistanceAndNormal> Sphere::intersect(Ray ray) const
 	// Set up quadratic equation with coefficients a, b, c
 	float a = p1_prime.dot(p1_prime);
 	float b = (2.0f *  p1_prime).dot(p0_prime_minus_c);
-	float c = p0_prime_minus_c.dot(p0_prime_minus_c) - (_radius * _radius);
+	float c = p0_prime_minus_c.dot(p0_prime_minus_c) - _radius_squared;
 
 	float discriminant = b * b - (4.0f * a * c);
 
@@ -69,7 +66,7 @@ std::optional<DistanceAndNormal> Sphere::intersect(Ray ray) const
 	normal = normal.normalize();
 	glm::vec4 p = _transform * p_prime;
 
-	//glm::vec3 p3 = glm::vec3(p.x / p.w, p.y / p.w, p.z / p.w);
+	Point p3 = Point(p.x / p.w, p.y / p.w, p.z / p.w);
 
-	return { {glm::distance(p, ray.origin().toGlmVec4()), normal} };
+	return { { this, p3, normal, ray, ray.origin().distanceTo(p3) } };
 }

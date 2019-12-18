@@ -10,17 +10,14 @@ class Sphere :
 			glm::mat4 transform, Point center, float radius);
 		
 		Point center() const;
-		float radius() const;
+		float radius_squared() const;
 
-		glm::mat4 transform() const; // Is this the best name for this? It's the name from the previous project, but it's not very clear.
-															// Maybe something like: worldToObject?
-
-		std::optional<DistanceAndNormal> intersect(Ray ray) const;
+		std::optional<Intersection> intersect(const Ray& ray) const;
 
 	private:
 		const Point _center;
-		const float _radius; // TODO: consider storing radius squared since that is what seems to be needed.
+		const float _radius_squared;
 		const glm::mat4 _transform;
-		const glm::mat4 _transform_inverse; // Only needed by sphere, not triangle
+		const glm::mat4 _transform_inverse; 
 };
 

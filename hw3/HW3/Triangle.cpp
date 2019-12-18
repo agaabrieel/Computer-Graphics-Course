@@ -14,7 +14,7 @@ Triangle::Triangle(Color diffuse, Color specular, float shininess, Color emissio
 }
 
 
-std::optional<DistanceAndNormal> Triangle::intersect(Ray ray) const
+std::optional<Intersection> Triangle::intersect(const Ray& ray) const
 {
 	// Triangles are stored with the transform already applied to the vertexes, so we do not need to worry about transforms here.
 	// Begin ray-plane intersection
@@ -34,21 +34,6 @@ std::optional<DistanceAndNormal> Triangle::intersect(Ray ray) const
 	if (t <= 0) {
 		return std::nullopt;
 	}
-
-	
-	// End ray-plane intersection
-	/*
-	Vector v0 = b - a, v1 = c - a, v2 = p - a;
-    float d00 = Dot(v0, v0);
-    float d01 = Dot(v0, v1);
-    float d11 = Dot(v1, v1);
-    float d20 = Dot(v2, v0);
-    float d21 = Dot(v2, v1);
-    float denom = d00 * d11 - d01 * d01;
-    v = (d11 * d20 - d01 * d21) / denom;
-    w = (d00 * d21 - d01 * d20) / denom;
-    u = 1.0f - v - w;
-	*/
 
 	// Begin compute barycentric coordinates.
 		// From https://gamedev.stackexchange.com/questions/23743/whats-the-most-efficient-way-to-find-barycentric-coordinates
@@ -71,7 +56,10 @@ std::optional<DistanceAndNormal> Triangle::intersect(Ray ray) const
 
 
 	if (alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1 && gamma >= 0 && gamma <= 1) {
-		return { {t, -_normal_with_transform } }; // TODO negating the normal fixes the problem with lighting for triangles, but really we should address why the normal is facing the wrong way.
+		// TODO negating the normal fixes the problem with lighting for triangles, but really we should address why the normal is facing the wrong way.
+		Intersection i = { this, p, -_normal_with_transform, ray, t };
+		
+		return { i };
 	}
 	else {
 		return std::nullopt;

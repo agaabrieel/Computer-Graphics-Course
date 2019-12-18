@@ -18,22 +18,9 @@ struct Camera {
 	float fovy_radians;
 };
 
-// Stores data related to an intersection between a Ray and a Shape
-struct Intersection {
-	const Shape* intersected_shape;
-	Point intersection_location;
-	Vector3 normal;
-	const Ray& ray;
-	float distance;
-};
-
 class Scene
 {
 	public:
-		
-
-		
-
 		Scene(int width, int height, Camera camera, std::vector<Triangle> triangles, std::vector<Sphere> spheres, 
 			std::vector<DirectionalLight> directional_lights, std::vector<PointLight> point_lights);
 	

@@ -56,36 +56,25 @@ Ray Scene::rayThroughPixel(int i, int j) const
 std::optional<Intersection> Scene::intersect(const Ray& ray) const
 {
 	float smallest_intersection_distance = INFINITY;
-	std::optional<const Shape*> hit_object;
-	Vector3 normal;
+	std::optional<Intersection> closest_intersection;
 
 	for (const Triangle& triangle : _triangles) {
-		std::optional<DistanceAndNormal> result = triangle.intersect(ray);
+		std::optional<Intersection> result = triangle.intersect(ray);
 		if (result.has_value() && result.value().distance < smallest_intersection_distance) {
 			smallest_intersection_distance = result.value().distance;
-			hit_object.reset(); 
-			hit_object = &triangle;
-			normal = result.value().normal;
+			closest_intersection.emplace(result.value());
 		}
 	}
 
 	for (const Sphere& sphere : _spheres) {
-		std::optional<DistanceAndNormal> result = sphere.intersect(ray);
+		std::optional<Intersection> result = sphere.intersect(ray);
 		if (result.has_value() && result.value().distance < smallest_intersection_distance) {
 			smallest_intersection_distance = result.value().distance;
-			hit_object.reset();
-			hit_object = &sphere;
-			normal = result.value().normal;
+			closest_intersection.emplace(result.value());
 		}
 	}
 
-	if (!hit_object.has_value()) {
-		return {};
-	}
-
-	Point p = ray.origin() + smallest_intersection_distance * ray.direction();
-	Intersection i = { hit_object.value(), p, normal, ray, smallest_intersection_distance };
-	return { i };
+	return closest_intersection;
 }
 
 Color Scene::findColor(Intersection intersection, int recursive_depth_permitted) const

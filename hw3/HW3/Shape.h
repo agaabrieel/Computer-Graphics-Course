@@ -7,22 +7,18 @@
 #include "Ray.h"
 #include <optional>
 
-struct DistanceAndNormal {
-	float distance;
-	Vector3 normal;
-};
+struct Intersection;
 
 class Shape  // abstract
 {
 	public:
-		// Getters
-		Color diffuse() const; // We may not need to provide these public getters: maybe there is a way to do the shading by asking the shape to do it?
-		Color specular() const;		// Otherwise we are passing a lot of information around.
+		Color diffuse() const; 
+		Color specular() const;
 		float shininess() const;
 		Color emission() const;
 		Color ambient() const;
 
-		virtual std::optional<DistanceAndNormal> intersect(Ray ray) const = 0;
+		virtual std::optional<Intersection> intersect(const Ray& ray) const = 0;
 
 	protected:
 		Shape(Color diffuse, Color specular, float shininess, Color emission, Color ambient);
@@ -34,3 +30,11 @@ class Shape  // abstract
 		const Color _ambient;
 };
 
+// Stores data related to an intersection between a Ray and a Shape
+struct Intersection {
+	const Shape* intersected_shape;
+	Point intersection_location;
+	Vector3 normal;
+	Ray ray;
+	float distance;
+};
