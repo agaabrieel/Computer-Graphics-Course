@@ -22,7 +22,7 @@ Scene::Scene(int width, int height, Camera camera, std::vector<Triangle> triangl
 
 	// Set up basis vectors for camera space.
 	Point center = _camera.lookat;	// center is what we are looking at
-	Point eye = _camera.lookfrom;		// eye is the camera location
+	Point eye = _camera.lookfrom;	// eye is the camera location
 	Vector3 a = eye - center;
 	Vector3 b = _camera.up;
 	_w = a.normalize();
@@ -81,7 +81,7 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 {
 	// Base case: no more reflections permitted
 	if (recursive_depth_permitted < 1) {
-		return Color(0.0f, 0.0f, 0.0f); // Colors are additive so we can just return black.
+		return Color(); // Colors are additive so we can just return black.
 	}
 
 	// Start with per-object ambient and emission terms
@@ -89,47 +89,11 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 	Color final_color = intersected_shape->ambient() + intersected_shape->emission();
 
 	for (PointLight point_light : _point_lights) {
-		bool isVisible = point_light.isVisibleFrom(intersection.intersection_location, this);
-		if (isVisible) { 
-			// TODO this is duplicated code form isVisibleFrom
-			Vector3 light_direction = (point_light.point() - intersection.intersection_location).normalize();
-			float l_dot_n = light_direction.dot(intersection.normal);
-
-			// diffuse
-			final_color += point_light.color() * intersected_shape->diffuse() * glm::max(l_dot_n, 0.0f);
-
-			// specular
-			Vector3 half_angle = (-intersection.ray.direction()) + light_direction;
-			half_angle = half_angle.normalize();
-			float h_dot_n = half_angle.dot(intersection.normal);
-
-			final_color += point_light.color() * intersected_shape->specular() * (pow(glm::max(h_dot_n, 0.0f), intersected_shape->shininess()));
-		}
-
-		// Handle attenuatioin for Point Lights
-		Attenuation atten = point_light.attenuation();
-		float distance_to_light = point_light.point().distanceTo(intersection.intersection_location); // TODO maybe we already have this
-		float attenuation_denominator = atten.constant + (atten.linear * distance_to_light) + (atten.quadratic * distance_to_light * distance_to_light);
-		final_color /= attenuation_denominator;
+		final_color += point_light.computeContribution(intersection, this);
 	}
 
 	for (DirectionalLight directional_light : _directional_lights) {
-		bool isVisible = directional_light.isVisibleFrom(intersection.intersection_location, this);
-		if (isVisible) { 
-			// No need to compute the direction
-			Vector3 light_direction = directional_light.direction();
-			float l_dot_n = light_direction.dot(intersection.normal);
-
-			// diffuse
-			final_color += directional_light.color() * intersected_shape->diffuse() * glm::max(l_dot_n, 0.0f);
-
-			// specular
-			Vector3 half_angle = (-intersection.ray.direction()) + light_direction;
-			half_angle = half_angle.normalize();
-			float h_dot_n = half_angle.dot(intersection.normal);
-
-			final_color += directional_light.color() * intersected_shape->specular() * (pow(glm::max(h_dot_n, 0.0f), intersected_shape->shininess()));
-		}
+		final_color += directional_light.computeContribution(intersection, this);
 	}
 
 	// Avoids recursive calls unless the specular component of the intersected object is significant.

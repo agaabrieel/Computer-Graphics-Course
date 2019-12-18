@@ -10,7 +10,8 @@ class PointLight :
 
 		Point point() const;
 		Attenuation attenuation() const;
-		bool isVisibleFrom(Point point, const Scene * scene) const;
+		Vector3 directionFrom(const Point& point) const;
+		Color computeContribution(Intersection hit_object, const Scene* scene) const;
 
 	private: 
 		const Point _point;

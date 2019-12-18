@@ -10,7 +10,7 @@ class DirectionalLight :
 		DirectionalLight(Color color, Vector3 direction);
 
 		Vector3 direction() const;
-		bool isVisibleFrom(Point point, const Scene* scene) const;
+		Color computeContribution(Intersection intersection, const Scene* scene) const;
 
 	private:
 		const Vector3 _direction;

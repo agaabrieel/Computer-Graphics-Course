@@ -1,6 +1,7 @@
 #pragma once
 #include "Color.h"
 #include "Point.h"
+#include "Shape.h"
 
 class Scene;
 
@@ -16,9 +17,9 @@ class Light  // abstract
 		Light(Color color);
 
 		Color color() const;
-		virtual bool isVisibleFrom(Point point, const Scene* scene) const = 0; // returns true if there is an unobstructed path from the given point to the light.
+		virtual Color computeContribution(Intersection hit_object, const Scene* scene) const = 0;
 
-	private:
+	protected:
 		const Color _color;
 };
 

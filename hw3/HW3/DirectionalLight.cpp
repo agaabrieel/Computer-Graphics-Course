@@ -8,17 +8,29 @@ DirectionalLight::DirectionalLight(Color color, Vector3 direction) :
 
 Vector3 DirectionalLight::direction() const {	return _direction; }
 
-bool DirectionalLight::isVisibleFrom(Point point, const Scene* scene) const 
+Color DirectionalLight::computeContribution(Intersection hit_object, const Scene* scene) const
 {
-	glm::vec3 origin = point.toGlmVec3();
-	glm::vec3 direction = _direction.toGlmVec3();
-	direction = glm::normalize(direction);
+	// Bring origin of ray slightly towards light source to prevent self-intersection.
+	Point shadow_ray_origin = hit_object.intersection_location + _direction * 0.001f;
 
-	origin += direction * 0.001f; // Bring origin of ray slightly towards light source to prevent self-intersection.
+	Ray shadow_ray = Ray(shadow_ray_origin, _direction);
+	std::optional<Intersection> shadow_ray_intersection = scene->intersect(shadow_ray);
 
-	Ray ray = Ray(origin, direction);
-	std::optional<Intersection> t = scene->intersect(ray);
+	if (!shadow_ray_intersection.has_value()) {
+		// diffuse
+		float l_dot_n = _direction.dot(hit_object.normal);
+		Color light_contribution = _color * hit_object.intersected_shape->diffuse() * glm::max(l_dot_n, 0.0f);
 
-	// Any object in the direction will be obstructing the directional light, since the light is at a point at infinity.
-	return !t.has_value();
+		// specular
+		Vector3 half_angle = (-hit_object.ray.direction()) + _direction;
+		half_angle = half_angle.normalize();
+		float h_dot_n = half_angle.dot(hit_object.normal);
+
+		light_contribution += _color * hit_object.intersected_shape->specular() * (pow(glm::max(h_dot_n, 0.0f), hit_object.intersected_shape->shininess()));
+
+		return light_contribution;
+	}
+	else {
+		return Color();
+	}
 }
