@@ -1,10 +1,8 @@
 #pragma once
-
-// TODO remove dependency on GLM
+#include <FreeImage.h>
 #ifndef GLM_FORCE_RADIANS
 #define GLM_FORCE_RADIANS
 #endif
-#include <FreeImage.h>
 #include <glm/glm.hpp>
 
 class Color

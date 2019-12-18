@@ -11,13 +11,10 @@ class Triangle :
 		std::optional<Intersection> intersect(const Ray& ray) const;
 
 	private:
-		// Stored in world coordinates (after transform)
 		Point _a;
 		Point _b;
 		Point _c;
-		Vector3 _normal;
 
-		// Useful pre-computed values for determining barycentric coordinates
 		Vector3 _v0;
 		Vector3 _v1;
 		float _d00;
@@ -25,5 +22,6 @@ class Triangle :
 		float _d11;
 		float _invDenom;
 
+		Vector3 _normal;
 };
 

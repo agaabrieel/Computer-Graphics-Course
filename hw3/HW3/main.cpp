@@ -7,9 +7,8 @@
 
 */
 
-#include <FreeImage.h>
 #include <iostream>
-
+#include <FreeImage.h>
 #include "ReadFile.h"
 
 using namespace std;
