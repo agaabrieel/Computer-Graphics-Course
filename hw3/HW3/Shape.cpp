@@ -5,11 +5,6 @@ Shape::Shape(Color diffuse, Color specular, float shininess, Color emission, Col
 {
 }
 
-
-Shape::~Shape()
-{
-}
-
 Color Shape::diffuse() const { return _diffuse; }
 
 Color Shape::specular() const {	return _specular; }

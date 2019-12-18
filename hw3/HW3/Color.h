@@ -1,13 +1,9 @@
 #pragma once
-
 #include <FreeImage.h>
 #ifndef GLM_FORCE_RADIANS
 #define GLM_FORCE_RADIANS
 #endif
 #include <glm/glm.hpp>
-
-// Struct for an RGB color
-// We can bring all these small files together into a header file such as utilities but for now I'll keep them separate
 
 class Color
 {

@@ -21,14 +21,14 @@ Scene::Scene(int width, int height, Camera camera, std::vector<Triangle> triangl
 	_beta_multiplicand = tan_fovy_over_two / _height_over_two;
 
 	// Set up basis vectors for camera space.
-	glm::vec3 center = _camera.lookat().toGlmVec3();	// center is what we are looking at
-	glm::vec3 eye = _camera.lookfrom().toGlmVec3();		// eye is the camera location
-	glm::vec3 a = eye - center;
-	glm::vec3 b = _camera.up().toGlmVec3();
-	_w = glm::normalize(a);
-	_u = glm::cross(b, _w);
-	_u = glm::normalize(_u);
-	_v = glm::cross(_w, _u);
+	Point center = _camera.lookat();	// center is what we are looking at
+	Point eye = _camera.lookfrom();		// eye is the camera location
+	Vector3 a = eye - center;
+	Vector3 b = _camera.up();
+	_w = a.normalize();
+	_u = b.cross(_w);
+	_u = _u.normalize();
+	_v = _w.cross(_u);
 }
 
 
@@ -44,11 +44,11 @@ Ray Scene::rayThroughPixel(int i, int j) const
 	float alpha = (j_float - _width_over_two) * _alpha_multiplicand;
 	float beta = (_height_over_two - i_float) * _beta_multiplicand;
 
-	glm::vec3 direction = alpha * _u + beta * _v - _w;
-	direction = glm::normalize(direction);
+	Vector3 direction = alpha * _u + beta * _v - _w;
+	direction = direction.normalize();
 
 	// The ray has origin at the camera location and looks in the given direction
-	return Ray(_camera.lookfrom(), Direction(direction)); 
+	return Ray(_camera.lookfrom(), direction); 
 }
 
 
@@ -57,7 +57,7 @@ std::optional<Scene::Intersection> Scene::intersect(const Ray& ray) const
 {
 	float smallest_intersection_distance = INFINITY;
 	std::optional<const Shape*> hit_object;
-	glm::vec3 normal;
+	Vector3 normal;
 
 	for (const Triangle& triangle : _triangles) {
 		std::optional<DistanceAndNormal> result = triangle.intersect(ray);
@@ -83,9 +83,7 @@ std::optional<Scene::Intersection> Scene::intersect(const Ray& ray) const
 		return {};
 	}
 
-	glm::vec3 intersection_location = ray.origin().toGlmVec3() + smallest_intersection_distance * ray.direction().toGlmVec3();
-	Point p = Point(intersection_location);
-
+	Point p = ray.origin() + smallest_intersection_distance * ray.direction();
 	Intersection i = { hit_object.value(), p, normal, ray, smallest_intersection_distance };
 	return { i };
 }
@@ -97,14 +95,10 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 		return Color(0.0f, 0.0f, 0.0f); // Colors are additive so we can just return black.
 	}
 
-	// TODO: for now, using glm::vec3 to handle the vector operations. Later on, could add operations to the custom Vector class.
-
 	const Shape* intersected_shape = intersection.intersected_shape;
 
 	// Ambient term, per object
-	//glm::vec3 final_color = intersected_shape->ambient().toGlmVec3();
 	Color final_color = intersected_shape->ambient();
-
 
 	// Emission term, per object
 	final_color += intersected_shape->emission();
@@ -114,25 +108,24 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 		bool isVisible = point_light.isVisibleFrom(intersection.intersection_location, this);
 		if (isVisible) { 
 			// TODO this is duplicated code form isVisibleFrom
-			glm::vec3 light_direction = point_light.point().toGlmVec3() - intersection.intersection_location.toGlmVec3();
-			light_direction = glm::normalize(light_direction);
-			float l_dot_n = glm::dot(light_direction, intersection.normal);
+			Vector3 light_direction = (point_light.point() - intersection.intersection_location).normalize();
+			float l_dot_n = light_direction.dot(intersection.normal);
 
 			// diffuse
-			final_color += point_light.color().toGlmVec3() * intersected_shape->diffuse().toGlmVec3() * glm::max(l_dot_n, 0.0f);
+			final_color += point_light.color() * intersected_shape->diffuse() * glm::max(l_dot_n, 0.0f);
 
 			// specular
-			glm::vec3 half_angle = (-intersection.ray.direction().toGlmVec3()) + light_direction;
-			half_angle = glm::normalize(half_angle);
-			float h_dot_n = glm::dot(half_angle, intersection.normal);
+			Vector3 half_angle = (-intersection.ray.direction()) + light_direction;
+			half_angle = half_angle.normalize();
+			float h_dot_n = half_angle.dot(intersection.normal);
 
 			final_color += point_light.color() * intersected_shape->specular() * (pow(glm::max(h_dot_n, 0.0f), intersected_shape->shininess()));
 		}
 
 		// Handle attenuatioin for Point Lights
 		Attenuation atten = point_light.attenuation();
-		float d = intersection.distance;
-		float attenuation_denominator = atten.constant() + (atten.linear()) * (d + atten.quadratic() * d * d);
+		float distance_to_light = point_light.point().distanceTo(intersection.intersection_location); // TODO maybe we already have this
+		float attenuation_denominator = atten.constant() + (atten.linear() * distance_to_light) + (atten.quadratic() * distance_to_light * distance_to_light);
 		final_color /= attenuation_denominator;
 	}
 
@@ -140,16 +133,16 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 		bool isVisible = directional_light.isVisibleFrom(intersection.intersection_location, this);
 		if (isVisible) { 
 			// No need to compute the direction
-			glm::vec3 light_direction = directional_light.direction().toGlmVec3();
-			float l_dot_n = glm::dot(light_direction, intersection.normal);
+			Vector3 light_direction = directional_light.direction();
+			float l_dot_n = light_direction.dot(intersection.normal);
 
 			// diffuse
 			final_color += directional_light.color() * intersected_shape->diffuse() * glm::max(l_dot_n, 0.0f);
 
 			// specular
-			glm::vec3 half_angle = (-intersection.ray.direction().toGlmVec3()) + light_direction;
-			half_angle = glm::normalize(half_angle);
-			float h_dot_n = glm::dot(half_angle, intersection.normal);
+			Vector3 half_angle = (-intersection.ray.direction()) + light_direction;
+			half_angle = half_angle.normalize();
+			float h_dot_n = half_angle.dot(intersection.normal);
 
 			final_color += directional_light.color() * intersected_shape->specular() * (pow(glm::max(h_dot_n, 0.0f), intersected_shape->shininess()));
 		}
@@ -157,15 +150,15 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 
 	// Avoids recursive calls unless the specular component of the intersected object is significant.
 	if (recursive_depth_permitted > 1 && intersected_shape->specular().toGlmVec3().length() > 0.001) {
-		glm::vec3 original_ray_direction = intersection.ray.direction().toGlmVec3();
-		glm::vec3 reflected_ray_origin = intersection.intersection_location.toGlmVec3();
-		glm::vec3 reflected_ray_direction = original_ray_direction + 2.0f * (glm::dot(-original_ray_direction, intersection.normal)) * intersection.normal;
-		reflected_ray_direction = glm::normalize(reflected_ray_direction);
+		Vector3 original_ray_direction = intersection.ray.direction();
+		Point reflected_ray_origin = intersection.intersection_location;
+		Vector3 reflected_ray_direction = original_ray_direction + 2.0f * (-original_ray_direction).dot(intersection.normal) * intersection.normal;
+		reflected_ray_direction = reflected_ray_direction.normalize();
 
 		// Push reflected ray slightly out to avoid self-intersection due to floating point inaccuracy.
 		reflected_ray_origin += 0.0001f * reflected_ray_direction;
 
-		Ray reflected_ray = Ray(Point(reflected_ray_origin), Direction(reflected_ray_direction));
+		Ray reflected_ray = Ray(reflected_ray_origin, reflected_ray_direction);
 		std::optional<Intersection> reflected_intersection = intersect(reflected_ray);
 
 		if (reflected_intersection.has_value()) {

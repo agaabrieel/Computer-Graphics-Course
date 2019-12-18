@@ -3,14 +3,10 @@
 #include <optional>
 #include "Scene.h"
 
-DirectionalLight::DirectionalLight(Color color, Attenuation attenuation, Direction direction) : 
-	Light(color, attenuation), _direction(direction) {}
+DirectionalLight::DirectionalLight(Color color, Attenuation attenuation, Vector3 direction) : 
+	Light(color, attenuation), _direction(direction.normalize()) {}
 
-DirectionalLight::~DirectionalLight()
-{
-}
-
-Direction DirectionalLight::direction() const {	return _direction; }
+Vector3 DirectionalLight::direction() const {	return _direction; }
 
 bool DirectionalLight::isVisibleFrom(Point point, const Scene* scene) const 
 {

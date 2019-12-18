@@ -1,14 +1,9 @@
 #include "PointLight.h"
 #include "Ray.h"
 #include <optional>
-#include "Intersection.h"
 #include "Scene.h"
 
 PointLight::PointLight(Color color, Attenuation attenuation, Point point) : Light(color, attenuation), _point(point) {}
-
-PointLight::~PointLight()
-{
-}
 
 Point PointLight::point() const { return _point; }
 

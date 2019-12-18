@@ -8,7 +8,6 @@
 #include <fstream>
 #include "TransformStack.h"
 #include <vector>
-#include "Vertex.h"
 #include "Triangle.h"
 #include "Sphere.h"
 
@@ -49,7 +48,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 
 	// Scene objects
 	unique_ptr<Camera> camera;  
-	vector<Vertex> vertexes; 
+	vector<Point> vertexes; 
 	vector<Triangle> triangles;
 	vector<Sphere> spheres;
 	vector<DirectionalLight> directional_lights;
@@ -111,7 +110,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					if (validinput && camera.get() == NULL) { // Only parses the first camera command and then ignores duplicates
 						Point lookfrom = Point(values[0], values[1], values[2]);
 						Point lookat = Point(values[3], values[4], values[5]);
-						Direction up = Direction(values[6], values[7], values[8]);
+						Vector3 up = Vector3(values[6], values[7], values[8]).normalize();
 						float fovy_degrees = values[9];
 						float fovy_radians = glm::radians(fovy_degrees);
 
@@ -155,7 +154,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 				else if (cmd == "vertex") {
 					validinput = readvals(s, 3, values);
 					if (validinput) {
-						Vertex vertex = Vertex(values[0], values[1], values[2]);
+						Point vertex = Point(values[0], values[1], values[2]);
 						vertexes.push_back(vertex);
 					}
 				}
@@ -203,7 +202,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					validinput = readvals(s, 4, values);
 					if (validinput) {
 						float angle_radians = glm::radians(values[3]);
-						Direction axis = Direction(values[0], values[1], values[2]);
+						Vector3 axis = Vector3(values[0], values[1], values[2]).normalize();
 						transform_stack.rotate(angle_radians, axis);
 					}
 				}
@@ -230,7 +229,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 				else if (cmd == "directional") {
 					validinput = readvals(s, 6, values);
 					if (validinput) {
-						Direction direction = Direction(values[0], values[1], values[2]);
+						Vector3 direction = Vector3(values[0], values[1], values[2]).normalize();
 						Color color = Color(values[3], values[4], values[5]);
 						DirectionalLight directional_light = DirectionalLight(color, *attenuation, direction);
 						directional_lights.push_back(directional_light);

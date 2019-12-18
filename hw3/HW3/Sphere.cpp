@@ -17,18 +17,15 @@ std::optional<DistanceAndNormal> Sphere::intersect(Ray ray) const
 	// Do sphere-ray' intersection to get p'
 	Ray ray_prime = ray.toObjectCoordinates(_transform_inverse);
 
-	// TODO: kludge using glm, later on we can define own operations on custom data types
-	glm::vec3 p0_prime = ray_prime.origin().toGlmVec3();
-	glm::vec3 p1_prime = ray_prime.direction().toGlmVec3();
-
-	glm::vec3 center = _center.toGlmVec3();
-
-	glm::vec3 p0_prime_minus_c = p0_prime - center;
+	Point p0_prime = ray_prime.origin();
+	Vector3 p1_prime = ray_prime.direction();
+	Point center = _center;
+	Vector3 p0_prime_minus_c = p0_prime - center;
 
 	// Set up quadratic equation with coefficients a, b, c
-	float a = glm::dot(p1_prime, p1_prime);
-	float b = glm::dot(2.0f *  p1_prime, p0_prime_minus_c);
-	float c = glm::dot(p0_prime_minus_c, p0_prime_minus_c) - (_radius * _radius);
+	float a = p1_prime.dot(p1_prime);
+	float b = (2.0f *  p1_prime).dot(p0_prime_minus_c);
+	float c = p0_prime_minus_c.dot(p0_prime_minus_c) - (_radius * _radius);
 
 	float discriminant = b * b - (4.0f * a * c);
 
@@ -65,14 +62,14 @@ std::optional<DistanceAndNormal> Sphere::intersect(Ray ray) const
 		return std::nullopt;
 	}
 
-	glm::vec4 p_prime = glm::vec4(p0_prime + smallest_positive_root * p1_prime, 1);
-	glm::vec4 normal_prime = p_prime - glm::vec4(center, 1);
+	glm::vec4 p_prime = glm::vec4((p0_prime + smallest_positive_root * p1_prime).toGlmVec3(), 1);
+	glm::vec4 normal_prime = p_prime - glm::vec4(center.toGlmVec3(), 1);
 	glm::vec4 normal4 = glm::transpose(_transform_inverse) * normal_prime;
-	glm::vec3 normal = glm::vec3(normal4.x, normal4.y, normal4.z);
-	normal = glm::normalize(normal);
+	Vector3 normal = Vector3(normal4.x, normal4.y, normal4.z);
+	normal = normal.normalize();
 	glm::vec4 p = _transform * p_prime;
 
-	glm::vec3 p3 = glm::vec3(p.x / p.w, p.y / p.w, p.z / p.w);
+	//glm::vec3 p3 = glm::vec3(p.x / p.w, p.y / p.w, p.z / p.w);
 
 	return { {glm::distance(p, ray.origin().toGlmVec4()), normal} };
 }

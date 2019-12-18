@@ -10,7 +10,6 @@
 #include "Sphere.h"
 #include "Triangle.h"
 #include "Camera.h"
-#include "Intersection.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include <optional>
@@ -23,7 +22,7 @@ class Scene
 		struct Intersection {
 			const Shape* intersected_shape;
 			Point intersection_location;
-			glm::vec3 normal;
+			Vector3 normal;
 			const Ray& ray;
 			float distance;
 		};
@@ -67,8 +66,8 @@ class Scene
 		float _height_over_two;
 		float _alpha_multiplicand;
 		float _beta_multiplicand;
-		glm::vec3 _u;
-		glm::vec3 _v;
-		glm::vec3 _w;
+		Vector3 _u;
+		Vector3 _v;
+		Vector3 _w;
 };
 

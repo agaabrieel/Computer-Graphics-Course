@@ -3,21 +3,13 @@
 #include "Attenuation.h"
 #include "Point.h"
 
-/*
-A light has
-
-color (r, g, b)
-attenuation (const, linear, quadratic)
-
-*/
-
 class Scene;
 
 class Light  // abstract
 {
 	public:
 		Light(Color color, Attenuation attenuation);
-		~Light();
+
 		Color color() const;
 		Attenuation attenuation() const;
 		

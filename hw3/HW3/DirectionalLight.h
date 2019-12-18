@@ -1,6 +1,6 @@
 #pragma once
 #include "Light.h"
-#include "Direction.h"
+#include "Vector3.h"
 
 
 /*
@@ -14,14 +14,13 @@ class DirectionalLight :
 	public Light
 {
 	public:
-		DirectionalLight(Color color, Attenuation attenuation, Direction direction);
-		~DirectionalLight();
+		DirectionalLight(Color color, Attenuation attenuation, Vector3 direction);
 
-		Direction direction() const;
+		Vector3 direction() const;
 
 		bool isVisibleFrom(Point point, const Scene* scene) const;
 
 	private:
-		const Direction _direction;
+		const Vector3 _direction;
 };
 
