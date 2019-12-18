@@ -9,10 +9,11 @@ class PointLight :
 		PointLight(Color color, Attenuation attenuation, Point point);
 
 		Point point() const;
-
+		Attenuation attenuation() const;
 		bool isVisibleFrom(Point point, const Scene * scene) const;
 
 	private: 
 		const Point _point;
+		const Attenuation _attenuation;
 };
 

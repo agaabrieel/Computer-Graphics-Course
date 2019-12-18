@@ -3,9 +3,10 @@
 #include <optional>
 #include "Scene.h"
 
-PointLight::PointLight(Color color, Attenuation attenuation, Point point) : Light(color, attenuation), _point(point) {}
+PointLight::PointLight(Color color, Attenuation attenuation, Point point) : Light(color), _point(point), _attenuation(attenuation) {}
 
 Point PointLight::point() const { return _point; }
+Attenuation PointLight::attenuation() const { return _attenuation; }
 
 bool PointLight::isVisibleFrom(Point point, const Scene * scene) const
 {

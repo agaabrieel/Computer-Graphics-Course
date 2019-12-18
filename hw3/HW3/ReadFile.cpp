@@ -226,7 +226,7 @@ ReadFile::FileData ReadFile::readfile(const char* filename)
 					if (validinput) {
 						Vector3 direction = Vector3(values[0], values[1], values[2]).normalize();
 						Color color = Color(values[3], values[4], values[5]);
-						DirectionalLight directional_light = DirectionalLight(color, attenuation, direction);
+						DirectionalLight directional_light = DirectionalLight(color, direction);
 						directional_lights.push_back(directional_light);
 					}
 				}

@@ -1,9 +1,12 @@
 ﻿  DirectionalLight.cpp
-  Light.cpp
+  main.cpp
   PointLight.cpp
+  ReadFile.cpp
+  Scene.cpp
+C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\include\ProgressBar.hpp(35,27): warning C4018: '<': signed/unsigned mismatch
   Generating code
-  27 of 840 functions ( 3.2%) were compiled, the rest were copied from previous compilation.
-    23 functions were new in current compilation
-    36 functions had inline decision re-evaluated but remain unchanged
+  63 of 841 functions ( 7.5%) were compiled, the rest were copied from previous compilation.
+    4 functions were new in current compilation
+    14 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   HW3.vcxproj -> C:\Users\josh\Documents\GitHub\Computer-Graphics-Course\hw3\HW3\Release\Raytracer.exe

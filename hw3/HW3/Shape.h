@@ -7,8 +7,6 @@
 #include "Ray.h"
 #include <optional>
 
-
-// TODO put in namespace
 struct DistanceAndNormal {
 	float distance;
 	Vector3 normal;

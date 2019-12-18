@@ -3,8 +3,8 @@
 #include <optional>
 #include "Scene.h"
 
-DirectionalLight::DirectionalLight(Color color, Attenuation attenuation, Vector3 direction) : 
-	Light(color, attenuation), _direction(direction.normalize()) {}
+DirectionalLight::DirectionalLight(Color color, Vector3 direction) : 
+	Light(color), _direction(direction.normalize()) {}
 
 Vector3 DirectionalLight::direction() const {	return _direction; }
 
