@@ -27,6 +27,50 @@ RGBTRIPLE Color::to_freeimage_rgbtriple() const
 	return triple;
 }
 
+Color Color::operator+(const Color& c) const
+{
+	return Color(this->_red + c._red, this->_green + c._green, this->_blue + c._blue);
+}
+
+Color Color::operator*(const Color& c) const
+{
+	return Color(
+		_red * c._red,
+		_green * c._green,
+		_blue * c._blue
+	);
+}
+
+Color Color::operator*(float f) const
+{
+	return Color(
+		_red * f,
+		_green * f,
+		_blue * f
+	);
+}
+
+void Color::operator=(const Color& c)
+{
+	_red = c._red;
+	_green = c._green;
+	_blue = c._blue;
+}
+
+void Color::operator+=(const Color& c)
+{
+	_red += c._red;
+	_green += c._green;
+	_blue += c._blue;
+}
+
+void Color::operator/=(float f)
+{
+	_red /= f;
+	_green /= f;
+	_blue /= f;
+}
+
 BYTE Color::color_channel_float_to_byte(float color_channel) const
 {
 	return (BYTE)floor(color_channel >= 1.0 ? 255 : color_channel * 256.0);

@@ -9,13 +9,6 @@
 // Struct for an RGB color
 // We can bring all these small files together into a header file such as utilities but for now I'll keep them separate
 
-
-/* A color has:
-r
-g
-b
-*/
-
 class Color
 {
 	public:
@@ -28,13 +21,19 @@ class Color
 		float blue() const;
 
 		glm::vec3 toGlmVec3();
-
 		RGBTRIPLE to_freeimage_rgbtriple() const;
 
+		Color operator+(const Color& c) const;
+		Color operator*(const Color& c) const;
+		Color operator*(float f) const;
+		void operator=(const Color& c);
+		void operator+=(const Color& c);
+		void operator/=(float f);
+
 	private:
-		const float _red;
-		const float _green;
-		const float _blue;
+		float _red;
+		float _green;
+		float _blue;
 
 		BYTE color_channel_float_to_byte(float color_channel) const;
 };

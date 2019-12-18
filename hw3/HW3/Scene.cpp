@@ -102,10 +102,12 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 	const Shape* intersected_shape = intersection.intersected_shape;
 
 	// Ambient term, per object
-	glm::vec3 final_color = intersected_shape->ambient().toGlmVec3();
+	//glm::vec3 final_color = intersected_shape->ambient().toGlmVec3();
+	Color final_color = intersected_shape->ambient();
+
 
 	// Emission term, per object
-	final_color += intersected_shape->emission().toGlmVec3();
+	final_color += intersected_shape->emission();
 
 	for (PointLight point_light : _point_lights) {
 
@@ -124,7 +126,7 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 			half_angle = glm::normalize(half_angle);
 			float h_dot_n = glm::dot(half_angle, intersection.normal);
 
-			final_color += point_light.color().toGlmVec3() * intersected_shape->specular().toGlmVec3() * (pow(glm::max(h_dot_n, 0.0f), intersected_shape->shininess()));
+			final_color += point_light.color() * intersected_shape->specular() * (pow(glm::max(h_dot_n, 0.0f), intersected_shape->shininess()));
 		}
 
 		// Handle attenuatioin for Point Lights
@@ -142,14 +144,14 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 			float l_dot_n = glm::dot(light_direction, intersection.normal);
 
 			// diffuse
-			final_color += directional_light.color().toGlmVec3() * intersected_shape->diffuse().toGlmVec3() * glm::max(l_dot_n, 0.0f);
+			final_color += directional_light.color() * intersected_shape->diffuse() * glm::max(l_dot_n, 0.0f);
 
 			// specular
 			glm::vec3 half_angle = (-intersection.ray.direction().toGlmVec3()) + light_direction;
 			half_angle = glm::normalize(half_angle);
 			float h_dot_n = glm::dot(half_angle, intersection.normal);
 
-			final_color += directional_light.color().toGlmVec3() * intersected_shape->specular().toGlmVec3() * (pow(glm::max(h_dot_n, 0.0f), intersected_shape->shininess()));
+			final_color += directional_light.color() * intersected_shape->specular() * (pow(glm::max(h_dot_n, 0.0f), intersected_shape->shininess()));
 		}
 	}
 
@@ -167,12 +169,12 @@ Color Scene::findColor(Intersection intersection, int recursive_depth_permitted)
 		std::optional<Intersection> reflected_intersection = intersect(reflected_ray);
 
 		if (reflected_intersection.has_value()) {
-			glm::vec3 recursive_specular_component = intersected_shape->specular().toGlmVec3() * findColor(reflected_intersection.value(), recursive_depth_permitted - 1).toGlmVec3();
+			Color recursive_specular_component = intersected_shape->specular() * findColor(reflected_intersection.value(), recursive_depth_permitted - 1);
 			final_color += recursive_specular_component;
 		}
 	}
 
-	return Color(final_color);
+	return final_color;
 }
 
 // TODO return smart pointer
@@ -185,9 +187,12 @@ BYTE* Scene::raytrace(int max_recursion_depth) const
 
 	for (int i = 0; i < _height; i++) {
 		for (int j = 0; j < _width; j++) {
+
+			// Finds closest object that is intersected by the ray through pixel (i, j)
 			Ray ray = rayThroughPixel(i, j);
 			std::optional<Intersection> intersection = intersect(ray);
 
+			// Shades pixel (i, j)
 			if (intersection.has_value()) {
 				pixel_color_triple = findColor(intersection.value(), max_recursion_depth).to_freeimage_rgbtriple();
 			}
