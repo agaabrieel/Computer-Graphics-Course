@@ -162,35 +162,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Color.cpp" />
-    <ClCompile Include="DirectionalLight.cpp" />
-    <ClCompile Include="Light.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="TransformStack.cpp" />
-    <ClCompile Include="Point.cpp" />
-    <ClCompile Include="PointLight.cpp" />
-    <ClCompile Include="Ray.cpp" />
-    <ClCompile Include="ReadFile.cpp" />
-    <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="Shape.cpp" />
-    <ClCompile Include="Sphere.cpp" />
-    <ClCompile Include="Triangle.cpp" />
-    <ClCompile Include="Vector3.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\model\Color.cpp" />
+    <ClCompile Include="src\model\lights\DirectionalLight.cpp" />
+    <ClCompile Include="src\model\lights\Light.cpp" />
+    <ClCompile Include="src\model\lights\PointLight.cpp" />
+    <ClCompile Include="src\model\Point.cpp" />
+    <ClCompile Include="src\model\Ray.cpp" />
+    <ClCompile Include="src\model\Scene.cpp" />
+    <ClCompile Include="src\model\shapes\Shape.cpp" />
+    <ClCompile Include="src\model\shapes\Sphere.cpp" />
+    <ClCompile Include="src\model\shapes\Triangle.cpp" />
+    <ClCompile Include="src\model\Vector3.cpp" />
+    <ClCompile Include="src\utilities\ReadFile.cpp" />
+    <ClCompile Include="src\utilities\TransformStack.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Color.h" />
-    <ClInclude Include="DirectionalLight.h" />
-    <ClInclude Include="Light.h" />
-    <ClInclude Include="TransformStack.h" />
-    <ClInclude Include="Point.h" />
-    <ClInclude Include="PointLight.h" />
-    <ClInclude Include="Ray.h" />
-    <ClInclude Include="ReadFile.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="Shape.h" />
-    <ClInclude Include="Sphere.h" />
-    <ClInclude Include="Triangle.h" />
-    <ClInclude Include="Vector3.h" />
+    <ClInclude Include="src\model\Color.h" />
+    <ClInclude Include="src\model\lights\DirectionalLight.h" />
+    <ClInclude Include="src\model\lights\Light.h" />
+    <ClInclude Include="src\model\lights\PointLight.h" />
+    <ClInclude Include="src\model\Point.h" />
+    <ClInclude Include="src\model\Ray.h" />
+    <ClInclude Include="src\model\Scene.h" />
+    <ClInclude Include="src\model\shapes\Shape.h" />
+    <ClInclude Include="src\model\shapes\Sphere.h" />
+    <ClInclude Include="src\model\shapes\Triangle.h" />
+    <ClInclude Include="src\model\Vector3.h" />
+    <ClInclude Include="src\utilities\ReadFile.h" />
+    <ClInclude Include="src\utilities\TransformStack.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

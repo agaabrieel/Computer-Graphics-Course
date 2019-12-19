@@ -39,87 +39,87 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\model\lights\DirectionalLight.cpp">
+      <Filter>Source Files\Model\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\lights\Light.cpp">
+      <Filter>Source Files\Model\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\lights\PointLight.cpp">
+      <Filter>Source Files\Model\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\shapes\Shape.cpp">
+      <Filter>Source Files\Model\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\shapes\Sphere.cpp">
+      <Filter>Source Files\Model\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\shapes\Triangle.cpp">
+      <Filter>Source Files\Model\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utilities\ReadFile.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\Color.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\Point.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\Ray.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\Scene.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\Vector3.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utilities\TransformStack.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Shape.cpp">
-      <Filter>Source Files\Model\Shapes</Filter>
-    </ClCompile>
-    <ClCompile Include="Sphere.cpp">
-      <Filter>Source Files\Model\Shapes</Filter>
-    </ClCompile>
-    <ClCompile Include="Triangle.cpp">
-      <Filter>Source Files\Model\Shapes</Filter>
-    </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>Source Files\Model\Lights</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectionalLight.cpp">
-      <Filter>Source Files\Model\Lights</Filter>
-    </ClCompile>
-    <ClCompile Include="PointLight.cpp">
-      <Filter>Source Files\Model\Lights</Filter>
-    </ClCompile>
-    <ClCompile Include="Color.cpp">
-      <Filter>Source Files\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Point.cpp">
-      <Filter>Source Files\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Source Files\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Ray.cpp">
-      <Filter>Source Files\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="ReadFile.cpp">
-      <Filter>Source Files\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="TransformStack.cpp">
-      <Filter>Source Files\Utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="Vector3.cpp">
-      <Filter>Source Files\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Shape.h">
-      <Filter>Header Files\Model\Shapes</Filter>
-    </ClInclude>
-    <ClInclude Include="Sphere.h">
-      <Filter>Header Files\Model\Shapes</Filter>
-    </ClInclude>
-    <ClInclude Include="Triangle.h">
-      <Filter>Header Files\Model\Shapes</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectionalLight.h">
+    <ClInclude Include="src\model\lights\DirectionalLight.h">
       <Filter>Header Files\Model\Lights</Filter>
     </ClInclude>
-    <ClInclude Include="Light.h">
+    <ClInclude Include="src\model\lights\Light.h">
       <Filter>Header Files\Model\Lights</Filter>
     </ClInclude>
-    <ClInclude Include="PointLight.h">
+    <ClInclude Include="src\model\lights\PointLight.h">
       <Filter>Header Files\Model\Lights</Filter>
     </ClInclude>
-    <ClInclude Include="Color.h">
-      <Filter>Header Files\Model</Filter>
+    <ClInclude Include="src\model\shapes\Triangle.h">
+      <Filter>Header Files\Model\Shapes</Filter>
     </ClInclude>
-    <ClInclude Include="Point.h">
-      <Filter>Header Files\Model</Filter>
+    <ClInclude Include="src\model\shapes\Sphere.h">
+      <Filter>Header Files\Model\Shapes</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Header Files\Model</Filter>
+    <ClInclude Include="src\model\shapes\Shape.h">
+      <Filter>Header Files\Model\Shapes</Filter>
     </ClInclude>
-    <ClInclude Include="Ray.h">
-      <Filter>Header Files\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="ReadFile.h">
+    <ClInclude Include="src\utilities\TransformStack.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="TransformStack.h">
+    <ClInclude Include="src\utilities\ReadFile.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Vector3.h">
+    <ClInclude Include="src\model\Color.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model\Point.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model\Ray.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model\Scene.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model\Vector3.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
   </ItemGroup>
